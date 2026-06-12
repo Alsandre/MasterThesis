@@ -155,3 +155,5 @@ Zhang Y., Zhao D., Hancock J.T., Kraut R., Yang D., "The Rise of AI Companions: 
 | 2026-06-11 | Research-direction sweep completed (8 agents, fact-checked); **Direction 1 chosen** (theory-grounded memory × perceived companionship) |
 | 2026-06-11 | `project/` folder structure: `draft.md` (thesis text) + `references.md` (this journal) |
 | 2026-06-11 | Vocabulary discipline adopted (three tiers, setup-then-conquer); terminology pass applied to draft.md |
+| 2026-06-12 | §1 drafted (v1→v3): four-lens review + red-team applied; bibliography verified; defense-prep.md created |
+| 2026-06-13 | Workflow pivot: English master (`draft-en.md`) + Lekso's manual Georgian translation as the authorship/learning step; `glossary.md` made binding; EN copy not published before defense |

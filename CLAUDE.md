@@ -38,7 +38,10 @@ Strategy is setup-then-conquer: technical throughout, the "companion" connection
 
 ## Files and maintenance duties
 
-- `project/draft.md` — thesis text is drafted and iterated HERE, in academic-register Georgian; approved sections later move into `შაბლონი სამაგისტრო (1).docx`. Never switch the draft to English.
+- `project/draft-en.md` — the ENGLISH MASTER: Claude drafts and iterates here; reviews and red-teams run on this text. Source of truth until section approval.
+- `project/draft.md` — the GEORGIAN thesis text: Lekso's manual translation of approved English sections (plus shared [N] bibliography). Approved sections later move into `შაბლონი სამაგისტრო (1).docx`. Claude reviews but never writes the Georgian translation itself (§1 v3 predates this rule and stays as a calibration reference).
+- `project/glossary.md` — binding EN→KA terminology + style rules. Check translations against it; extend it before translating sections that introduce new terms.
+- `project/defense-prep.md` — commission-style questions per section with answer outlines; Lekso must pass these before a section is approved. Add questions for each new section.
 - `project/references.md` — the research journal. **Your duty to maintain it:** when research surfaces a relevant finding, verify it against the primary source, then append it as the next F-number using the existing entry structure (claim → "Use in thesis" → citation). Record project decisions as dated rows in the decision log. ⭐ marks load-bearing findings; ⚠️ marks caveats — preserve caveats whenever citing.
 - `note_from_lecturer.txt` — Stage 1 requirements from the lecturer (სოფო ბარნოვი). The intro's five points and the lit review's four sections come verbatim from here.
 - `paper-complition-instructions (1).pdf` — official GTU formatting rules (digest in `draft.md` §0). Consult at formatting time, not while writing content.
@@ -59,7 +62,7 @@ After Stage 1 review, add a "Lecturer feedback" section to references.md and cap
 
 The thesis must be defensibly Lekso's. The ideas, system, decisions, and study are his; AI assists with drafting and verification. Enforce this workflow:
 
-1. **Draft → rework → approve.** Claude drafts evidence-grounded section text; Lekso rewrites or substantially reworks it in his own Georgian before a section is marked approved. Never mark a section final without his pass.
+1. **English master → manual Georgian translation → approve.** Claude drafts evidence-grounded section text in English in `project/draft-en.md` (the source of truth until section approval); review workflows run on the English text. Lekso then translates the section into Georgian (`project/draft.md`) MANUALLY — this translation pass IS the rework/authorship/learning step; never generate the Georgian translation for him. Claude reviews his translation for grammar, terminology-glossary adherence, and claim fidelity — but does not rewrite his voice. After approval, any change must be applied in both languages or logged. Translation unit is the paragraph/claim, not the word — guard against calques (see `project/glossary.md`, which is binding; extend it when new terms appear). The English copy is not published anywhere before the defense.
 2. **Quiz after every section.** Once a section is drafted, ask Lekso 3–5 mock-defense questions on it („საიდან იცით?" style). If he can't defend a claim, rework or cut it. This is both integrity protection and defense prep — do not skip it.
 3. **Provenance.** Commit draft iterations to git with meaningful messages — the history of human-reviewed evolution is the audit trail.
 4. **Plagiarism hygiene (F15):** SC2 ≤10% is the binding constraint — never reproduce ≥25-word runs from any source; paraphrase from notes, never from open source text; quotes rare, marked, cited.
