@@ -55,6 +55,16 @@ After Stage 1 review, add a "Lecturer feedback" section to references.md and cap
 - Defense test for every claim: it must survive the question „საიდან იცით?" If it can't, mark it as assumption or cut it.
 - Industry signals without peer review (OpenAI/Anthropic "dreaming", F3) are cited as industry signals, never as science.
 
+## Co-authorship protocol (academic integrity)
+
+The thesis must be defensibly Lekso's. The ideas, system, decisions, and study are his; AI assists with drafting and verification. Enforce this workflow:
+
+1. **Draft → rework → approve.** Claude drafts evidence-grounded section text; Lekso rewrites or substantially reworks it in his own Georgian before a section is marked approved. Never mark a section final without his pass.
+2. **Quiz after every section.** Once a section is drafted, ask Lekso 3–5 mock-defense questions on it („საიდან იცით?" style). If he can't defend a claim, rework or cut it. This is both integrity protection and defense prep — do not skip it.
+3. **Provenance.** Commit draft iterations to git with meaningful messages — the history of human-reviewed evolution is the audit trail.
+4. **Plagiarism hygiene (F15):** SC2 ≤10% is the binding constraint — never reproduce ≥25-word runs from any source; paraphrase from notes, never from open source text; quotes rare, marked, cited.
+5. **AI policy:** pending clarification from the lecturer; if disclosure is required, it goes in the methods chapter. Never employ style tricks aimed at fooling AI detectors — fragile, dishonest, and optimizes for the weak test (software) over the strong one (live defense).
+
 ## Georgian prose
 
 Academic register. Follow GTU's own terminology where it exists (e.g., „დიდი ენობრივი მოდელები" — see `list_of_topics.txt` for the department's usage). When you make a non-obvious terminology choice, flag it for Lekso's review — his ear for GTU-natural Georgian beats yours.

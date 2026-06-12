@@ -123,6 +123,11 @@ From `plagiarism-regulation.pdf` (Article 5.10 + annexes), verified by direct re
 
 **Use in thesis (process):** SC2 ≤10% is the binding constraint in practice — avoid any ≥25-word run that tracks a source's wording; paraphrase from notes, never from open source text. QC3 30% is generous — direct quotes are safe when marked and cited.
 
+## F16. Companion-oriented use at scale (supports the actuality claim)
+Zhang Y., Zhao D., Hancock J.T., Kraut R., Yang D., "The Rise of AI Companions: Interaction with AI Companions and Psychological Well-being" (arXiv:2506.12605, 2025): analysis of n=1,131 Character.AI users plus 4,664 chat sessions documents widespread companionship-oriented use of general-purpose chatbot platforms. ⚠️ Correlational study with negative well-being associations — do NOT cite for causal claims in either direction (see F8 caution and the MIT/OpenAI RCT null result).
+
+**Use in thesis:** intro §1.3 actuality, cited as [5] — phrased as „ფართოდ გავრცელებული პრაქტიკა" (widespread practice), not „მასობრივი" (mass), per fact-check correction 2026-06-12.
+
 ---
 
 ## Key resource links
