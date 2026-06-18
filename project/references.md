@@ -157,3 +157,4 @@ Zhang Y., Zhao D., Hancock J.T., Kraut R., Yang D., "The Rise of AI Companions: 
 | 2026-06-11 | Vocabulary discipline adopted (three tiers, setup-then-conquer); terminology pass applied to draft.md |
 | 2026-06-12 | §1 drafted (v1→v3): four-lens review + red-team applied; bibliography verified; defense-prep.md created |
 | 2026-06-13 | Workflow pivot: English master (`draft-en.md`) + Lekso's manual Georgian translation as the authorship/learning step; `glossary.md` made binding; EN copy not published before defense |
+| 2026-06-13 | §2 (Literature Review, Rich) drafted in EN → four-lens review + red-team applied (v2); bibliography extended [20]–[34], all verified; defense-prep Q9–Q15 added. Key fixes: event-segmentation correctly attributed to Zacks [31] not Tulving; "single-theory" framing sharpened to avoid strawman; glossary "companion" leaks quoted; voice-RCT [15] folded in as a strength |

@@ -95,6 +95,21 @@
 17. Packer C., Wooders S., Lin K., Fang V., Patil S.G., Stoica I., Gonzalez J.E. MemGPT: Towards LLMs as Operating Systems. 2023. arXiv:2310.08560.
 18. OpenAI. [„Dreaming V3" — მეხსიერების ფონური კონსოლიდაციის ფუნქციის ანონსი, 2026 წ. ივნისი] ⚠️ TODO: ოფიციალური ანონსის URL და ზუსტი სათაური დასაზუსტებელია.
 19. Anthropic. [აგენტური მეხსიერების კონსოლიდაციის კვლევითი წინასწარი ვერსია, 2026 წ. მაისი] ⚠️ TODO: ოფიციალური ანონსის URL და ზუსტი სათაური დასაზუსტებელია.
+20. Atkinson R.C., Shiffrin R.M. Human Memory: A Proposed System and Its Control Processes. In: Spence K.W., Spence J.T. (Eds.), The Psychology of Learning and Motivation, vol. 2, pp. 89–195. New York: Academic Press, 1968.
+21. Baddeley A.D., Hitch G. Working Memory. In: Bower G.H. (Ed.), The Psychology of Learning and Motivation, vol. 8, pp. 47–89. New York: Academic Press, 1974.
+22. Tulving E. Episodic and Semantic Memory. In: Tulving E., Donaldson W. (Eds.), Organization of Memory, pp. 381–403. New York: Academic Press, 1972.
+23. Ebbinghaus H. Memory: A Contribution to Experimental Psychology (Trans. H.A. Ruger & C.E. Bussenius). New York: Teachers College, Columbia University, 1913. (Original work published 1885.)
+24. Reyna V.F., Brainerd C.J. Fuzzy-trace theory: An interim synthesis. Learning and Individual Differences, 7(1), 1–75, 1995. doi:10.1016/1041-6080(95)90031-4.
+25. McClelland J.L., McNaughton B.L., O'Reilly R.C. Why there are complementary learning systems in the hippocampus and neocortex: insights from the successes and failures of connectionist models of learning and memory. Psychological Review, 102(3), 419–457, 1995. doi:10.1037/0033-295X.102.3.419.
+26. Teyler T.J., DiScenna P. The hippocampal memory indexing theory. Behavioral Neuroscience, 100(2), 147–152, 1986. doi:10.1037/0735-7044.100.2.147.
+27. Xu W., Liang Z., Mei K., Gao H., Tan J., Zhang Y. A-MEM: Agentic Memory for LLM Agents. NeurIPS 2025. arXiv:2502.12110.
+28. Reeves B., Nass C. The Media Equation: How People Treat Computers, Television, and New Media Like Real People and Places. Cambridge University Press / CSLI Publications, 1996.
+29. Chhikara P., Khant D., Aryan S., Singh T., Yadav D. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory. 2025. arXiv:2504.19413.
+30. Rasmussen P., Paliychuk P., Beauvais T., Ryan J., Chalef D. Zep: A Temporal Knowledge Graph Architecture for Agent Memory. 2025. arXiv:2501.13956.
+31. Zacks J.M., Speer N.K., Swallow K.M., Braver T.S., Reynolds J.R. Event perception: A mind-brain perspective. Psychological Bulletin, 133(2), 273–293, 2007. doi:10.1037/0033-2909.133.2.273. ⚠️ TODO: გადასამოწმებელია (event-segmentation theory; EM-LLM-ის საფუძველი).
+32. getzep/zep-papers, GitHub Issue #5: "Revisiting Zep's 84% LoCoMo Claim: Corrected Evaluation & 58.44% Accuracy", 2025. (ვენდორთა შორის შეფასების დავა — იხ. F9.)
+33. dial481/locomo-audit, GitHub repository, 2026. (LoCoMo-ს დამოუკიდებელი აუდიტი: ოქროს პასუხების 6.4% მცდარი — იხ. F9.)
+34. [MemoryGraph pilot] "Remembering Things Makes Chatbots Sound Smarter, but Less Trustworthy". CUI 2025. doi:10.1145/3719160.3737617. ⚠️ TODO: ავტორები/ზუსტი სათაური დასაზუსტებელია.
 
 ## §2. ლიტერატურის მიმოხილვა
 
