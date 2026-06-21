@@ -95,6 +95,8 @@ All major memory benchmarks (LoCoMo, LongMemEval, MSC) are text-only. No publish
 | Instrument | What | Items | Status |
 |---|---|---|---|
 | **ASAQ** (TU Delft) — primary | 19 constructs incl. social presence, user-agent alliance, believability | 90 long / **24 short** | Validated (IJHCS 2025), CC BY 4.0, free: ii.tudelft.nl/evalquest |
+
+**Canonical DV naming (decided 2026-06-21, consistency audit):** the third primary construct is named **"perceived humanlikeness"** everywhere in our own voice (aim, RQ1, H1, glossary); it is *operationalized* via ASAQ's **believability** subscale (+ Godspeed anthropomorphism). Don't use "believability" as the DV name — only as the instrument subscale. See §3.6 hypothesis↔instrument map in draft.md.
 | Godspeed (Bartneck) | anthropomorphism, animacy, likeability, intelligence | 24 semantic differentials | Ubiquitous; psychometrically criticized — secondary |
 | WAI-SR adaptation | working alliance (bond/goal/task) | 12 | Free for research; Woebot precedent (bond at human-therapy level in 5 days) |
 | Machine Companionship Scale (Banks) | companionship-specific | TBD | Brand new 2025/26, unreplicated — optional |
@@ -115,7 +117,7 @@ Published norm for this class of system: GRACE n=21 (single session), ComPeer n=
 ## F15. Plagiarism check — exact rules for master's theses (GTU regulation)
 From `plagiarism-regulation.pdf` (Article 5.10 + annexes), verified by direct reading:
 - Tool: **Strikeplagiarism.com**, run by a faculty operator; result within ~5 working days.
-- Thresholds for a master's thesis: **SC1 ≤ 60%** (share of text containing ≥5-word phrases matching other sources), **SC2 ≤ 10%** (≥25-word matching fragments), **QC3 ≤ 30%** (quotations).
+- Thresholds for a master's thesis (Georgian-language): **SC1 ≤ 60%** (share of text containing ≥5-word phrases matching other sources), **SC2 ≤ 10%** (≥25-word matching fragments), **QC3 ≤ 25%** (quotations). [Corrected 2026-06-21 by compliance audit — was QC3 ≤30%, which is the *bachelor's* threshold.]
 - If thresholds are exceeded: work is returned, not accepted. Re-checks allowed **max 3 times total** (incl. the first); repeat checks cost 50 GEL.
 - If the operator/department suspects plagiarism on review, an appeal path exists (Article 7).
 - Author signs a declaration (Annex 2): "ნაშრომი მომზადებულია ჩემ მიერ და იგი არ არღვევს მესამე პირთა საავტორო უფლებებს" + printed/electronic versions identical.
@@ -127,6 +129,38 @@ From `plagiarism-regulation.pdf` (Article 5.10 + annexes), verified by direct re
 Zhang Y., Zhao D., Hancock J.T., Kraut R., Yang D., "The Rise of AI Companions: Interaction with AI Companions and Psychological Well-being" (arXiv:2506.12605, 2025): analysis of n=1,131 Character.AI users plus 4,664 chat sessions documents widespread companionship-oriented use of general-purpose chatbot platforms. ⚠️ Correlational study with negative well-being associations — do NOT cite for causal claims in either direction (see F8 caution and the MIT/OpenAI RCT null result).
 
 **Use in thesis:** intro §1.3 actuality, cited as [5] — phrased as „ფართოდ გავრცელებული პრაქტიკა" (widespread practice), not „მასობრივი" (mass), per fact-check correction 2026-06-12.
+
+## F17. Systematic audit (2026-06-21) — system-feasibility HARD BLOCKERS + consistency fixes ⭐
+7-agent read-only audit (consistency, citation re-verification, GTU compliance, architecture map, feasibility, adversarial blocker-verification). Both hard blockers **confirmed by independent skeptics** reading the real `voice_companion` code.
+
+### System reality (architecture map, verified)
+- **Voice pipeline:** Whisper STT → local Qwen *or* OpenAI Realtime → Kokoro TTS; turn-based, ~2–5 s latency. Conversation memory is a **volatile in-process array** (`voicePipeline.js:102`, `MAX_HISTORY=20`, wiped each session).
+- **No retrieval layer exists:** repo-wide grep for embeddings/vector/sqlite/faiss/chroma = **zero**.
+- **The "brain" the gadget talks to** is the persistent master Claude Code session JSONL (`masterSession.js`), but it is **off the voice path** (reached only from the gadget *text box*, never from `voicePipeline`) and is **CC's opaque internal context management — not an instrumentable, swappable memory module**.
+- **Single-user:** one global UUID, "Lekso" hardcoded in 4+ files, shared un-namespaced data dir, **no participant-id concept** (grep = zero), hardcoded ports 8321/8322, no electron-builder build config, macOS-native deps, 470 MB local ML stack launched by hand.
+- **Logging that does exist:** `conversation-log.jsonl`, `decision-log.jsonl`, `task-history.jsonl`, orchestrator-actions.
+
+### HARD BLOCKER 1 — agent is memoryless; brain memory opaque & unswappable (confirmed-hard)
+The IV *is* memory (A/B/C). Today only **condition A (no memory)** is supported. Profiles **B (verbatim RAG) and C (human-modeled) do not exist and have no cheap mount point** — both must be built from scratch + a new voice→memory hook. Estimate **~4–8 weeks**, and that is *before* §3.2 (the actual profile-C design) is specified. No workaround found.
+
+### HARD BLOCKER 2 — single-user; undeployable to 20 participants (confirmed-hard, *understated*)
+Needs 20 isolated participants; the app can't reach them. Escape hatches all fail (20 macOS accounts collide on hardcoded ports + each needs its own Claude Max subscription; no build config; native deps). Realistic path: parameterize participant id (~1–2 wk) **plus** build a deployable client. No cheaper option exists.
+
+### Other findings
+- **Citation re-verification: CLEAN** — all load-bearing numbers and the riskiest bib entries ([8] EM-LLM, [9] ReadAgent, [27] A-MEM, [29] Mem0, [30] Zep, [31] Zacks) re-confirmed against primary sources. Prior work held. ([34] MemoryGraph authors still TODO; MSC added as [35], confirmed.)
+- **Compliance gaps:** plagiarism declaration / Strikeplagiarism submission not tracked → now in draft.md Part 0; QC3 threshold corrected to ≤25% (master's); bibliography not yet in instruction §1.4 element order; "სურათების ნუსხა" vs instruction's "ნახაზების ნუსხა" (cosmetic).
+- **Only ~15–20% of the study's system needs exist today** (condition A + logging + ASAQ/n≈20 scaffolding). B and C — the entire IV — are greenfield (~6–10 wk) gated behind an undefined §3.2.
+
+### Open design questions exposed (author's call, before any build)
+1. **Which brain?** local Qwen vs OpenAI Realtime vs the CC master session — each differs in memory-control and per-participant cost.
+2. **§3.2 "profile C" is undefined** — salience/decay/consolidation/gist is a *name*, not a design. It is the intellectual core and must be designed *before* code.
+3. Will master/RHM/ContextManager be kept or removed for the study build?
+
+### Strategic implication
+The thesis is in good shape; the system is **not** ready to be its apparatus, and the gap is bigger than the docs imply. **Build must not start before §3.2 is designed, a brain is chosen, and Sopho signs off stage 1** — else risk 8 weeks building B/C that a direction-correction invalidates. Reconnects to the [[master-thesis]] study-vs-demo / silicon-agents decision.
+
+### Consistency fixes applied (8 issues, 2026-06-21)
+(1) humanlikeness added to H1; (2) H2a/H2b marked secondary + hypothesis↔instrument map added (§3.6); (3) initiative stated as testable only in optional D; (4) DV naming canonicalized to "perceived humanlikeness"; (5) MSC bib entry [35] added; (6) unquoted "companion-genre" fixed; (7) modality-held-constant clause added (§1.2, §2.8); (8) benchmark verbs harmonized (KA §1.1).
 
 ---
 
@@ -158,3 +192,5 @@ Zhang Y., Zhao D., Hancock J.T., Kraut R., Yang D., "The Rise of AI Companions: 
 | 2026-06-12 | §1 drafted (v1→v3): four-lens review + red-team applied; bibliography verified; defense-prep.md created |
 | 2026-06-13 | Workflow pivot: English master (`draft-en.md`) + Lekso's manual Georgian translation as the authorship/learning step; `glossary.md` made binding; EN copy not published before defense |
 | 2026-06-13 | §2 (Literature Review, Rich) drafted in EN → four-lens review + red-team applied (v2); bibliography extended [20]–[34], all verified; defense-prep Q9–Q15 added. Key fixes: event-segmentation correctly attributed to Zacks [31] not Tulving; "single-theory" framing sharpened to avoid strawman; glossary "companion" leaks quoted; voice-RCT [15] folded in as a strength |
+| 2026-06-21 | GTU-compliant skeleton built into draft.md (front/back matter + §3–§5 sub-skeletons) |
+| 2026-06-21 | **Systematic audit (F17):** 2 hard system-feasibility blockers confirmed (memoryless voice agent / opaque unswappable brain; single-user undeployable). Citation re-verification clean. 8 consistency issues fixed; MSC added [35]; QC3 threshold corrected. Build gated behind §3.2 design + brain choice + Sopho sign-off |
