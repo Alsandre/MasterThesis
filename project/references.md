@@ -162,6 +162,27 @@ The thesis is in good shape; the system is **not** ready to be its apparatus, an
 ### Consistency fixes applied (8 issues, 2026-06-21)
 (1) humanlikeness added to H1; (2) H2a/H2b marked secondary + hypothesis↔instrument map added (§3.6); (3) initiative stated as testable only in optional D; (4) DV naming canonicalized to "perceived humanlikeness"; (5) MSC bib entry [35] added; (6) unquoted "companion-genre" fixed; (7) modality-held-constant clause added (§1.2, §2.8); (8) benchmark verbs harmonized (KA §1.1).
 
+## F18. Profile-C pressure-test (2026-06-22) — the central contrast is underpowered; reframe required ⭐⭐
+5-agent adversarial pressure-test (statistician, null-skeptic, engineer, cognitive scientist → verdict). **Verdict: go-with-adjustments, 3 arms.** The dominant, unrefuted fact:
+
+### The central contrast C>B+ cannot be a confirmatory test at n≈20
+- **Effect-size priors** (grounded in Cox n=169 [11], a 142-paper social-cue meta-analysis g≈0.36, MemoryGraph): C>A is **large** (dz≈0.65–0.84); C>B small-medium (dz≈0.40); B+>B small (dz≈0.35); **C>B+ (the F5 novelty) is the SMALLEST — dz≈0.28 saturated, ~0.14–0.20 after cold-start dilution.** By construction it must be smallest: B+ already captures presence + clean gist/paraphrase, the two most robustly-supported memory wins.
+- **Power:** at n=20 within-subject, Holm-corrected, the smallest detectable dz is **~0.78 (3-arm) to ~0.86 (4-arm)**. C>B+ realized power **2–12%.** Powering it needs **n≈116–159** — infeasible for the HRI/CUI class (F12 norm 20–24). n=30 doesn't rescue it (~17%).
+- **4 arms is strictly WORSE:** the 6-comparison penalty raises every threshold and adds ~50% participant burden, buying only the C>A/B>A wins that are already near-certain.
+
+### Null-risk on C>B+ rated HIGH (independent of power)
+Memory *dynamics* (decay/salience/consolidation) over clean static memory may add little perceptual margin; forgetting is a documented **negative** interpersonal signal (an n=60 robot study: a forgetting robot lost perceived competence/trust). Consolidation is the only C-only stage with a *positive* mechanism and the slowest to accrue (cold-start).
+
+### THE REFRAME (the decision this forces — Sopho-level)
+**Stake the thesis on the curation-controlled APPARATUS + a sign-agnostic measurement, NOT on a positive C>B+.** Pre-register C>B+ as an **estimation target** (mean diff + 95% CI + dz, precision/equivalence logic); pre-register C>A and directional B+>B/C>B as the confirmatory tests where power exists. A clean **null is publishable**: "the perceptual value of 'human-like memory' is carried by gist-curation + presence, not by Ebbinghaus decay / salience / CLS consolidation" overturns a field assumption — and the B+ control was *designed* to make that interpretable. Pre-register null-handling so it reads as anticipated, not salvaged.
+
+### Adjustments (full list in profile-c-design.md §8)
+3 arms (B/B+/C, n=20, full 3 wk), A → short calibration touch · analyze the **late/post-consolidation window** (not grand mean) + log consolidation density as covariate · **warm, attributable forgetting** as a pre-registered rule (neutralizes the "being forgotten = I matter less" negative) · **amplify consolidation** (C verbalizes "I've noticed you tend to…") · add **event-sensitive + behavioral DVs + mandatory coded interviews** as null-insurance · honest theory relabeling ("composes" not "unifies" 5 theories; CLS as spirit-of-transfer; salience cited with levels-of-processing + emotional modulation; name omitted interference/reconstructive-distortion).
+
+### Build (engineer): realistic **12–16 weeks** solo (consistent with F17), deployability under-counted. **Cheapest viable cut ~8–10 wk:** keep B+ + consolidation + simple lazy decay + gist/anchor; defer salience-gating, associative pre-expansion, anchor-regex, programmatic sensitivity sweep. **Cutting B+ or consolidation breaks the central claim — off the table.**
+
+### Theory (cognitive scientist): the engine is genuinely ONE coherent object (chief virtue), B+ is its strongest methodological achievement. Hardest defense attacks: "your forgetting omits interference (the dominant human-forgetting dynamic)"; "precision-first consolidation engineers OUT the gist false-memory/schema distortion that fuzzy-trace + CLS most distinctively predict — on your primary humanlikeness axis"; "CLS is a misnomer (schema abstraction ≠ interleaved interference-protected learning)"; "salience-as-Atkinson-Shiffrin is really Craik-Lockhart depth-of-processing." → pre-empt in §3.2.
+
 ---
 
 ## Key resource links

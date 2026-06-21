@@ -104,6 +104,23 @@ Synchronous per turn: embed (≈tens of ms, = B) → **one** vector query (sqlit
 
 ---
 
+## 7.5 🔶 Pressure-test verdict (2026-06-22) — go-with-adjustments (see F18)
+
+A 5-lens adversarial pressure-test (power, null-risk, build, theory + verdict) surfaced one dominant fact: **the scientifically central contrast C>B+ is structurally underpowered (dz≈0.28 vs ~0.78–0.86 detectable at n=20; needs n≈116–159) and at HIGH null-risk.** This is a property of the effect size and study class, not a fixable defect — no feasible n rescues it, and 4 arms make it worse.
+
+**Decision forced (Sopho-level): reframe the thesis.** Primary deliverable = the curation-controlled comparative **apparatus** + a **sign-agnostic measurement** of the marginal perceptual contribution of human-memory dynamics (which may be zero). C>B+ becomes a pre-registered **estimation** target (CI + dz), not a confirmatory NHST. A clean null is a publishable contribution the B+ control was designed to make interpretable.
+
+**Adjustments to this design:**
+1. **3 arms (B/B+/C), n=20, full 3 weeks;** A demoted to a short scripted calibration touch (not a phase). B+ and consolidation are the non-negotiable floor.
+2. **Analyze the late/post-consolidation window** (or consolidation-density-moderated), not the grand within-condition mean — that's where the effect, if any, lives. Log consolidation density + per-tier retrieval share + salience write-rate as pre-registered covariates.
+3. **Warm, attributable forgetting** as a pre-registered architectural rule (deterministic): on soft-discard, signal warm partial recall ("I don't remember the details, but I know it mattered to you") — neutralizes the documented "being forgotten = I matter less" negative signal that otherwise threatens trust/intelligence DVs.
+4. **Amplify consolidation** — C verbalizes generalizations ("I've noticed you tend to…") at natural, pre-registered trigger points; optionally seed recurring themes for low-usage participants so ≥N events accrue in-window.
+5. **Add event-sensitive + behavioral DVs + mandatory coded interviews** (post-episode micro-ratings; self-disclosure depth; voluntary return/usage; ≥2-coder interview analysis of whether users *noticed and valued* dynamics) — contribution-insurance that makes a self-report null publishable as a dissociation map.
+6. **Honest theory relabeling in §3.2 prose:** "composes" not "unifies" five theories; CLS as "episodic→semantic abstraction in the spirit of CLS's transfer function" (lean on Tulving, not McClelland's mechanism); cite salience alongside levels-of-processing + emotional modulation, not pure modal-model; explicitly name omissions (interference — the dominant human-forgetting dynamic; reconstructive/schema distortion — which precision-first consolidation deliberately suppresses; temporal-order/source memory) as stated limitations + future work.
+7. **Resolve deployability BEFORE C-stage build** (~2–3 wk non-memory lift): pick one brain (OpenAI Realtime least painful to distribute), parameterize participant-id + namespaced per-condition stores, electron-builder config, manual onboarding accepted.
+
+**Build:** realistic **12–16 wk** solo; **cheapest viable cut ~8–10 wk** = B/B+/C + consolidation + simple lazy decay + gist/anchor, deferring salience-gating/associative-pre-expansion/anchor-regex/programmatic-sensitivity-sweep. Cutting B+ or consolidation is off the table.
+
 ## 7. How this differs from prior systems (defense-ready)
 - **MemoryBank/SiliconFriend [6]:** only the Ebbinghaus row (decay+reinforcement) on *verbatim* text — no gist coding, no event segmentation, no episodic→semantic consolidation.
 - **Generative Agents [10]:** recency×importance×relevance, author-stated *not* theory-grounded (ACT-R-like, F6) — no Ebbinghaus, no fuzzy-trace dual code, no CLS consolidation.
