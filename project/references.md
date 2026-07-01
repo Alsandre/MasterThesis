@@ -185,6 +185,12 @@ Memory *dynamics* (decay/salience/consolidation) over clean static memory may ad
 
 ---
 
+## F19. Full-draft review + originality pre-check (2026-07-02)
+Complete English draft (§1–§5 + abstract, ~12.3k words) reviewed. **Citation integrity clean** (all [1]–[35] used and defined, no orphans); **abstract 591 words** (within 500–800), faithful to §4's real numbers; **§4 numbers re-verified against `poc/results.json`** — all match.
+- **Consistency (fixed):** §1 predated the pivot — B+ was absent, objectives 4–5 promised an executed study, §1.4 promised a working voice system + empirical trust data. All reconciled: B+ added to objectives/hypotheses with the C>B+ estimation forward-ref; objectives 4–5 + §1.4 + §1.6 reframed as design/PoC/deferred; 5th theory (CLS) added to objective 2; "executed experiment" language softened in §1.1/§1.5.
+- **Originality pre-check: overall risk LOW–moderate, now mitigated.** NO verbatim (25+ word) matches found online; no unmarked quotes; all citations present. Only risk was ~11 theory-definition sentences in §2.2–§2.3 tracking canonical wording (Atkinson–Shiffrin, Baddeley–Hitch, Tulving, Ebbinghaus, fuzzy-trace, CLS, indexing, MemGPT, Generative Agents, ReadAgent) — all reworded into distinctive syntax (citations kept). Translation to Georgian further breaks English-source string overlap. **Strikeplagiarism itself must still be run by the faculty on the final Georgian text** (SC1≤60/SC2≤10/QC3≤25).
+- NOTE: fidelity + english review agents returned broken stubs (transient); §4 fidelity re-verified manually instead.
+
 ## Key resource links
 - MemoryBank/SiliconFriend: https://arxiv.org/abs/2305.10250 · github.com/zhongwanjun/MemoryBank-SiliconFriend
 - HippoRAG: https://arxiv.org/abs/2405.14831 · github.com/OSU-NLP-Group/HippoRAG
