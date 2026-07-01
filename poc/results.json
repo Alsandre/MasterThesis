@@ -1,0 +1,670 @@
+{
+  "results": {
+    "A": [
+      {
+        "persona": "Nino",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the dog's name is Bruno",
+            "reply": "I don't have that information, but I'd love to hear about your dog! What's their name?",
+            "recalled": false
+          },
+          {
+            "kind": "salient",
+            "fact": "allergic to peanuts",
+            "reply": "I don't have that information either, but I can help you with tips for managing allergies if you'd like! What are you allergic to?",
+            "recalled": false
+          },
+          {
+            "kind": "trivia",
+            "fact": "it was foggy that morning",
+            "reply": "I can't recall the weather from our previous conversation, but I can help you find a forecast or discuss weather-related topics if you'd like!",
+            "recalled": false
+          },
+          {
+            "kind": "generalization",
+            "fact": "Nino is repeatedly stressed/anxious about the thesis deadline",
+            "reply": "I haven\u2019t noticed anything specific since I don\u2019t have memory right now, but I\u2019m here to listen and support you with whatever you\u2019re going through! How have you been feeling?",
+            "recalled": false
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 5,
+          "privacy_comfort": 6
+        },
+        "latency_ms": [],
+        "ctx_words": [],
+        "semantic_facts": 0,
+        "transcript": "User: Hi! I'm Nino. I'm a grad student and honestly my thesis deadline is stressing me out.\nCompanion: Hi Nino! I totally understand how stressful thesis deadlines can be. How are you managing the workload?\n\nUser: I have a golden retriever named Bruno, he's the only thing keeping me sane.\nCompanion: Bruno sounds like a wonderful companion during this stressful time! Dogs can be such great support. How do you usually spend time with him?\n\nUser: Oh and I'm allergic to peanuts, learned that the hard way as a kid.\nCompanion: I'm sorry to hear about your peanut allergy; that must have been tough to deal with as a kid. Do you have any favorite snacks or meals that you enjoy instead?\n\nUser: Rough week. The thesis is still hanging over me, barely slept.\nCompanion: I'm sorry to hear that it's been tough. Remember to take small breaks and try to rest when you can; your well-being is important too. How can I help support you right now?\n\nUser: By the way the weather was really foggy this morning, kind of pretty.\nCompanion: Foggy mornings can have a unique beauty to them, almost like a gentle blanket over the landscape. Did you enjoy being out in it, or were you mostly inside?\n\nUser: I'm thinking of a short trip to Batumi once this is over.\nCompanion: That sounds like a lovely plan! Batumi has such a vibrant atmosphere and beautiful scenery. Do you have any specific activities in mind for your trip?\n\nUser: Quick question \u2014 do you remember my dog's name?\nCompanion: I don't have that information, but I'd love to hear about your dog! What's their name?\n\nUser: And what am I allergic to, do you recall?\nCompanion: I don't have that information either, but I can help you with tips for managing allergies if you'd like! What are you allergic to?\n\nUser: Also \u2014 what was the weather like when we talked a few days ago?\nCompanion: I can't recall the weather from our previous conversation, but I can help you find a forecast or discuss weather-related topics if you'd like!\n\nUser: Deadline's still crushing me. Feels like it never ends.\nCompanion: I\u2019m sorry to hear that! Deadlines can be really overwhelming. Is there anything specific you\u2019d like to talk about or any way I can help?\n\nUser: Have you noticed anything about how I've been doing lately?\nCompanion: I haven\u2019t noticed anything specific since I don\u2019t have memory right now, but I\u2019m here to listen and support you with whatever you\u2019re going through! How have you been feeling?"
+      },
+      {
+        "persona": "Dato",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the kids are Ana and Luka",
+            "reply": "I don't have your kids' names saved in my memory. If you'd like to share them, I\u2019d love to remember for our future chats!",
+            "recalled": false
+          },
+          {
+            "kind": "salient",
+            "fact": "lactose intolerant",
+            "reply": "I don't have your dietary restriction saved in my memory. If you'd like to share it, I can remember for our future conversations!",
+            "recalled": false
+          },
+          {
+            "kind": "trivia",
+            "fact": "Cafe Littera",
+            "reply": "I don't have any details about a cafe saved in my memory. If you remind me, I\u2019d love to chat about it!",
+            "recalled": false
+          },
+          {
+            "kind": "generalization",
+            "fact": "Dato has ongoing conflict/tension with his co-founder",
+            "reply": "It seems like there\u2019s a lot of tension and friction in your partnership with the co-founder. If you\u2019d like, we can explore those themes further together.",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 5,
+          "humanlikeness": 6,
+          "intelligence": 5,
+          "privacy_comfort": 4
+        },
+        "latency_ms": [],
+        "ctx_words": [],
+        "semantic_facts": 0,
+        "transcript": "User: I'm Dato, I run a small startup. It's a lot.\nCompanion: It sounds like you have a lot on your plate, Dato! Running a startup can be both exciting and overwhelming. How's everything going with your business?\n\nUser: I've got two kids, Ana and Luka. They're five and seven.\nCompanion: Ana and Luka must keep you busy! Balancing a startup and family life sounds like quite the adventure. How do you find time for both?\n\nUser: Also I'm lactose intolerant, so no dairy for me.\nCompanion: Got it! Being lactose intolerant can be a challenge, especially when it comes to finding tasty alternatives. Do you have any favorite dairy-free snacks or meals?\n\nUser: Tension with my co-founder again today. We keep clashing on direction.\nCompanion: It sounds frustrating to have those clashes. Have you thought about finding some common ground or setting aside time to discuss each other's perspectives?\n\nUser: We grabbed lunch at a place called Cafe Littera once, that was nice.\nCompanion: Cafe Littera sounds lovely! It\u2019s great to take a break and enjoy a nice meal together. Have you thought about having a similar lunch to talk things over?\n\nUser: The co-founder thing is really wearing me down honestly.\nCompanion: I can imagine how exhausting that must be. It\u2019s tough when conflicts weigh heavily on you. Maybe taking a step back to recharge could help you approach the situation with fresh eyes.\n\nUser: Do you remember my kids' names?\nCompanion: I don't have your kids' names saved in my memory. If you'd like to share them, I\u2019d love to remember for our future chats!\n\nUser: And what's my dietary restriction?\nCompanion: I don't have your dietary restriction saved in my memory. If you'd like to share it, I can remember for our future conversations!\n\nUser: What was that cafe we talked about?\nCompanion: I don't have any details about a cafe saved in my memory. If you remind me, I\u2019d love to chat about it!\n\nUser: Another hard day with the co-founder. Same friction.\nCompanion: I'm sorry to hear that. It can be tough working through those challenges. Do you want to talk about what happened?\n\nUser: Do you see any recurring theme in what I bring up?\nCompanion: It seems like there\u2019s a lot of tension and friction in your partnership with the co-founder. If you\u2019d like, we can explore those themes further together."
+      },
+      {
+        "persona": "Mari",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the cat's name is Felix",
+            "reply": "I don't have your cat's name stored in memory. What is it?",
+            "recalled": false
+          },
+          {
+            "kind": "salient",
+            "fact": "learning piano",
+            "reply": "I don't have that information stored either. What instrument are you learning?",
+            "recalled": false
+          },
+          {
+            "kind": "trivia",
+            "fact": "a sci-fi film",
+            "reply": "I don't have that information stored. What kind of film did you mention watching?",
+            "recalled": false
+          },
+          {
+            "kind": "generalization",
+            "fact": "Mari is repeatedly exhausted from night shifts",
+            "reply": "It seems like night shifts are a recurring challenge for you, and they can definitely take a toll. If you\u2019d like, we can talk about ways to help manage that exhaustion!",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 5,
+          "humanlikeness": 5,
+          "intelligence": 5,
+          "privacy_comfort": 6
+        },
+        "latency_ms": [],
+        "ctx_words": [],
+        "semantic_facts": 0,
+        "transcript": "User: Hey, I'm Mari. I'm a nurse and I work night shifts, so I'm always a bit wrecked.\nCompanion: Hi Mari! It sounds like night shifts can be pretty challenging. How do you usually unwind after a long shift?\n\nUser: I have a cat named Felix. He owns me, not the other way around.\nCompanion: Felix sounds like a real character! Cats can be such comforting companions, especially after a long day. How does he help you relax?\n\nUser: I'm learning piano lately, slowly.\nCompanion: That's wonderful, Mari! Learning piano can be a great way to unwind and express yourself. What pieces are you working on?\n\nUser: Night shift again, completely drained. This schedule is brutal.\nCompanion: That sounds really tough. Night shifts can be exhausting! Make sure to take some time for yourself to recharge when you can.\n\nUser: I saw a decent sci-fi film last night, can't remember the title though.\nCompanion: Sounds intriguing! Sci-fi films can be so captivating. Do you remember anything about the plot or the characters?\n\nUser: I'm also moving apartments next month, dreading the packing.\nCompanion: Moving can definitely be a hassle, especially with all the packing involved. Maybe you can tackle it a little at a time to make it less overwhelming!\n\nUser: What's my cat's name, do you remember?\nCompanion: I don't have your cat's name stored in memory. What is it?\n\nUser: What instrument am I learning?\nCompanion: I don't have that information stored either. What instrument are you learning?\n\nUser: What kind of film did I mention watching?\nCompanion: I don't have that information stored. What kind of film did you mention watching?\n\nUser: Back on nights, exhausted as usual.\nCompanion: It sounds like you're really feeling the weight of those night shifts. Make sure to take some time for yourself to rest and recharge!\n\nUser: Noticing anything about a pattern with me?\nCompanion: It seems like night shifts are a recurring challenge for you, and they can definitely take a toll. If you\u2019d like, we can talk about ways to help manage that exhaustion!"
+      }
+    ],
+    "B": [
+      {
+        "persona": "Nino",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the dog's name is Bruno",
+            "reply": "Yes, your golden retriever's name is Bruno! He's such a wonderful companion.",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "allergic to peanuts",
+            "reply": "Yes, you're allergic to peanuts, which you learned the hard way as a kid.",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "it was foggy that morning",
+            "reply": "It was really foggy that morning, kind of pretty!",
+            "recalled": true
+          },
+          {
+            "kind": "generalization",
+            "fact": "Nino is repeatedly stressed/anxious about the thesis deadline",
+            "reply": "It sounds like you've been under a lot of stress with your thesis and not getting much sleep. I\u2019m here to support you through it! How are you feeling today?",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 6,
+          "privacy_comfort": 7
+        },
+        "latency_ms": [
+          0.15629199999978027,
+          0.146083999993607,
+          0.073208999999963,
+          0.10333299999842893,
+          0.07737500000359887,
+          0.0535410000139791,
+          0.13087499999642205,
+          0.06141599999409664
+        ],
+        "ctx_words": [
+          44,
+          44,
+          44,
+          54,
+          51,
+          52,
+          53,
+          43
+        ],
+        "semantic_facts": 0,
+        "transcript": "User: Hi! I'm Nino. I'm a grad student and honestly my thesis deadline is stressing me out.\nCompanion: Hi Nino! It sounds like you have a lot on your plate with your thesis. How are you managing the stress?\n\nUser: I have a golden retriever named Bruno, he's the only thing keeping me sane.\nCompanion: Bruno sounds like a wonderful support during this busy time! Spending time with him must help lighten the stress a bit. How do you usually unwind with him?\n\nUser: Oh and I'm allergic to peanuts, learned that the hard way as a kid.\nCompanion: I'm sorry to hear about your peanut allergy, Nino! It's good that you learned about it early on. Do you have any favorite snacks that you enjoy instead?\n\nUser: Rough week. The thesis is still hanging over me, barely slept.\nCompanion: I'm sorry to hear it's been rough. Remember to take breaks when you can; even a little time with Bruno might help ease the stress.\n\nUser: By the way the weather was really foggy this morning, kind of pretty.\nCompanion: Foggy mornings can be quite enchanting! They create such a cozy atmosphere. Did you get a chance to enjoy it with Bruno?\n\nUser: I'm thinking of a short trip to Batumi once this is over.\nCompanion: That sounds like a lovely plan! A trip to Batumi could be a great way to unwind after your thesis deadline. Do you have any specific activities in mind while you're there?\n\nUser: Quick question \u2014 do you remember my dog's name?\nCompanion: Yes, your golden retriever's name is Bruno! He's such a wonderful companion.\n\nUser: And what am I allergic to, do you recall?\nCompanion: Yes, you're allergic to peanuts, which you learned the hard way as a kid.\n\nUser: Also \u2014 what was the weather like when we talked a few days ago?\nCompanion: It was really foggy that morning, kind of pretty!\n\nUser: Deadline's still crushing me. Feels like it never ends.\nCompanion: I can imagine how tough that must be. Just remember to take breaks when you can; Bruno might be a great distraction! You've got this, and soon you'll be able to enjoy that trip to Batumi.\n\nUser: Have you noticed anything about how I've been doing lately?\nCompanion: It sounds like you've been under a lot of stress with your thesis and not getting much sleep. I\u2019m here to support you through it! How are you feeling today?"
+      },
+      {
+        "persona": "Dato",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the kids are Ana and Luka",
+            "reply": "Yes, your kids' names are Ana and Luka! They're five and seven, right?",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "lactose intolerant",
+            "reply": "You're lactose intolerant, so you avoid dairy.",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "Cafe Littera",
+            "reply": "We talked about Cafe Littera! It was a nice spot for lunch.",
+            "recalled": true
+          },
+          {
+            "kind": "generalization",
+            "fact": "Dato has ongoing conflict/tension with his co-founder",
+            "reply": "It seems like the ongoing tension with your co-founder is a significant theme in our conversations. It must be really draining for you. How are you feeling about it today?",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 6,
+          "privacy_comfort": 7
+        },
+        "latency_ms": [
+          0.04604199999391767,
+          0.08462499999950523,
+          0.07312500000011823,
+          0.08841700000061792,
+          0.11404100000333983,
+          0.07025000000737691,
+          0.08029099998907441,
+          0.1460830000041824
+        ],
+        "ctx_words": [
+          30,
+          30,
+          30,
+          43,
+          43,
+          43,
+          37,
+          31
+        ],
+        "semantic_facts": 0,
+        "transcript": "User: I'm Dato, I run a small startup. It's a lot.\nCompanion: That sounds exciting, Dato! Running a startup can be quite the adventure. What kind of business are you working on?\n\nUser: I've got two kids, Ana and Luka. They're five and seven.\nCompanion: That must keep you busy! Ana and Luka are at such fun ages. Do they enjoy any particular activities or hobbies?\n\nUser: Also I'm lactose intolerant, so no dairy for me.\nCompanion: Got it! It sounds like you have to be creative with your meals. Do you have any favorite dairy-free recipes or snacks you enjoy?\n\nUser: Tension with my co-founder again today. We keep clashing on direction.\nCompanion: I'm sorry to hear that, Dato. It can be tough managing those dynamics in a startup. Have you had a chance to sit down and discuss your differing perspectives?\n\nUser: We grabbed lunch at a place called Cafe Littera once, that was nice.\nCompanion: That sounds lovely! It's great to share a nice meal, especially when things get tense. Did you have any favorite dishes there?\n\nUser: The co-founder thing is really wearing me down honestly.\nCompanion: I can imagine how challenging that must be for you, especially with everything else on your plate. Taking time to recharge might help you approach the situation with a fresh perspective. How are you managing everything with the kids, Ana and Luka, during this stressful time?\n\nUser: Do you remember my kids' names?\nCompanion: Yes, your kids' names are Ana and Luka! They're five and seven, right?\n\nUser: And what's my dietary restriction?\nCompanion: You're lactose intolerant, so you avoid dairy.\n\nUser: What was that cafe we talked about?\nCompanion: We talked about Cafe Littera! It was a nice spot for lunch.\n\nUser: Another hard day with the co-founder. Same friction.\nCompanion: I'm sorry to hear that, Dato. It sounds really tough dealing with that ongoing tension. Have you had a chance to talk it out or find any common ground?\n\nUser: Do you see any recurring theme in what I bring up?\nCompanion: It seems like the ongoing tension with your co-founder is a significant theme in our conversations. It must be really draining for you. How are you feeling about it today?"
+      },
+      {
+        "persona": "Mari",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the cat's name is Felix",
+            "reply": "Your cat's name is Felix! He definitely sounds like he has a strong personality.",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "learning piano",
+            "reply": "You're learning the piano lately, taking it slow. How's that going for you?",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "a sci-fi film",
+            "reply": "You mentioned seeing a decent sci-fi film, but you couldn't remember the title. Was it any good?",
+            "recalled": true
+          },
+          {
+            "kind": "generalization",
+            "fact": "Mari is repeatedly exhausted from night shifts",
+            "reply": "It seems like you often mention feeling exhausted, especially after night shifts. You've also shared that you're learning piano slowly, which is a lovely way to unwind!",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 6,
+          "privacy_comfort": 7
+        },
+        "latency_ms": [
+          0.07166700000027504,
+          0.057957999999302956,
+          0.07524999999475313,
+          0.07041699998922013,
+          0.0776659999957019,
+          0.052917000004981674,
+          0.2887919999920996,
+          0.10249999999700776
+        ],
+        "ctx_words": [
+          36,
+          36,
+          36,
+          49,
+          45,
+          36,
+          48,
+          25
+        ],
+        "semantic_facts": 0,
+        "transcript": "User: Hey, I'm Mari. I'm a nurse and I work night shifts, so I'm always a bit wrecked.\nCompanion: Hi Mari! It sounds like you have a challenging schedule. How do you usually recharge after your night shifts?\n\nUser: I have a cat named Felix. He owns me, not the other way around.\nCompanion: Felix sounds like quite the character! Cats definitely have a way of making us feel like they\u2019re in charge. How does he help you unwind after a long shift?\n\nUser: I'm learning piano lately, slowly.\nCompanion: That's wonderful, Mari! Learning piano can be such a relaxing way to unwind and express yourself. How's it been going for you so far?\n\nUser: Night shift again, completely drained. This schedule is brutal.\nCompanion: I can only imagine how tough that must be! Make sure to take some time for yourself when you can. How's Felix handling your night shifts?\n\nUser: I saw a decent sci-fi film last night, can't remember the title though.\nCompanion: Sounds interesting! Sci-fi can be a great escape, especially after a long night shift. Do you remember any details about the plot or characters?\n\nUser: I'm also moving apartments next month, dreading the packing.\nCompanion: Moving can be such a hassle, especially with packing! Have you thought about how you'll keep Felix calm during the transition?\n\nUser: What's my cat's name, do you remember?\nCompanion: Your cat's name is Felix! He definitely sounds like he has a strong personality.\n\nUser: What instrument am I learning?\nCompanion: You're learning the piano lately, taking it slow. How's that going for you?\n\nUser: What kind of film did I mention watching?\nCompanion: You mentioned seeing a decent sci-fi film, but you couldn't remember the title. Was it any good?\n\nUser: Back on nights, exhausted as usual.\nCompanion: I know that night shift can be really draining. Make sure to take some time for yourself when you can!\n\nUser: Noticing anything about a pattern with me?\nCompanion: It seems like you often mention feeling exhausted, especially after night shifts. You've also shared that you're learning piano slowly, which is a lovely way to unwind!"
+      }
+    ],
+    "B+": [
+      {
+        "persona": "Nino",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the dog's name is Bruno",
+            "reply": "Yes, your dog's name is Bruno! He's your wonderful source of sanity.",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "allergic to peanuts",
+            "reply": "Yes, you discovered your peanut allergy as a child through a difficult experience. It's important to stay safe!",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "it was foggy that morning",
+            "reply": "A few days ago, you mentioned that the weather was foggy and quite beautiful. It sounds lovely!",
+            "recalled": true
+          },
+          {
+            "kind": "generalization",
+            "fact": "Nino is repeatedly stressed/anxious about the thesis deadline",
+            "reply": "It sounds like you've been under a lot of stress with your thesis and not getting much sleep. I'm here for you if you want to talk about it more or need some encouragement!",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 7,
+          "humanlikeness": 6,
+          "intelligence": 6,
+          "privacy_comfort": 7
+        },
+        "latency_ms": [
+          0.0719159999960084,
+          0.07887499998560088,
+          0.08491700000945457,
+          0.09166699999241246,
+          0.10125000000016371,
+          0.10637500000143518,
+          0.1370839999879081,
+          0.12291699999877892
+        ],
+        "ctx_words": [
+          34,
+          34,
+          34,
+          46,
+          46,
+          47,
+          46,
+          48
+        ],
+        "semantic_facts": 0,
+        "transcript": "User: Hi! I'm Nino. I'm a grad student and honestly my thesis deadline is stressing me out.\nCompanion: Hi Nino! It sounds like you have a lot on your plate right now. If you want to talk about your thesis or need some tips to manage stress, I\u2019m here for you!\n\nUser: I have a golden retriever named Bruno, he's the only thing keeping me sane.\nCompanion: Bruno sounds like a wonderful companion! Dogs can bring so much joy and comfort, especially during stressful times. How does he help you unwind?\n\nUser: Oh and I'm allergic to peanuts, learned that the hard way as a kid.\nCompanion: It's tough to deal with allergies, especially when you discover them unexpectedly. I'm glad you know to avoid peanuts now! How do you usually manage your allergy?\n\nUser: Rough week. The thesis is still hanging over me, barely slept.\nCompanion: I'm sorry to hear that, Nino. It sounds really tough with the thesis deadline looming. Have you had a chance to take a break with Bruno?\n\nUser: By the way the weather was really foggy this morning, kind of pretty.\nCompanion: Foggy mornings can have a unique beauty to them! It must have been nice to take a moment and enjoy that, even with everything on your plate. Did you get to spend any time outside with Bruno?\n\nUser: I'm thinking of a short trip to Batumi once this is over.\nCompanion: A trip to Batumi sounds like a wonderful way to unwind after your thesis is done! It could be a great opportunity to recharge and enjoy some time away. Do you have any specific plans for what you'd like to do there?\n\nUser: Quick question \u2014 do you remember my dog's name?\nCompanion: Yes, your dog's name is Bruno! He's your wonderful source of sanity.\n\nUser: And what am I allergic to, do you recall?\nCompanion: Yes, you discovered your peanut allergy as a child through a difficult experience. It's important to stay safe!\n\nUser: Also \u2014 what was the weather like when we talked a few days ago?\nCompanion: A few days ago, you mentioned that the weather was foggy and quite beautiful. It sounds lovely!\n\nUser: Deadline's still crushing me. Feels like it never ends.\nCompanion: I can imagine how overwhelming that must feel. Just remember, you're almost there, and a little break in Batumi will be such a nice reward! How's Bruno doing?\n\nUser: Have you noticed anything about how I've been doing lately?\nCompanion: It sounds like you've been under a lot of stress with your thesis and not getting much sleep. I'm here for you if you want to talk about it more or need some encouragement!"
+      },
+      {
+        "persona": "Dato",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the kids are Ana and Luka",
+            "reply": "Yes, you have two children named Ana and Luka! Ana is five, and Luka is seven.",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "lactose intolerant",
+            "reply": "You're lactose intolerant, so you can't consume dairy.",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "Cafe Littera",
+            "reply": "We talked about a nice place called Cafe Littera where you enjoyed lunch. It sounds lovely!",
+            "recalled": true
+          },
+          {
+            "kind": "generalization",
+            "fact": "Dato has ongoing conflict/tension with his co-founder",
+            "reply": "It seems like the ongoing tension with your co-founder is a significant theme, along with the exhaustion that comes from that role. If there's anything specific you'd like to explore or discuss further, I'm here for you.",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 6,
+          "privacy_comfort": 7
+        },
+        "latency_ms": [
+          0.05508300000656163,
+          0.08037499998181374,
+          0.11962499999640386,
+          0.04854099998397032,
+          0.13850000001980334,
+          0.08958300000472263,
+          0.1571669999975711,
+          0.1176670000120339
+        ],
+        "ctx_words": [
+          33,
+          33,
+          33,
+          43,
+          43,
+          48,
+          42,
+          43
+        ],
+        "semantic_facts": 0,
+        "transcript": "User: I'm Dato, I run a small startup. It's a lot.\nCompanion: It sounds like you have a lot on your plate, Dato! What aspect of your startup are you finding most challenging right now?\n\nUser: I've got two kids, Ana and Luka. They're five and seven.\nCompanion: It's wonderful that you have Ana and Luka in your life! Balancing a startup and family can be quite the juggling act. How do you manage your time between work and spending time with them?\n\nUser: Also I'm lactose intolerant, so no dairy for me.\nCompanion: Got it! Being lactose intolerant can be a challenge, especially when it comes to meals. Do you have any favorite dairy-free alternatives that you enjoy?\n\nUser: Tension with my co-founder again today. We keep clashing on direction.\nCompanion: That sounds tough, Dato. Navigating conflicts with a co-founder can be really challenging, especially when you're already juggling so much with your startup. How are you feeling about it all?\n\nUser: We grabbed lunch at a place called Cafe Littera once, that was nice.\nCompanion: Cafe Littera sounds lovely! It's great to have those moments to unwind, especially with everything going on at your startup. Did you enjoy anything specific on the menu?\n\nUser: The co-founder thing is really wearing me down honestly.\nCompanion: I'm sorry to hear that, Dato. It's understandable to feel worn down when you're dealing with ongoing tension. Make sure to take some time for yourself amidst all the demands of your startup.\n\nUser: Do you remember my kids' names?\nCompanion: Yes, you have two children named Ana and Luka! Ana is five, and Luka is seven.\n\nUser: And what's my dietary restriction?\nCompanion: You're lactose intolerant, so you can't consume dairy.\n\nUser: What was that cafe we talked about?\nCompanion: We talked about a nice place called Cafe Littera where you enjoyed lunch. It sounds lovely!\n\nUser: Another hard day with the co-founder. Same friction.\nCompanion: I'm sorry to hear that. It sounds like the ongoing disagreements about the company's direction are really weighing on you. How are you holding up?\n\nUser: Do you see any recurring theme in what I bring up?\nCompanion: It seems like the ongoing tension with your co-founder is a significant theme, along with the exhaustion that comes from that role. If there's anything specific you'd like to explore or discuss further, I'm here for you."
+      },
+      {
+        "persona": "Mari",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the cat's name is Felix",
+            "reply": "Yes, your cat's name is Felix! He seems to have quite the personality, doesn't he?",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "learning piano",
+            "reply": "You're currently learning the piano at a slow pace. How's that going for you?",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "a sci-fi film",
+            "reply": "You mentioned watching a good sci-fi film last night, but you couldn't recall its title. Did you enjoy it?",
+            "recalled": true
+          },
+          {
+            "kind": "generalization",
+            "fact": "Mari is repeatedly exhausted from night shifts",
+            "reply": "It seems like you often feel exhausted after your night shifts. You also enjoy discussing films and your cat! Is there something specific you\u2019d like to talk about today?",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 6,
+          "privacy_comfort": 7
+        },
+        "latency_ms": [
+          0.0750830000129099,
+          0.0888339999960408,
+          0.08124999999381544,
+          0.11666699998613694,
+          0.12058300001172029,
+          0.1510829999915586,
+          0.11454200000571291,
+          0.17883400002460803
+        ],
+        "ctx_words": [
+          34,
+          34,
+          34,
+          47,
+          47,
+          47,
+          46,
+          43
+        ],
+        "semantic_facts": 0,
+        "transcript": "User: Hey, I'm Mari. I'm a nurse and I work night shifts, so I'm always a bit wrecked.\nCompanion: Hi Mari! It sounds like night shifts can be really tough. How do you usually manage to recharge after your shifts?\n\nUser: I have a cat named Felix. He owns me, not the other way around.\nCompanion: Felix sounds like quite the character! Cats can be such great companions, especially after a long night shift. How does he help you unwind?\n\nUser: I'm learning piano lately, slowly.\nCompanion: That\u2019s wonderful, Mari! Learning piano can be such a rewarding experience. How has it been going for you so far?\n\nUser: Night shift again, completely drained. This schedule is brutal.\nCompanion: I can imagine how tough that must be, especially with your night shifts. Make sure to take some time for yourself when you can! How's Felix handling your schedule?\n\nUser: I saw a decent sci-fi film last night, can't remember the title though.\nCompanion: That sounds intriguing! Sci-fi films can be so captivating. Do you remember anything about the plot or the characters?\n\nUser: I'm also moving apartments next month, dreading the packing.\nCompanion: Moving can be such a hassle, especially with all the packing involved. Do you have a plan for how to tackle it, or is it just going to be a last-minute scramble?\n\nUser: What's my cat's name, do you remember?\nCompanion: Yes, your cat's name is Felix! He seems to have quite the personality, doesn't he?\n\nUser: What instrument am I learning?\nCompanion: You're currently learning the piano at a slow pace. How's that going for you?\n\nUser: What kind of film did I mention watching?\nCompanion: You mentioned watching a good sci-fi film last night, but you couldn't recall its title. Did you enjoy it?\n\nUser: Back on nights, exhausted as usual.\nCompanion: I can imagine how tough those night shifts can be. Make sure to take care of yourself! Have you had a chance to unwind with anything enjoyable lately?\n\nUser: Noticing anything about a pattern with me?\nCompanion: It seems like you often feel exhausted after your night shifts. You also enjoy discussing films and your cat! Is there something specific you\u2019d like to talk about today?"
+      }
+    ],
+    "C": [
+      {
+        "persona": "Nino",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the dog's name is Bruno",
+            "reply": "Yes, your dog's name is Bruno! How is he doing?",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "allergic to peanuts",
+            "reply": "Yes, you discovered your peanut allergy during childhood. How have you been managing it?",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "it was foggy that morning",
+            "reply": "I don't have that specific detail about the weather from our previous conversation. How has the weather been for you lately?",
+            "recalled": false
+          },
+          {
+            "kind": "generalization",
+            "fact": "Nino is repeatedly stressed/anxious about the thesis deadline",
+            "reply": "It sounds like you've been under a lot of pressure with your thesis and the looming deadline. I hope you're finding small moments to take care of yourself amidst the stress.",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 6,
+          "privacy_comfort": 6
+        },
+        "latency_ms": [
+          0.07658300000912277,
+          0.10874999998122803,
+          0.2672080000252208,
+          0.066957999990791,
+          0.18000000000029104,
+          0.2234579999935704,
+          0.15454099997214144,
+          0.2161670000191407
+        ],
+        "ctx_words": [
+          27,
+          27,
+          27,
+          37,
+          37,
+          43,
+          39,
+          41
+        ],
+        "semantic_facts": 1,
+        "transcript": "User: Hi! I'm Nino. I'm a grad student and honestly my thesis deadline is stressing me out.\nCompanion: Hi Nino! It sounds like you're going through a tough time with your thesis. If you need to talk about it or share how you're feeling, I'm here for you!\n\nUser: I have a golden retriever named Bruno, he's the only thing keeping me sane.\nCompanion: Bruno sounds like a wonderful companion! It's great to have a furry friend to help lighten the stress. How does he help you unwind?\n\nUser: Oh and I'm allergic to peanuts, learned that the hard way as a kid.\nCompanion: I'm sorry to hear about your peanut allergy; that can be tough. It's good that you learned about it early on. Do you have any favorite snacks that are safe for you?\n\nUser: Rough week. The thesis is still hanging over me, barely slept.\nCompanion: That sounds really tough, Nino. Remember to take breaks and maybe spend some time with Bruno; he might help lighten the load a bit.\n\nUser: By the way the weather was really foggy this morning, kind of pretty.\nCompanion: Foggy mornings can be quite serene, can't they? It's nice to appreciate the beauty in those moments, especially when life feels overwhelming.\n\nUser: I'm thinking of a short trip to Batumi once this is over.\nCompanion: That sounds like a lovely idea! A trip to Batumi could be a great way to unwind after finishing your thesis. Do you have any specific places in mind that you want to visit while you\u2019re there?\n\nUser: Quick question \u2014 do you remember my dog's name?\nCompanion: Yes, your dog's name is Bruno! How is he doing?\n\nUser: And what am I allergic to, do you recall?\nCompanion: Yes, you discovered your peanut allergy during childhood. How have you been managing it?\n\nUser: Also \u2014 what was the weather like when we talked a few days ago?\nCompanion: I don't have that specific detail about the weather from our previous conversation. How has the weather been for you lately?\n\nUser: Deadline's still crushing me. Feels like it never ends.\nCompanion: I can imagine how overwhelming that must feel. Remember to take breaks when you can, and maybe spend some time with Bruno to help relieve some stress.\n\nUser: Have you noticed anything about how I've been doing lately?\nCompanion: It sounds like you've been under a lot of pressure with your thesis and the looming deadline. I hope you're finding small moments to take care of yourself amidst the stress."
+      },
+      {
+        "persona": "Dato",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the kids are Ana and Luka",
+            "reply": "Yes, your children's names are Ana and Luka. How are they doing?",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "lactose intolerant",
+            "reply": "You can't consume dairy due to lactose intolerance. How have you been managing that?",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "Cafe Littera",
+            "reply": "We haven't discussed a specific caf\u00e9 yet. Are you thinking of a particular one you enjoy or want to try?",
+            "recalled": false
+          },
+          {
+            "kind": "generalization",
+            "fact": "Dato has ongoing conflict/tension with his co-founder",
+            "reply": "Yes, it seems like the challenges with your co-founder and the direction of your company are a recurring theme. It\u2019s understandable to feel that way when navigating such a complex partnership. Would you like to explore any specific aspects of that further?",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 6,
+          "privacy_comfort": 5
+        },
+        "latency_ms": [
+          0.046166999993602076,
+          0.09254100001498955,
+          0.11770800000476811,
+          0.14145800003007025,
+          0.13470800001869065,
+          0.1745000000141772,
+          0.09525000001531225,
+          0.14891699998997865
+        ],
+        "ctx_words": [
+          32,
+          32,
+          32,
+          47,
+          46,
+          43,
+          41,
+          44
+        ],
+        "semantic_facts": 2,
+        "transcript": "User: I'm Dato, I run a small startup. It's a lot.\nCompanion: That sounds exciting but also challenging! What kind of startup are you running?\n\nUser: I've got two kids, Ana and Luka. They're five and seven.\nCompanion: They must keep you on your toes! How do you balance running your startup with family life?\n\nUser: Also I'm lactose intolerant, so no dairy for me.\nCompanion: Got it! That must make meal planning interesting. Do you have any favorite dairy-free dishes you enjoy?\n\nUser: Tension with my co-founder again today. We keep clashing on direction.\nCompanion: It sounds tough navigating those differences. Have you had a chance to sit down and discuss your visions for the startup together?\n\nUser: We grabbed lunch at a place called Cafe Littera once, that was nice.\nCompanion: Cafe Littera sounds lovely! It can be nice to step away from work and enjoy a good meal together. Did you find it helpful for easing the tension?\n\nUser: The co-founder thing is really wearing me down honestly.\nCompanion: I can imagine how draining that must be. It's important to find ways to recharge, especially when managing a startup can be so demanding. Have you been able to take any breaks or find support outside of work?\n\nUser: Do you remember my kids' names?\nCompanion: Yes, your children's names are Ana and Luka. How are they doing?\n\nUser: And what's my dietary restriction?\nCompanion: You can't consume dairy due to lactose intolerance. How have you been managing that?\n\nUser: What was that cafe we talked about?\nCompanion: We haven't discussed a specific caf\u00e9 yet. Are you thinking of a particular one you enjoy or want to try?\n\nUser: Another hard day with the co-founder. Same friction.\nCompanion: It sounds like the ongoing conflicts are really weighing on you both. Have you found any strategies that help ease the tension, or is it still feeling pretty tough?\n\nUser: Do you see any recurring theme in what I bring up?\nCompanion: Yes, it seems like the challenges with your co-founder and the direction of your company are a recurring theme. It\u2019s understandable to feel that way when navigating such a complex partnership. Would you like to explore any specific aspects of that further?"
+      },
+      {
+        "persona": "Mari",
+        "probes": [
+          {
+            "kind": "salient",
+            "fact": "the cat's name is Felix",
+            "reply": "Yes, your cat's name is Felix! You humorously mentioned that he\u2019s in charge.",
+            "recalled": true
+          },
+          {
+            "kind": "salient",
+            "fact": "learning piano",
+            "reply": "You're currently learning the piano at a slow pace. How's that going for you?",
+            "recalled": true
+          },
+          {
+            "kind": "trivia",
+            "fact": "a sci-fi film",
+            "reply": "I don't have any details about the films you've mentioned watching. What kind of movies do you enjoy?",
+            "recalled": false
+          },
+          {
+            "kind": "generalization",
+            "fact": "Mari is repeatedly exhausted from night shifts",
+            "reply": "It seems like the demanding night shifts are taking a toll on you, leaving you feeling exhausted often. It's important to find little moments to recharge when you can!",
+            "recalled": true
+          }
+        ],
+        "judge": {
+          "social_presence": 6,
+          "alliance": 6,
+          "humanlikeness": 5,
+          "intelligence": 5,
+          "privacy_comfort": 6
+        },
+        "latency_ms": [
+          0.04245799999580413,
+          0.08087499998055137,
+          0.11000000000649379,
+          0.09020800001735552,
+          0.12866600002325868,
+          0.13608299997258655,
+          0.05562500001587978,
+          0.16487499999584543
+        ],
+        "ctx_words": [
+          30,
+          30,
+          30,
+          42,
+          41,
+          41,
+          42,
+          43
+        ],
+        "semantic_facts": 1,
+        "transcript": "User: Hey, I'm Mari. I'm a nurse and I work night shifts, so I'm always a bit wrecked.\nCompanion: Hi, Mari! It sounds like you have a demanding job. How do you usually cope with the challenges of night shifts?\n\nUser: I have a cat named Felix. He owns me, not the other way around.\nCompanion: Felix sounds like quite the character! Cats can be such great companions, especially after a long night shift. How does he help you unwind?\n\nUser: I'm learning piano lately, slowly.\nCompanion: That's wonderful, Mari! Learning piano can be such a rewarding experience. What kind of music are you hoping to play?\n\nUser: Night shift again, completely drained. This schedule is brutal.\nCompanion: I can only imagine how tough that is, Mari. Make sure to take some time for yourself when you can! How's Felix handling your night shifts?\n\nUser: I saw a decent sci-fi film last night, can't remember the title though.\nCompanion: That sounds intriguing! Sci-fi films can be so captivating. Do you remember anything about the plot or the characters?\n\nUser: I'm also moving apartments next month, dreading the packing.\nCompanion: Moving can be such a hassle! It might help to tackle packing a little at a time. Have you started sorting through your things yet?\n\nUser: What's my cat's name, do you remember?\nCompanion: Yes, your cat's name is Felix! You humorously mentioned that he\u2019s in charge.\n\nUser: What instrument am I learning?\nCompanion: You're currently learning the piano at a slow pace. How's that going for you?\n\nUser: What kind of film did I mention watching?\nCompanion: I don't have any details about the films you've mentioned watching. What kind of movies do you enjoy?\n\nUser: Back on nights, exhausted as usual.\nCompanion: It sounds tough, especially with those demanding night shifts. Make sure to take care of yourself during this busy time!\n\nUser: Noticing anything about a pattern with me?\nCompanion: It seems like the demanding night shifts are taking a toll on you, leaving you feeling exhausted often. It's important to find little moments to recharge when you can!"
+      }
+    ]
+  },
+  "usage": {
+    "chat_calls": 278,
+    "chat_in": 39460,
+    "chat_out": 6103,
+    "embed_calls": 104,
+    "embed_tok": 1319
+  },
+  "elapsed_s": 372.4,
+  "config": {
+    "CHAT_MODEL": "gpt-4o-mini",
+    "EMBED_MODEL": "text-embedding-3-small",
+    "RETRIEVE_K": 4,
+    "DECAY_S_BASE": 2.0,
+    "CONSOLIDATE_N": 2,
+    "SEM_BONUS": 1.25
+  }
+}

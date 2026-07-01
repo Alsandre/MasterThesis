@@ -9,6 +9,22 @@
 
 ---
 
+## Abstract
+
+Conversational systems built on large language models achieve human-comparable fluency within a single session but fail to sustain a continuous, evolving relationship across sessions, because they lack durable long-term memory. Evidence from long-term-memory benchmarks and from users of so-called "companion" applications indicates that this failure is both technical — models lag human recall by wide margins, worst of all on temporal reasoning — and relational, in that memory failure and abrupt identity discontinuity are documented to break a user's sense of relationship. Yet the two literatures that bear on the problem remain separate: memory architectures are evaluated on factual-accuracy metrics, while studies of perceived relationship treat memory as a single on/off manipulation on one system. In the literature available to us, no controlled study compares memory architectures grounded in different human-memory theories with respect to user-perceived social constructs, and none situates such a comparison in the voice modality.
+
+This thesis addresses that gap through design, implementation, and evaluation methodology. It presents Profile C, a long-term memory architecture for a voice interlocutor that composes five cognitive-memory theories — the Atkinson–Shiffrin multi-store model, the Ebbinghaus forgetting curve, Tulving's episodic–semantic distinction, fuzzy-trace theory, and the complementary learning systems framework — into one lifecycle: salience-gated encoding, gist-and-anchor representation, lazy Ebbinghaus decay with spaced-repetition reinforcement, offline episodic-to-semantic consolidation, and gist-first retrieval. Each mechanism is tied to an observable behavioral signature rather than to a claim of psychological fidelity.
+
+The central methodological contribution is a curation-controlled experimental design. Profile C is compared not only against a no-memory baseline (A) and verbatim retrieval-augmented memory (B), but against an active control, B+, which receives the same offline language-model gisting and cleanup as C yet none of its human-memory dynamics — no decay, no salience-gating, no consolidation. Because the conditions share an identical inference-time envelope, the B+ control isolates the effect of the human-memory dynamics from the generic legibility gains of language-model curation, the confound that would otherwise render any advantage of a "human-like" memory uninterpretable. An a-priori power analysis shows that the resulting central contrast, C versus B+, is by construction the smallest effect in the design and is not confirmable at the sample size normative for this class of study; it is therefore pre-registered as an estimation target, and a precisely-estimated null is treated as a substantive result that the B+ control was purpose-built to make interpretable.
+
+A proof-of-concept harness implements all four conditions over multi-session dialogues and is evaluated on a technical and a simulated-user track. Technically, the mechanisms behave as designed and are distinguishable: only Profile C forgets gracefully and selectively — retaining salient facts while letting trivia fade — and only C consolidates recurring episodes into durable semantic knowledge, at a leaner context footprint and at latency parity with the baselines. In simulation, Profile C does not exceed the B+ control on any perceived construct, corroborating the prediction that human-memory dynamics add little perceptual margin over clean curation. Most consequentially, on the one construct with a strong replicated human effect — the intrusiveness of verbatim recall — the simulated judge produced the opposite ordering to the human literature, demonstrating that a language-model judge cannot substitute for human perception on stakes-dependent constructs, and thereby establishing the necessity of the human-subject study that the thesis fully specifies as future work.
+
+The thesis contributes a cognitively-grounded memory architecture, a reusable curation-controlled methodology for separating memory dynamics from curation, and empirical proof-of-concept evidence for both — framing the human-subject evaluation as rigorous, pre-registered future work.
+
+**Keywords:** conversational AI, long-term memory, human memory models, social presence, voice interlocutor, evaluation methodology.
+
+---
+
 ## §1. Introduction
 
 ### 1.1 Research problem
@@ -245,6 +261,92 @@ The methodology carries three classes of limitation, stated plainly.
 *Inferential limitations.* Even when executed, the human protocol is not powered to confirm the central C > B+ contrast (§3.1, §3.5c); that contrast is an estimation target, and the thesis's confirmatory claims are confined to the better-powered comparisons. The single-language, single-modality scope (English, voice-only) established in §1 bounds external validity to the tested condition.
 
 *Theory-fidelity limitations.* As detailed in §3.2, Profile C **composes** rather than unifies its five source theories, and it makes three named omissions: it omits **interference**, the dominant dynamic of human forgetting, modeling only time-and-salience decay; its precision-first consolidation **deliberately suppresses the reconstructive and schema-driven distortion** that fuzzy-trace and complementary learning systems most distinctively predict, trading cognitive realism on the humanlikeness axis for the safety of not asserting confident false generalizations; and it models temporal-order and source memory only weakly. The complementary-learning-systems grounding is invoked in the *spirit of its episodic-to-semantic transfer function* rather than as a claim of interleaved, interference-protected cortical learning, and the encoding-time salience mechanism is acknowledged as much a levels-of-processing effect as a modal-model one. These are principled engineering choices, disclosed so that the architecture's cognitive-grounding claim is understood as *design-time inspiration with measurable behavioral signatures*, consistent with §2.2, and not as a claim of psychological fidelity. Each omission is, correspondingly, a concrete direction for future work.
+
+## §4. Results and Discussion
+
+This chapter reports the proof-of-concept implementation and its two-track evaluation (§3.4–§3.5), and discusses what the results establish and — as importantly — what they do not. The design deliberately does not stake its central perceptual claim on this evaluation (§3.1); the technical track demonstrates that the mechanisms behave as designed and are distinguishable across conditions, and the simulated track both estimates the direction of the perceptual effects and, in one respect, delivers a substantive methodological finding about the limits of simulated evaluation itself.
+
+### 4.1 Proof-of-concept: scope and fidelity
+
+The proof-of-concept is a standalone Python memory harness that implements the four conditions (A, B, B+, C) over multi-session dialogue transcripts, using OpenAI `gpt-4o-mini` for the language-model roles (salience scoring, gisting, consolidation, the conversational agent, and the judge) and `text-embedding-3-small` for retrieval. It was exercised over three synthetic user personas, each a four-session conversation with planted salient facts (names, allergies, family), one-off trivia (a passing weather remark, a forgotten film title, a café mentioned once), and a recurring emotional theme (thesis-deadline stress, co-founder conflict, night-shift exhaustion). The identical user-turn scripts were replayed through all four conditions, so every condition saw the same input and differed only in its memory mechanism. The complete run cost approximately USD 0.01 and took under seven minutes.
+
+Table 4.1 states the fidelity of the harness against the full architecture of §3.2, honestly separating what is implemented from what is deferred (per the cheapest-viable-cut of F18).
+
+| Mechanism (§3.2) | Fidelity in the proof-of-concept |
+|---|---|
+| Salience-gated encoding | Implemented (LLM rubric, four dimensions) |
+| Gist + verbatim anchor representation | Implemented |
+| Ebbinghaus decay + reinforcement | Implemented (lazy, session-unit time) |
+| Episodic→semantic consolidation | Implemented (embedding clustering + LLM abstraction) |
+| Gist-first composite retrieval | Implemented (relevance × retrievability × capped semantic bonus) |
+| Event segmentation | Reduced: one utterance = one event (Bayesian-surprise segmentation deferred) |
+| Associative pre-expansion; anchor-regex exact-recall trigger; programmatic sensitivity sweep | Deferred to the full build |
+| Real voice pipeline (STT/TTS/turn-taking) | Out of scope by design — the harness studies the memory *process* over transcripts |
+
+Time is measured in session units rather than wall-clock, and users are simulated rather than human; both bound the interpretation and are revisited in §4.4.
+
+### 4.2 Technical results
+
+**Cross-session recall and graceful forgetting.** Table 4.2 reports the fraction of recall probes answered correctly, by probe type, aggregated over the three personas.
+
+| Condition | Salient facts | Trivia | Generalization |
+|---|---|---|---|
+| A (no memory) | 0.00 | 0.00 | 0.67 |
+| B (verbatim RAG) | 1.00 | 1.00 | 1.00 |
+| B+ (curated static) | 1.00 | 1.00 | 1.00 |
+| **C (Profile C)** | **1.00** | **0.00** | **1.00** |
+
+Three patterns are visible. First, long-term memory is necessary: condition A, with only the volatile working window, recalls no cross-session fact (its 0.67 on generalization is a within-session artifact — the recurring theme is restated in the same session as the probe — not evidence of memory). Second, and centrally, **only Profile C exhibits graceful, salience-selective forgetting**: it retains every salient fact (1.00) while forgetting the low-salience trivia (0.00), whereas B and B+ retain everything indiscriminately (1.00/1.00). This is the Ebbinghaus signature operating as designed — low-salience traces receive low stability, decay below the retrievability floor within one to two session gaps, and drop out of retrieval. The behavioral difference is directly observable: asked what the weather had been, condition B replied *"It was really foggy that morning, kind of pretty!"*, while condition C replied *"I don't have that specific detail about the weather from our previous conversation. How has the weather been for you lately?"* — a warm non-recall rather than a mechanical replay.
+
+**Consolidation.** Only Profile C formed durable semantic facts: four across the three personas (B and B+ formed none, by construction). Surfacing the recurring theme, C drew on its consolidated store — *"it seems like the challenges with your co-founder and the direction of your company are a recurring theme"*. It is important to report honestly that B+ also produced a competent generalization on the fly — *"the ongoing tension with your co-founder is a significant theme"* — by having the language model infer the pattern from several retrieved episodes. The consolidation advantage of C is therefore not that a curated baseline *cannot* generalize, but that C maintains the generalization as an explicit, durable, reusable structure with source-episode provenance, produced offline rather than re-derived at every turn.
+
+**Efficiency and latency.** At the shared retrieval budget, C injected a mean of 37.2 context words per turn against 41.0 for both B and B+ — slightly leaner, because gist-first retrieval favours compact semantic facts over raw or full-length gists. Per-turn synchronous retrieval latency was sub-millisecond for all conditions (median 0.08–0.12 ms), confirming the design claim that C's added arithmetic (decay and bonus scoring) is negligible against the retrieval itself, and — by construction — that all expensive language-model work runs offline.
+
+### 4.3 Simulated-perception results
+
+An LLM judge rated each condition's full transcript on five constructs (1–7). Table 4.3 reports the means over the three personas; these are illustrative estimates from a small simulated sample (three personas, a single judge pass, integer ratings), reported without significance testing and consistent with the estimation stance of §3.1.
+
+| Construct | A | B | B+ | C | C − B+ |
+|---|---|---|---|---|---|
+| Social presence | 6.00 | 6.00 | 6.00 | 6.00 | 0.00 |
+| User–agent alliance | 5.33 | 6.00 | 6.33 | 6.00 | −0.33 |
+| Perceived humanlikeness | 5.33 | 5.00 | 5.33 | 5.00 | −0.33 |
+| Perceived intelligence | 5.00 | 6.00 | 6.00 | 5.67 | −0.33 |
+| Privacy comfort | 5.33 | 7.00 | 7.00 | 5.67 | −1.33 |
+
+Two findings follow, and the second is the more important.
+
+First, **Profile C does not exceed the B+ curation control on any construct** (every C − B+ difference is zero or negative in this small sample). This is precisely what the a-priori analysis predicted (F18): once a clean, curated static memory (B+) is in place, the *additional* human-memory dynamics of C — decay, salience, consolidation — add no detectable perceptual margin at this scale and horizon. The proof-of-concept thus corroborates, in simulation, the thesis's own claim that the C-versus-B+ effect is small; it does not, and cannot, establish that it is zero in humans.
+
+Second, and unexpectedly, the **privacy-comfort result runs opposite to the established human finding**. In humans, verbatim recall of a user's exact words heightens privacy concern relative to paraphrase (the Cox result [11], the empirical anchor for the whole fuzzy-trace argument of §2.2). Here the simulated judge rated the *verbatim* condition B and the curated B+ highest on privacy comfort (7.00) and the gist-based, forgetting Profile C lowest (5.67) — the reverse of the human effect. The judge, an LLM without privacy stakes, appears to read total, accurate recall as simple competence ("it remembered well") and C's deliberate forgetting as a deficiency, exactly the surface-legibility reading that §3.5(b) warned an LLM judge would substitute for felt relationship.
+
+### 4.4 Discussion
+
+The evaluation supports a clear, bounded set of conclusions. On the technical side, the architecture is implementable and its mechanisms behave as designed: memory is necessary for cross-session recall; Profile C alone forgets gracefully and selectively, keeping what matters and letting trivia fade; only C consolidates episodes into durable semantic knowledge; and it does so at a leaner context footprint and at latency parity. The mechanisms are not only present but *distinguishable* in observable behavior — the sanity-check the technical track was designed to provide.
+
+On the perceptual side, the result is a genuine dissociation. The condition that is behaviorally most "human" — forgetting trivia, generalizing about the user — is *not* the condition the simulated judge preferred; the curated static control (B+) matched or edged it everywhere. Read together with the a-priori power analysis (F18), this reinforces the thesis's central methodological position: the perceptual value that the literature attributes to "human-like memory" may be carried largely by clean curation and mere presence, with the biomimetic dynamics contributing a margin too small to detect at feasible scale. The B+ control was built precisely to make this distinction visible, and here it does.
+
+The privacy-comfort inversion is the single most consequential result of the evaluation, because it is a *demonstration by counterexample* of the limits of simulated evaluation. On the one construct where a strong, replicated human effect exists — verbatim recall feeling intrusive — the LLM judge produced the opposite ordering. This is not a flaw to be tuned away; it is direct evidence that an LLM judge cannot stand in for human perception on constructs that depend on human stakes such as privacy and trust. It follows that the perceptual claims of this thesis genuinely *cannot* be settled in simulation, and that the human-subject protocol of §3.5(c) is not a discretionary extension but a methodological necessity. The proof-of-concept, in other words, earns the deferral of the human study by showing empirically why it is required.
+
+### 4.5 Limitations of the evaluation
+
+The evaluation's limits are substantial and are stated plainly. The simulated users and the LLM judge share the architecture of the system under test and lack the stakes, temporal depth, and privacy sensitivities of real users — the privacy inversion above is the sharpest illustration. The sample is small (three personas, four sessions each, a single judge pass), so the perceptual numbers are illustrative rather than estimates of any population quantity, and no significance is claimed. Time is compressed to session units, so the decay and consolidation dynamics are exercised over a handful of gaps rather than the weeks the design envisages; the cold-start dilution that F18 identifies is, if anything, understated here. The language model driving every role (`gpt-4o-mini`) is not the eventual voice brain, and several mechanisms are implemented at reduced fidelity or deferred (Table 4.1). Finally, the harness operates over text transcripts, not the live voice pipeline, so it demonstrates the memory *process* rather than the fielded interlocutor. Each limitation is a concrete task for the full build and the human study that follow from this work.
+
+## §5. Conclusion
+
+This thesis set out to determine whether long-term memory modeled on cognitive theories of human memory makes a voice conversational system feel less like an assistant and more like an interlocutor. Under a constraint that precluded a full human-subject study, the work delivered the parts of that programme that do not depend on fielded human data — a cognitively-grounded memory architecture, a curation-controlled evaluation methodology, and a working proof-of-concept — and specified the human evaluation as rigorous future work. This concluding chapter summarizes the contributions, the findings, and the road ahead.
+
+### 5.1 Summary of contributions
+
+The thesis makes three coordinated contributions. First, it presents **Profile C**, a single memory engine that composes five cognitive-memory theories — the multi-store model, the Ebbinghaus forgetting curve, Tulving's episodic–semantic distinction, fuzzy-trace theory, and the complementary learning systems framework — into one coherent lifecycle of salience-gated encoding, gist-and-anchor representation, lazy decay with reinforcement, offline episodic-to-semantic consolidation, and gist-first retrieval, with each stage tied to an observable behavioral signature rather than to a claim of cognitive fidelity. Second, and methodologically most significant, it introduces the **B+ active control**: a curated-static memory condition that receives the same offline gisting and cleanup as Profile C but none of its human-memory dynamics, thereby isolating the effect of the dynamics from the generic legibility gains of language-model curation — the confound that would otherwise make any positive result for a human-like memory uninterpretable. Third, it delivers a **proof-of-concept implementation** of all four conditions and a two-track technical and simulated evaluation that demonstrates the architecture's mechanisms and probes their perceptual consequences.
+
+### 5.2 Summary of findings
+
+The proof-of-concept established that the architecture is implementable and that its mechanisms behave as designed and are distinguishable in observable behavior: memory is necessary for cross-session recall; Profile C alone forgets gracefully and selectively — retaining salient facts while letting trivia fade — and alone consolidates recurring episodes into durable semantic knowledge, at a leaner context footprint and at latency parity with the baselines. In the simulated-perception track, Profile C did not exceed the B+ curation control on any construct, corroborating in simulation the a-priori analysis that the marginal perceptual contribution of human-memory dynamics over clean curation is small. Most consequentially, on the one construct with a strong replicated human effect — the intrusiveness of verbatim recall — the simulated judge produced the *opposite* ordering to the human literature, demonstrating by counterexample that an LLM judge cannot substitute for human perception on stakes-dependent constructs such as privacy and trust. The evaluation therefore does not merely defer the human study; it shows empirically why that study is necessary.
+
+### 5.3 Future work
+
+Three lines of work follow directly. The first is the **full system build**: integrating Profile C into the live voice pipeline, resolving the deployability constraints identified in the platform audit (participant isolation, packaging, a single chosen conversational brain), and implementing the mechanisms currently at reduced fidelity — Bayesian-surprise event segmentation, associative pre-expansion, and the deterministic exact-recall trigger. The second is the **human-subject study** specified in §3.5(c): a pre-registered, within-subject comparison of B, B+, and C at the field's normative sample size, powered for the comparisons where power is attainable and treating the central C-versus-B+ contrast as an estimation target, with warm attributable forgetting, late-window analysis, event-sensitive and behavioral measures, and coded interviews as the design's answer to a likely small or null primary effect. The third is **theoretical extension**: incorporating the memory phenomena the present architecture deliberately omits — interference as a forgetting mechanism, the reconstructive and schema-driven distortion that fuzzy-trace and complementary learning systems most distinctively predict, and richer temporal-order and source memory — each of which is both a fidelity gap and a concrete hypothesis about what would make an interlocutor feel more human. Taken together, these complete the evolution from assistant to interlocutor that this thesis has designed, built in miniature, and shown how to measure.
 
 ---
 
