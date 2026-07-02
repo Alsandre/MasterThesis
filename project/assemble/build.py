@@ -249,11 +249,15 @@ def main():
     for p in doc.paragraphs:
         if 'დასახელება' in p.text and 'სამაგისტრო ნაშრომი' in p.text:
             replace_in_paragraph(p, [('დასახელება', f'„{TITLE}“')])
-    # front matter: justified body paragraphs stretch the Georgian ugly with real
-    # text inserted -> left-align (matches the GTU sample). Only template paras exist now.
+    # front matter (only template paras exist now): match the GTU sample —
+    # (a) left-align justified body paragraphs (justification stretches Georgian),
+    # (b) 1.5 line spacing (template used single; sample + GTU body use 1.5).
     for p in doc.paragraphs:
         if p.alignment == WD_ALIGN_PARAGRAPH.JUSTIFY:
             p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        if p.paragraph_format.line_spacing == 1.0:
+            p.paragraph_format.line_spacing = 1.5
+            p.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
 
     # ---- B. რეზიუმე (Georgian abstract) ----
     idx = para_index(doc, 'რეზიუმე')
