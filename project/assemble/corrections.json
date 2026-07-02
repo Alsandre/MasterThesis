@@ -1,0 +1,79 @@
+[
+  {"old": "წოდებული \"სათადარიგო\"", "new": "წოდებული „კომპანიონი“", "count": 1, "note": "MEANING: companion (not spare). §1.1"},
+  {"old": "არც გახანგრძლივება, არც", "new": "არც დაქრობა, არც", "count": 1, "note": "MEANING: decay (not prolongation). §1.2 triad"},
+  {"old": "დამოკიდებულ გახანგრძლივებას", "new": "დამოკიდებულ დაქრობას", "count": 1, "note": "MEANING: decay. §2.2"},
+  {"old": "გახანგრძლივება, სალიენცობა", "new": "დაქრობა, სალიენცობა", "count": 1, "note": "MEANING: decay. §4.3 triad"},
+  {"old": "ენერგეტიკული ანალიზით", "new": "ძალის (სტატისტიკური სიმძლავრის) ანალიზით", "count": 1, "note": "MEANING: statistical power analysis (not energy). §3.1"},
+  {"old": "საშუალო ტურნირის", "new": "საშუალო ტურის", "count": 1, "note": "MEANING: per-turn (not tournament). §3.2"},
+  {"old": "ინფორმაციის გამოსათვლელად", "new": "ინფორმაციის გასახსენებლად", "count": 1, "note": "MEANING: cross-session recall (not calculation). §5.2"},
+  {"old": "უსასრულო დაქვეითება", "new": "ზარმაცი დაქვეითება", "count": 1, "note": "MEANING: lazy decay (not infinite). §3.4"},
+  {"old": "ცოდნილ რეალიზმს", "new": "კოგნიტურ რეალიზმს", "count": 1, "note": "MEANING: cognitive realism (not 'known'). §3.8"},
+  {"old": "თავის ხუთი საწყისი თეორიას აერთიანებდა კი არ, არამედ ქმნიდა მათგან ახალს", "new": "თავის ხუთ საწყის თეორიას კომპოზიციად აწყობს და არა ერთ მთლიანობად აერთიანებს", "count": 1, "note": "MEANING: composes rather than unifies (was 'created something new'). §3.8 — INTERPRETIVE, author confirm verb"},
+  {"old": "ჩამორჩენილი კომენტარი", "new": "გაკვრით ნათქვამი კომენტარი", "count": 1, "note": "MEANING: passing remark (not 'backward'). §4.1"},
+
+  {"old": "დაუჯერღვანელებელ", "new": "დაუმუშავებელ", "count": 1, "note": "NON-WORD: undigested → unprocessed. §2.2"},
+  {"old": "უსხვამისეულად", "new": "განურჩევლად", "count": 1, "note": "NON-WORD: indiscriminately. §4.2"},
+  {"old": "ხმის პიპელა", "new": "ხმის მილსადენი", "count": 1, "note": "NON-WORD: pipeline. §4.1 (Table 4.1)"},
+  {"old": "ზოგადყოფების", "new": "განზოგადებების", "count": 1, "note": "NON-WORD: generalizations. §3.2"},
+  {"old": "გასამოსაჯაროებელი", "new": "გამოსაქვეყნებელი", "count": 1, "note": "NON-WORD: publishable. §3.1"},
+  {"old": "ნაწინდევრებული", "new": "პროგნოზირებული", "count": 1, "note": "GARBLED: predicted. §1.2"},
+  {"old": "(გიუსტი)", "new": "(gist)", "count": 1, "note": "NON-WORD gloss. §2.2"},
+  {"old": "სიხშირული ფილტრის", "new": "სალიენს-გეითინგის", "count": 1, "note": "MEANING: salience-gating (not 'frequency filter'). §3.3"},
+  {"old": "კომპრესიя", "new": "კომპრესია", "count": 1, "note": "CYRILLIC я (U+044F) → Georgian ა. Table 3.1"},
+
+  {"old": "თვრამეტ კონსტრუქტს", "new": "ცხრამეტ კონსტრუქტს", "count": 1, "note": "NUMBER: ASAQ 19 constructs (not 18). §2.6"},
+  {"old": "თვრამეტი ცხრა კონსტრუქტს", "new": "ცხრამეტ კონსტრუქტს", "count": 1, "note": "NUMBER: garbled '18 9' → 19. §3.6"},
+
+  {"old": "სოციალური თანადგომა", "new": "სოციალური თანდასწრება", "count": 3, "note": "TERM social presence. Nominative"},
+  {"old": "სოციალურ თანადგომაზე", "new": "სოციალურ თანდასწრებაზე", "count": 1, "note": "TERM social presence. -ზე"},
+  {"old": "სოციალურ თანადგომას", "new": "სოციალურ თანდასწრებას", "count": 2, "note": "TERM social presence. Dative"},
+  {"old": "სოციალური თანადგომის", "new": "სოციალური თანდასწრების", "count": 2, "note": "TERM social presence. Genitive"},
+  {"old": "სოციალური პრეზენციისა", "new": "სოციალური თანდასწრებისა", "count": 1, "note": "TERM social presence (presence variant). Genitive"},
+  {"old": "სოციალურ პრეზენციას", "new": "სოციალურ თანდასწრებას", "count": 1, "note": "TERM social presence (presence variant). Dative"},
+
+  {"old": "დავიწყების კრუგი,", "new": "დავიწყების მრუდი,", "count": 1, "note": "TERM forgetting curve (Rus. круг). Nom, comma-bounded"},
+  {"old": "დავიწყების კრუგი.", "new": "დავიწყების მრუდი.", "count": 1, "note": "TERM forgetting curve. Nom, period-bounded"},
+  {"old": "დავიწყების კრუგს", "new": "დავიწყების მრუდს", "count": 4, "note": "TERM forgetting curve. Dative"},
+  {"old": "დავიწყების კრუგისთვის", "new": "დავიწყების მრუდისთვის", "count": 1, "note": "TERM forgetting curve. Gen+postp"},
+  {"old": "დავიწყების კურივა", "new": "დავიწყების მრუდი", "count": 1, "note": "TERM forgetting curve (Rus. кривая). §2.4"},
+
+  {"old": "ლატენტურობისა", "new": "დაყოვნებისა", "count": 1, "note": "TERM latency (glossary). Gen+euphonic"},
+  {"old": "ლატენტურობა", "new": "დაყოვნება", "count": 1, "note": "TERM latency. Nominative"},
+
+  {"old": "კონფუუდის", "new": "აღრევის ფაქტორის", "count": 2, "note": "TERM confound. Genitive"},
+  {"old": "წაკითხვადობის კონფუუდი", "new": "წაკითხვადობის აღრევის ფაქტორი", "count": 1, "note": "TERM confound. Nom, bounded"},
+  {"old": "ამ კონფუუდს", "new": "ამ აღრევის ფაქტორს", "count": 1, "note": "TERM confound. Dative, bounded"},
+  {"old": "კონფუუნდების", "new": "აღრევის ფაქტორების", "count": 1, "note": "TERM confound (misspelling). Gen pl"},
+
+  {"old": "თანაშემწისგან", "new": "ასისტენტისგან", "count": 1, "note": "TERM assistant. §1.5"},
+  {"old": "თანაშემწიდან", "new": "ასისტენტიდან", "count": 1, "note": "TERM assistant. §5"},
+  {"old": "დამხმარედან", "new": "ასისტენტიდან", "count": 1, "note": "TERM assistant. §2.6 heading"},
+  {"old": "დამხმარისგან", "new": "ასისტენტისგან", "count": 1, "note": "TERM assistant. §2.6"},
+
+  {"old": "საუბრის პარტნიორის", "new": "თანამოსაუბრის", "count": 3, "note": "TERM interlocutor. Genitive"},
+  {"old": "საუბრის პარტნიორს", "new": "თანამოსაუბრეს", "count": 3, "note": "TERM interlocutor. Dative"},
+  {"old": "აღჭურვილი საუბრის პარტნიორი", "new": "აღჭურვილი თანამოსაუბრე", "count": 1, "note": "TERM interlocutor. Nom, bounded"},
+  {"old": "ადამიანი-საუბრის პარტნიორი", "new": "ადამიანი-თანამოსაუბრე", "count": 1, "note": "TERM interlocutor. Nom, bounded"},
+  {"old": "საუბრის პარტნიორი მდგრადად", "new": "თანამოსაუბრე მდგრადად", "count": 1, "note": "TERM interlocutor. Nom, bounded"},
+  {"old": "საუბრის პარტნიორი გადადის", "new": "თანამოსაუბრე გადადის", "count": 1, "note": "TERM interlocutor. Nom, bounded"},
+  {"old": "ინტერლოკუტორი", "new": "თანამოსაუბრე", "count": 1, "note": "TERM interlocutor (translit). Nom"},
+  {"old": "ინტერლოკუტორს", "new": "თანამოსაუბრეს", "count": 1, "note": "TERM interlocutor. Dative"},
+
+  {"old": "მრავალსაცავო მოდელი", "new": "მრავალსაცავიანი მოდელი", "count": 1, "note": "TERM multi-store model. Nominative"},
+  {"old": "მრავალსაცავო მოდელს", "new": "მრავალსაცავიან მოდელს", "count": 2, "note": "TERM multi-store model. Dative"},
+  {"old": "მრავალსაწყობიანი", "new": "მრავალსაცავიანი", "count": 3, "note": "TERM multi-store model (variant). Nominative"},
+
+  {"old": "ებინგჰაუზ", "new": "ებინგჰაუს", "count": 10, "note": "PROPER NAME: Ebbinghaus ზ→ს (glossary). Stem, all endings"},
+
+  {"old": "ქცევითი ხელწერა", "new": "ქცევითი სიგნატურა", "count": 2, "note": "TERM behavioral signature. Nominative"},
+  {"old": "ქცევით ხელწერას", "new": "ქცევით სიგნატურას", "count": 1, "note": "TERM behavioral signature. Dative"},
+
+  {"old": "დუნე კვალითეორია", "new": "ბუნდოვანი კვალის თეორია", "count": 1, "note": "TERM fuzzy-trace (garbled). §2.2 heading"},
+  {"old": "ბურუსიანი კვალი", "new": "ბუნდოვანი კვალი", "count": 1, "note": "TERM fuzzy-trace ('misty trace'). §3.2"},
+
+  {"old": "კერძოობის კომფორტი", "new": "კონფიდენციალურობის კომფორტი", "count": 1, "note": "TERM (Table 4.3) privacy comfort"},
+  {"old": "შეფასებული ინტელექტი", "new": "აღქმული ინტელექტი", "count": 1, "note": "TERM (Table 4.3) perceived intelligence"},
+  {"old": "საინტერესო ფაქტები", "new": "წვრილმანები", "count": 1, "note": "TERM (Table 4.2 header) trivia"},
+
+  {"old": "დროში აზროვნებისას", "new": "დროითი (ტემპორალური) მსჯელობისას", "count": 1, "note": "TERM temporal reasoning. Abstract"}
+]

@@ -10,7 +10,7 @@ Sources:
 
 Output: project/thesis-ka.docx
 """
-import re, copy, sys, zipfile, shutil, os, subprocess
+import re, copy, sys, zipfile, shutil, os, subprocess, json
 from docx import Document
 from docx.shared import Pt, Cm
 from docx.enum.text import WD_LINE_SPACING, WD_TAB_ALIGNMENT, WD_TAB_LEADER
@@ -49,11 +49,20 @@ TABLE_META = [
     ("4.3", "სიმულირებული აღქმის საშუალო შეფასებები კონსტრუქტების მიხედვით"),
 ]
 
+# ---------------- proofing corrections (from coherence review) ----------------
+CORR_PATH = os.path.join(HERE, 'corrections.json')
+CORRECTIONS = json.load(open(CORR_PATH, encoding='utf-8')) if os.path.exists(CORR_PATH) else []
+
+def apply_corrections(t):
+    for c in CORRECTIONS:
+        t = t.replace(c['old'], c['new'])
+    return t
+
 # ---------------- 1. Build poured structure (validated 1:1) ----------------
 def pour():
     blocks = parse_blueprint(MD)
     doc = Document(KA)
-    ka = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
+    ka = [apply_corrections(p.text.strip()) for p in doc.paragraphs if p.text.strip()]
     ka_body = ka[1:]                      # [0] is the (re-translated) title -> discard
     out, j = [], 0
     for b in blocks:
