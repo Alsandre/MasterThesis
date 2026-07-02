@@ -338,10 +338,13 @@ def main():
                                           spacing=WD_LINE_SPACING.SINGLE)
 
     # ---- I. cleanup: stray backtick + blank spacer page ----
+    # NB: title-page paragraph [0] also anchors floating drawings (logo/title/author
+    # text boxes). Only edit the run that holds the backtick — never the drawing runs,
+    # since run.text = '' would destroy the drawing.
     for p in doc.paragraphs[:3]:
-        if p.text.strip() == '`':
-            for r in p.runs:
-                r.text = ''
+        for r in p.runs:
+            if '`' in r.text:
+                r.text = r.text.replace('`', '')
     # delete the run of empty template spacer paragraphs after the English keywords line
     kw = next((i for i, p in enumerate(doc.paragraphs)
                if p.text.strip().startswith('Keywords:')), -1)
