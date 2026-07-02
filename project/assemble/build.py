@@ -32,12 +32,12 @@ OUT      = R("project/thesis-ka.docx")
 
 # ---------------- FACTS (confirmed vs placeholder) ----------------
 TITLE  = "სასაუბრო ხელოვნური ინტელექტი: ასისტენტიდან თანამოსაუბრემდე ევოლუცია"
-AUTHOR = "ალექსანდრე ხობელია"          # inferred from CV — CONFIRM
-YEAR   = "2026"
-MONTH  = "ივლისი"
+AUTHOR = "ალექსანდრე იმნაიშვილი"         # confirmed by Lekso
+YEAR   = "2026"                          # cover year (default; editable)
+MONTH  = "ივლისი"                        # cover month (default; editable)
 SHIFRI = "[შიფრი]"                       # TODO from Lekso
 PROGRAM= "[სამაგისტრო პროგრამა]"         # TODO from Lekso
-SUPERVISOR = "სოფო ბარნოვი"              # CONFIRM name/title
+SUPERVISOR = "ოთარ თავდიშვილი"           # confirmed by Lekso
 DEFENSE_DATE = "[სხდომის თარიღი]"        # TODO
 
 # table captions (numbers MUST match the "ცხრილი N.M" references in the prose)
