@@ -44,7 +44,7 @@ DEFENSE_DATE = "[სხდომის თარიღი]"        # TODO
 TABLE_META = [
     ("2.1", "ადამიანის მეხსიერების თეორიები და მათი შესაბამისი LLM-იმპლემენტაციები"),
     ("3.1", "აღრევის ფაქტორების კონტროლი ექსპერიმენტულ დიზაინში"),
-    ("4.1", "კონცეფციის დამტკიცების ერთგულება §3.2-ის სრული არქიტექტურის მიმართ"),
+    ("4.1", "კონცეფციის დამტკიცების ერთგულება 3.2-ის სრული არქიტექტურის მიმართ"),
     ("4.2", "სესიებს-შორისი გახსენების სიზუსტე პრობის ტიპის მიხედვით"),
     ("4.3", "სიმულირებული აღქმის საშუალო შეფასებები კონსტრუქტების მიხედვით"),
 ]
@@ -158,6 +158,47 @@ def set_table_borders(tbl):
         borders.append(el)
     tblPr.append(borders)
 
+def set_col_widths(tbl, grid, total_cm=14.7):
+    """Fixed layout with content-proportional column widths (so numeric columns
+    stay narrow and long-label columns get the room they need)."""
+    ncol = max(len(r) for r in grid)
+    tbl.autofit = False
+    tblPr = tbl._element.tblPr
+    layout = OxmlElement('w:tblLayout'); layout.set(qn('w:type'), 'fixed'); tblPr.append(layout)
+    # per-column weight = max content length (floored), dampened for very long cells
+    weights = []
+    for c in range(ncol):
+        maxlen = max((len(r[c]) for r in grid if c < len(r) and r[c]), default=1)
+        weights.append(max(4, min(maxlen, 46)))
+    s = sum(weights)
+    widths = [max(1.3, total_cm * w / s) for w in weights]
+    scale = total_cm / sum(widths)             # renormalise to total after the 1.3cm floor
+    widths = [w * scale for w in widths]
+    twips = [int(round(w * 567)) for w in widths]   # 1cm = 567 twips (dxa)
+    # 1) update the tblGrid gridCol widths (authoritative under fixed layout)
+    grid_el = tbl._element.find(qn('w:tblGrid'))
+    cols = grid_el.findall(qn('w:gridCol'))
+    for i, gc in enumerate(cols):
+        if i < ncol:
+            gc.set(qn('w:w'), str(twips[i]))
+    # 2) also set per-cell widths to match
+    for row in tbl.rows:
+        for i in range(ncol):
+            row.cells[i].width = Cm(widths[i])
+
+def clean_prose(t):
+    """Light polish: drop the § section-marker so prose matches the §-less headings."""
+    return t.replace('§', '')
+
+def suppress_numbering(p):
+    """Override the Heading style's automatic outline numbering (numId=30) with
+    numId=0 so only our manual '1.', '1.1' numbers appear (no double-numbering)."""
+    ppr = p._p.get_or_add_pPr()
+    numPr = OxmlElement('w:numPr')
+    numId = OxmlElement('w:numId'); numId.set(qn('w:val'), '0')
+    numPr.append(numId)
+    ppr.append(numPr)
+
 def add_toc_field(paragraph, switches=r'\o "1-2" \h \z \u'):
     """Insert a live Word TOC field. Populates automatically on open in Word
     (updateFields is set); until then it shows the neutral placeholder below."""
@@ -215,7 +256,7 @@ def main():
             ka_abs.append(b[1])
     prev = anchor
     for t in ka_abs:
-        prev = insert_paragraph_after(prev, t, style='Normal', spacing=WD_LINE_SPACING.SINGLE)
+        prev = insert_paragraph_after(prev, clean_prose(t), style='Normal', spacing=WD_LINE_SPACING.SINGLE)
 
     # ---- C. Abstract (English) ----
     idx = para_index(doc, 'Abstract')
@@ -241,6 +282,7 @@ def main():
                 continue
             started = True
             p = doc.add_paragraph(style='Heading 1')
+            suppress_numbering(p)
             p.paragraph_format.page_break_before = True     # GTU: chapters start on a new page
             run = p.add_run(norm_heading(b[1])); set_sylfaen(run, 14, bold=True)
             continue
@@ -248,15 +290,16 @@ def main():
             continue
         if b[0] == 'h2':
             p = doc.add_paragraph(style='Heading 2')
+            suppress_numbering(p)
             run = p.add_run(b[1]); set_sylfaen(run, 13, bold=True)
         elif b[0] == 'p':
-            p = doc.add_paragraph(style='Normal'); run = p.add_run(b[1]); set_sylfaen(run, 12)
+            p = doc.add_paragraph(style='Normal'); run = p.add_run(clean_prose(b[1])); set_sylfaen(run, 12)
         elif b[0] == 'bullet':
-            t = re.sub(r'^•\s*\t?\s*', '', b[1])
+            t = clean_prose(re.sub(r'^•\s*\t?\s*', '', b[1]))
             p = doc.add_paragraph(style='Normal')
             run = p.add_run('•  ' + t); set_sylfaen(run, 12)
         elif b[0] == 'num':
-            t = re.sub(r'^(\d+)\s*\t\s*', r'\1. ', b[1])
+            t = clean_prose(re.sub(r'^(\d+)\s*\t\s*', r'\1. ', b[1]))
             p = doc.add_paragraph(style='Normal'); run = p.add_run(t); set_sylfaen(run, 12)
         elif b[0] == 'table':
             grid = b[1]
@@ -267,17 +310,19 @@ def main():
             ncol = max(len(r) for r in grid)
             tbl = doc.add_table(rows=len(grid), cols=ncol)
             set_table_borders(tbl)
+            set_col_widths(tbl, grid)
             for ri, row in enumerate(grid):
                 for ci in range(ncol):
                     cell = tbl.cell(ri, ci)
-                    txt = row[ci] if ci < len(row) else ''
+                    txt = clean_prose(row[ci]) if ci < len(row) else ''
                     cp = cell.paragraphs[0]
                     cp.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
                     run = cp.add_run(txt); set_sylfaen(run, 11, bold=(ri == 0))
             doc.add_paragraph('', style='Normal')
 
     # ---- F. bibliography ----
-    p = doc.add_paragraph(style='Heading 1'); p.paragraph_format.page_break_before = True
+    p = doc.add_paragraph(style='Heading 1'); suppress_numbering(p)
+    p.paragraph_format.page_break_before = True
     run = p.add_run('ბიბლიოგრაფია'); set_sylfaen(run, 14, bold=True)
     for entry in bibliography():
         p = doc.add_paragraph(style='Normal')
