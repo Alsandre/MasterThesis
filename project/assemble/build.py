@@ -1,0 +1,373 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Assemble the GTU-formatted Georgian thesis .docx.
+
+Sources:
+  - template:  შაბლონი სამაგისტრო (1).docx   (styles, margins, front-matter pages, title-page text boxes)
+  - georgian:  project/draft-en ka.docx        (translated body, flattened)
+  - structure: project/draft-en.md             (heading levels + table geometry, via blueprint.py)
+  - biblio:    project/draft.md                 ([1]-[35])
+
+Output: project/thesis-ka.docx
+"""
+import re, copy, sys, zipfile, shutil, os, subprocess
+from docx import Document
+from docx.shared import Pt, Cm
+from docx.enum.text import WD_LINE_SPACING, WD_TAB_ALIGNMENT, WD_TAB_LEADER
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+from blueprint import parse_blueprint
+
+SOFFICE = "/Applications/LibreOffice.app/Contents/MacOS/soffice"
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
+def R(p): return os.path.join(ROOT, p)
+
+TEMPLATE = R("შაბლონი სამაგისტრო (1).docx")
+KA       = R("project/draft-en ka.docx")
+MD       = R("project/draft-en.md")
+BIB      = R("project/draft.md")
+OUT      = R("project/thesis-ka.docx")
+
+# ---------------- FACTS (confirmed vs placeholder) ----------------
+TITLE  = "სასაუბრო ხელოვნური ინტელექტი: ასისტენტიდან თანამოსაუბრემდე ევოლუცია"
+AUTHOR = "ალექსანდრე ხობელია"          # inferred from CV — CONFIRM
+YEAR   = "2026"
+MONTH  = "ივლისი"
+SHIFRI = "[შიფრი]"                       # TODO from Lekso
+PROGRAM= "[სამაგისტრო პროგრამა]"         # TODO from Lekso
+SUPERVISOR = "სოფო ბარნოვი"              # CONFIRM name/title
+DEFENSE_DATE = "[სხდომის თარიღი]"        # TODO
+
+# table captions (numbers MUST match the "ცხრილი N.M" references in the prose)
+TABLE_META = [
+    ("2.1", "ადამიანის მეხსიერების თეორიები და მათი შესაბამისი LLM-იმპლემენტაციები"),
+    ("3.1", "აღრევის ფაქტორების კონტროლი ექსპერიმენტულ დიზაინში"),
+    ("4.1", "კონცეფციის დამტკიცების ერთგულება §3.2-ის სრული არქიტექტურის მიმართ"),
+    ("4.2", "სესიებს-შორისი გახსენების სიზუსტე პრობის ტიპის მიხედვით"),
+    ("4.3", "სიმულირებული აღქმის საშუალო შეფასებები კონსტრუქტების მიხედვით"),
+]
+
+# ---------------- 1. Build poured structure (validated 1:1) ----------------
+def pour():
+    blocks = parse_blueprint(MD)
+    doc = Document(KA)
+    ka = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
+    ka_body = ka[1:]                      # [0] is the (re-translated) title -> discard
+    out, j = [], 0
+    for b in blocks:
+        if b[0] in ('h1', 'h2', 'p', 'bullet', 'num'):
+            out.append((b[0], ka_body[j])); j += 1
+        elif b[0] == 'table':
+            grid = []
+            for row in b[1]:
+                grow = []
+                for cell in row:
+                    if cell.strip():
+                        grow.append(ka_body[j]); j += 1
+                    else:
+                        grow.append('')
+                grid.append(grow)
+            out.append(('table', grid))
+    assert j == len(ka_body), f"alignment off: consumed {j}/{len(ka_body)}"
+    return out
+
+# ---------------- English abstract (for Abstract slot) ----------------
+def english_abstract():
+    lines = open(MD, encoding='utf-8').read().split('\n')
+    s = next(i for i, l in enumerate(lines) if l.strip() == '## Abstract')
+    e = next(i for i, l in enumerate(lines) if l.strip().startswith('## §1'))
+    paras = []
+    for l in lines[s+1:e]:
+        t = l.strip()
+        if not t or t == '---':
+            continue
+        t = re.sub(r'\*\*(.+?)\*\*', r'\1', t)   # strip bold
+        t = re.sub(r'\*(.+?)\*', r'\1', t)
+        paras.append(t)
+    return paras   # 5 body paras + keywords line
+
+# ---------------- helpers ----------------
+def set_sylfaen(run, size=12, bold=False):
+    run.font.name = 'Sylfaen'
+    run.font.size = Pt(size)
+    run.bold = bold
+    rpr = run._element.get_or_add_rPr()
+    rf = rpr.find(qn('w:rFonts'))
+    if rf is None:
+        rf = OxmlElement('w:rFonts'); rpr.append(rf)
+    for a in ('w:ascii','w:hAnsi','w:cs'):
+        rf.set(qn(a), 'Sylfaen')
+
+def clear_highlight(run):
+    rpr = run._element.find(qn('w:rPr'))
+    if rpr is not None:
+        for h in rpr.findall(qn('w:highlight')):
+            rpr.remove(h)
+
+def replace_in_paragraph(p, repls):
+    """Replace substrings across a paragraph's concatenated runs.
+    Rewrites into a single run using the first run's formatting. For boilerplate lines only."""
+    full = ''.join(r.text for r in p.runs)
+    new = full
+    for a, b in repls:
+        new = new.replace(a, b)
+    if new == full:
+        return False
+    if p.runs:
+        p.runs[0].text = new
+        clear_highlight(p.runs[0])
+        for r in p.runs[1:]:
+            r.text = ''
+    else:
+        p.add_run(new)
+    return True
+
+def para_index(doc, needle):
+    """Exact-match a standalone heading/anchor paragraph (avoids substring collisions)."""
+    for i, p in enumerate(doc.paragraphs):
+        if p.text.strip() == needle:
+            return i
+    for i, p in enumerate(doc.paragraphs):   # fallback: contains
+        if needle in p.text:
+            return i
+    return -1
+
+def insert_paragraph_after(paragraph, text='', style=None, spacing=None):
+    new_p = OxmlElement('w:p')
+    paragraph._p.addnext(new_p)
+    from docx.text.paragraph import Paragraph
+    np = Paragraph(new_p, paragraph._parent)
+    if style:
+        np.style = style
+    if text:
+        run = np.add_run(text)
+        set_sylfaen(run, 12)
+    if spacing:
+        np.paragraph_format.line_spacing_rule = spacing
+    return np
+
+def set_table_borders(tbl):
+    tblPr = tbl._element.tblPr
+    borders = OxmlElement('w:tblBorders')
+    for edge in ('top', 'left', 'bottom', 'right', 'insideH', 'insideV'):
+        el = OxmlElement(f'w:{edge}')
+        el.set(qn('w:val'), 'single'); el.set(qn('w:sz'), '4')
+        el.set(qn('w:space'), '0'); el.set(qn('w:color'), '000000')
+        borders.append(el)
+    tblPr.append(borders)
+
+def add_toc_field(paragraph, switches=r'\o "1-2" \h \z \u'):
+    """Insert a live Word TOC field. Populates automatically on open in Word
+    (updateFields is set); until then it shows the neutral placeholder below."""
+    run = paragraph.add_run()
+    fldBegin = OxmlElement('w:fldChar'); fldBegin.set(qn('w:fldCharType'), 'begin')
+    fldBegin.set(qn('w:dirty'), 'true')
+    instr = OxmlElement('w:instrText'); instr.set(qn('xml:space'), 'preserve')
+    instr.text = f' TOC {switches} '
+    fldSep = OxmlElement('w:fldChar'); fldSep.set(qn('w:fldCharType'), 'separate')
+    hint = OxmlElement('w:t'); hint.set(qn('xml:space'), 'preserve')
+    hint.text = 'შინაარსი გენერირდება ავტომატურად Word-ში (საჭიროების შემთხვევაში: მარჯვენა ღილაკი → Update Field / F9).'
+    fldEnd = OxmlElement('w:fldChar'); fldEnd.set(qn('w:fldCharType'), 'end')
+    r = run._element
+    r.append(fldBegin); r.append(instr); r.append(fldSep); r.append(hint); r.append(fldEnd)
+
+# ---------------- main ----------------
+def main():
+    poured = pour()
+    en_abs = english_abstract()
+    doc = Document(TEMPLATE)
+
+    # GTU: body 1.5 line spacing (template default is ~single). Set on Normal style.
+    nf = doc.styles['Normal'].paragraph_format
+    nf.line_spacing = 1.5
+    nf.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
+
+    # ---- A. front-matter paragraph fills ----
+    for p in doc.paragraphs:
+        replace_in_paragraph(p, [
+            ('სახელი, გვარი', AUTHOR),
+            ('სახელი გვარი', AUTHOR),
+            ('„------------------“', f'„{TITLE}“'),
+            ('„------------------"', f'„{TITLE}“'),
+            ('2023 წელი', f'{YEAR} წელი'),
+            ('2023 წელს', f'{YEAR} წელს'),
+            ('ხელმძღვანელი: _______________', f'ხელმძღვანელი: {SUPERVISOR}'),
+        ])
+    # commission page: "სამაგისტრო ნაშრომი:  დასახელება"
+    for p in doc.paragraphs:
+        if 'დასახელება' in p.text and 'სამაგისტრო ნაშრომი' in p.text:
+            replace_in_paragraph(p, [('დასახელება', f'„{TITLE}“')])
+
+    # ---- B. რეზიუმე (Georgian abstract) ----
+    idx = para_index(doc, 'რეზიუმე')
+    anchor = doc.paragraphs[idx]
+    # georgian abstract = poured blocks between the 'ანოტაცია' h1 and the next h1 (§1)
+    ka_abs, collecting = [], False
+    for b in poured:
+        if b[0] == 'h1':
+            if b[1].strip() == 'ანოტაცია':
+                collecting = True; continue
+            if collecting:
+                break
+        elif collecting:
+            ka_abs.append(b[1])
+    prev = anchor
+    for t in ka_abs:
+        prev = insert_paragraph_after(prev, t, style='Normal', spacing=WD_LINE_SPACING.SINGLE)
+
+    # ---- C. Abstract (English) ----
+    idx = para_index(doc, 'Abstract')
+    anchor = doc.paragraphs[idx]
+    prev = anchor
+    for t in en_abs:
+        prev = insert_paragraph_after(prev, t, style='Normal', spacing=WD_LINE_SPACING.SINGLE)
+
+    # ---- D. შინაარსი -> live Word TOC field (auto-populates on open in Word) ----
+    idx = para_index(doc, 'შინაარსი')
+    toc_p = insert_paragraph_after(doc.paragraphs[idx], '', style='Normal')
+    add_toc_field(toc_p)
+
+    # ---- E. body (skip Abstract block; it lives in front matter) ----
+    def norm_heading(t):
+        t = re.sub(r'^§\s*', '', t)          # drop § from "§1."
+        return t
+    started = False
+    tcount = 0
+    for b in poured:
+        if b[0] == 'h1':
+            if b[1].strip() == 'ანოტაცია':
+                continue
+            started = True
+            p = doc.add_paragraph(style='Heading 1')
+            p.paragraph_format.page_break_before = True     # GTU: chapters start on a new page
+            run = p.add_run(norm_heading(b[1])); set_sylfaen(run, 14, bold=True)
+            continue
+        if not started:
+            continue
+        if b[0] == 'h2':
+            p = doc.add_paragraph(style='Heading 2')
+            run = p.add_run(b[1]); set_sylfaen(run, 13, bold=True)
+        elif b[0] == 'p':
+            p = doc.add_paragraph(style='Normal'); run = p.add_run(b[1]); set_sylfaen(run, 12)
+        elif b[0] == 'bullet':
+            t = re.sub(r'^•\s*\t?\s*', '', b[1])
+            p = doc.add_paragraph(style='Normal')
+            run = p.add_run('•  ' + t); set_sylfaen(run, 12)
+        elif b[0] == 'num':
+            t = re.sub(r'^(\d+)\s*\t\s*', r'\1. ', b[1])
+            p = doc.add_paragraph(style='Normal'); run = p.add_run(t); set_sylfaen(run, 12)
+        elif b[0] == 'table':
+            grid = b[1]
+            num, title = TABLE_META[tcount]; tcount += 1
+            cap = doc.add_paragraph(style='Normal')      # caption above table (GTU)
+            cap.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+            crun = cap.add_run(f'ცხრილი {num}. {title}'); set_sylfaen(crun, 11, bold=True)
+            ncol = max(len(r) for r in grid)
+            tbl = doc.add_table(rows=len(grid), cols=ncol)
+            set_table_borders(tbl)
+            for ri, row in enumerate(grid):
+                for ci in range(ncol):
+                    cell = tbl.cell(ri, ci)
+                    txt = row[ci] if ci < len(row) else ''
+                    cp = cell.paragraphs[0]
+                    cp.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+                    run = cp.add_run(txt); set_sylfaen(run, 11, bold=(ri == 0))
+            doc.add_paragraph('', style='Normal')
+
+    # ---- F. bibliography ----
+    p = doc.add_paragraph(style='Heading 1'); p.paragraph_format.page_break_before = True
+    run = p.add_run('ბიბლიოგრაფია'); set_sylfaen(run, 14, bold=True)
+    for entry in bibliography():
+        p = doc.add_paragraph(style='Normal')
+        p.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+        run = p.add_run(entry); set_sylfaen(run, 11)
+
+    # ---- H. populate ცხრილების ნუსხა (list of tables) ----
+    idx = para_index(doc, 'ცხრილების ნუსხა')
+    if idx >= 0:
+        prev = doc.paragraphs[idx]
+        for num, title in TABLE_META:
+            prev = insert_paragraph_after(prev, f'ცხრილი {num}. {title}', style='Normal',
+                                          spacing=WD_LINE_SPACING.SINGLE)
+
+    # ---- I. cleanup: stray backtick + blank spacer page ----
+    for p in doc.paragraphs[:3]:
+        if p.text.strip() == '`':
+            for r in p.runs:
+                r.text = ''
+    # delete the run of empty template spacer paragraphs after the English keywords line
+    kw = next((i for i, p in enumerate(doc.paragraphs)
+               if p.text.strip().startswith('Keywords:')), -1)
+    if kw >= 0:
+        to_del = []
+        for p in doc.paragraphs[kw+1:]:
+            if p.text.strip():
+                break
+            if 'w:br' in p._p.xml and 'type="page"' in p._p.xml:
+                break            # keep the page-break paragraph
+            to_del.append(p._p)
+        for el in to_del:
+            el.getparent().remove(el)
+
+    doc.save(OUT)
+    print('saved', OUT)
+
+    # ---- G. title-page text boxes (XML surgery, scoped to txbxContent) ----
+    patch_textboxes(OUT, {
+        'სახელი და გვარი': AUTHOR,
+        'ივლისი, 2023 წელი': f'{MONTH}, {YEAR} წელი',
+    }, TITLE)
+    print('patched text boxes')
+
+
+def bibliography():
+    lines = open(BIB, encoding='utf-8').read().split('\n')
+    # scan ONLY within the "## ბიბლიოგრაფია" section
+    start = next(i for i, l in enumerate(lines) if l.strip().startswith('## ბიბლიოგრაფია'))
+    out, expect = [], 1
+    for l in lines[start+1:]:
+        s = l.strip()
+        if s.startswith('## '):          # next section -> stop
+            break
+        m = re.match(r'^(\d+)\.\s+(.*)$', s)
+        if m and int(m.group(1)) == expect:
+            entry = re.sub(r'\s*⚠️.*$', '', m.group(2))
+            out.append(f'[{m.group(1)}] {entry}')
+            expect += 1
+    return out
+
+
+def patch_textboxes(path, repls, title):
+    tmp = path + '.tmp'
+    with zipfile.ZipFile(path) as zin:
+        names = zin.namelist()
+        data = {n: zin.read(n) for n in names}
+    xml = data['word/document.xml'].decode('utf-8')
+
+    def fix_txbx(m):
+        block = m.group(0)
+        for a, b in repls.items():
+            block = block.replace(a, b)
+        # title placeholder is split across two runs: "ნაშრომის " + "სათაური "
+        block = block.replace('ნაშრომის ', title + ' ')
+        block = block.replace('სათაური ', '')
+        return block
+    xml = re.sub(r'<w:txbxContent>.*?</w:txbxContent>', fix_txbx, xml, flags=re.S)
+    data['word/document.xml'] = xml.encode('utf-8')
+
+    # tell Word/LibreOffice to update all fields (TOC) on open
+    sx = data['word/settings.xml'].decode('utf-8')
+    if 'updateFields' not in sx:
+        sx = sx.replace('<w:settings ', '<w:settings ', 1)
+        sx = re.sub(r'(<w:settings[^>]*>)', r'\1<w:updateFields w:val="true"/>', sx, count=1)
+        data['word/settings.xml'] = sx.encode('utf-8')
+    with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as zout:
+        for n in names:
+            zout.writestr(n, data[n])
+    shutil.move(tmp, path)
+
+
+if __name__ == '__main__':
+    main()

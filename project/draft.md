@@ -302,8 +302,8 @@ LongMemEval-ის ქვესეტი; საკუთარი მსაჯ�
 15. Fang C.M., Liu A.R., Danry V., Lee E., Chan S.W.T., Pataranutaporn P., Maes P., Phang J., Lampe M., Ahmad L., Agarwal S. How AI and Human Behaviors Shape Psychosocial Effects of Extended Chatbot Use: A Longitudinal Randomized Controlled Study. 2025. arXiv:2503.17473.
 16. Wu Y., Liang S., Zhang C., Wang Y., Zhang Y., Guo H., Tang R., Liu Y. From Human Memory to AI Memory: A Survey on Memory Mechanisms in the Era of LLMs. 2025. arXiv:2504.15965.
 17. Packer C., Wooders S., Lin K., Fang V., Patil S.G., Stoica I., Gonzalez J.E. MemGPT: Towards LLMs as Operating Systems. 2023. arXiv:2310.08560.
-18. OpenAI. [„Dreaming V3" — მეხსიერების ფონური კონსოლიდაციის ფუნქციის ანონსი, 2026 წ. ივნისი] ⚠️ TODO: ოფიციალური ანონსის URL და ზუსტი სათაური დასაზუსტებელია.
-19. Anthropic. [აგენტური მეხსიერების კონსოლიდაციის კვლევითი წინასწარი ვერსია, 2026 წ. მაისი] ⚠️ TODO: ოფიციალური ანონსის URL და ზუსტი სათაური დასაზუსტებელია.
+18. OpenAI. Dreaming: Better memory for a more helpful ChatGPT. OpenAI, 2026 (4 ივნისი). https://openai.com/index/chatgpt-memory-dreaming/
+19. Anthropic. New in Claude Managed Agents: dreaming, outcomes, and multiagent orchestration. Anthropic, 2026 (19 მაისი, კვლევითი წინასწარი ვერსია). https://claude.com/blog/new-in-claude-managed-agents
 20. Atkinson R.C., Shiffrin R.M. Human Memory: A Proposed System and Its Control Processes. In: Spence K.W., Spence J.T. (Eds.), The Psychology of Learning and Motivation, vol. 2, pp. 89–195. New York: Academic Press, 1968.
 21. Baddeley A.D., Hitch G. Working Memory. In: Bower G.H. (Ed.), The Psychology of Learning and Motivation, vol. 8, pp. 47–89. New York: Academic Press, 1974.
 22. Tulving E. Episodic and Semantic Memory. In: Tulving E., Donaldson W. (Eds.), Organization of Memory, pp. 381–403. New York: Academic Press, 1972.
@@ -318,7 +318,7 @@ LongMemEval-ის ქვესეტი; საკუთარი მსაჯ�
 31. Zacks J.M., Speer N.K., Swallow K.M., Braver T.S., Reynolds J.R. Event perception: A mind-brain perspective. Psychological Bulletin, 133(2), 273–293, 2007. doi:10.1037/0033-2909.133.2.273. ⚠️ TODO: გადასამოწმებელია (event-segmentation theory; EM-LLM-ის საფუძველი).
 32. getzep/zep-papers, GitHub Issue #5: "Revisiting Zep's 84% LoCoMo Claim: Corrected Evaluation & 58.44% Accuracy", 2025. (ვენდორთა შორის შეფასების დავა — იხ. F9.)
 33. dial481/locomo-audit, GitHub repository, 2026. (LoCoMo-ს დამოუკიდებელი აუდიტი: ოქროს პასუხების 6.4% მცდარი — იხ. F9.)
-34. [MemoryGraph pilot] "Remembering Things Makes Chatbots Sound Smarter, but Less Trustworthy". CUI 2025. doi:10.1145/3719160.3737617. ⚠️ TODO: ავტორები/ზუსტი სათაური დასაზუსტებელია.
+34. Yan Z., Fischer J.E., Clos J. Remembering Things Makes Chatbots Sound Smarter, but Less Trustworthy — A Pilot Study. In: Proceedings of the 7th ACM Conference on Conversational User Interfaces (CUI '25), Art. 23, pp. 23:1–23:8, 2025. doi:10.1145/3719160.3737617.
 35. Xu J., Szlam A., Weston J. Beyond Goldfish Memory: Long-Term Open-Domain Conversation (Multi-Session Chat, MSC). ACL 2022. arXiv:2107.07567.
 
 ## დანართები ⬜
