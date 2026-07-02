@@ -13,7 +13,7 @@ Output: project/thesis-ka.docx
 import re, copy, sys, zipfile, shutil, os, subprocess, json
 from docx import Document
 from docx.shared import Pt, Cm
-from docx.enum.text import WD_LINE_SPACING, WD_TAB_ALIGNMENT, WD_TAB_LEADER
+from docx.enum.text import WD_LINE_SPACING, WD_TAB_ALIGNMENT, WD_TAB_LEADER, WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 from blueprint import parse_blueprint
@@ -249,6 +249,11 @@ def main():
     for p in doc.paragraphs:
         if 'დასახელება' in p.text and 'სამაგისტრო ნაშრომი' in p.text:
             replace_in_paragraph(p, [('დასახელება', f'„{TITLE}“')])
+    # front matter: justified body paragraphs stretch the Georgian ugly with real
+    # text inserted -> left-align (matches the GTU sample). Only template paras exist now.
+    for p in doc.paragraphs:
+        if p.alignment == WD_ALIGN_PARAGRAPH.JUSTIFY:
+            p.alignment = WD_ALIGN_PARAGRAPH.LEFT
 
     # ---- B. რეზიუმე (Georgian abstract) ----
     idx = para_index(doc, 'რეზიუმე')
@@ -412,6 +417,10 @@ def patch_textboxes(path, repls, title):
         block = block.replace('სათაური ', '')
         return block
     xml = re.sub(r'<w:txbxContent>.*?</w:txbxContent>', fix_txbx, xml, flags=re.S)
+    # NB: the template title page is a fragile floating-box layout (logo image + 4
+    # absolutely-positioned text boxes). Scripted resize/reposition of the logo
+    # collides the boxes, so the logo size is left as the template designed it —
+    # final logo sizing is a trivial manual drag in Word/Pages.
     data['word/document.xml'] = xml.encode('utf-8')
 
     # tell Word/LibreOffice to update all fields (TOC) on open
