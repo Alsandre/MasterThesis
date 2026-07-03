@@ -40,6 +40,10 @@ PROGRAM= "[სამაგისტრო პროგრამა]"         # T
 SUPERVISOR = "ოთარ თავდიშვილი"           # confirmed by Lekso
 DEFENSE_DATE = "[სხდომის თარიღი]"        # TODO
 
+# chapters rendered cohesively: subsection headings become bold run-in lead-ins
+# (flowing prose, no numbered sub-headings) — like the passed GTU reference.
+COHESIVE_CHAPTERS = {'1'}
+
 # table captions (numbers MUST match the "ცხრილი N.M" references in the prose)
 TABLE_META = [
     ("2.1", "ადამიანის მეხსიერების თეორიები და მათი შესაბამისი LLM-იმპლემენტაციები"),
@@ -157,6 +161,15 @@ def insert_paragraph_after(paragraph, text='', style=None, spacing=None):
         np.paragraph_format.line_spacing_rule = spacing
     return np
 
+def _insert_in_tblpr(tblPr, el, after_tags):
+    """Insert el into tblPr in schema order: before the first of after_tags present."""
+    for tag in after_tags:
+        anchor = tblPr.find(qn(tag))
+        if anchor is not None:
+            anchor.addprevious(el)
+            return
+    tblPr.append(el)
+
 def set_table_borders(tbl):
     tblPr = tbl._element.tblPr
     borders = OxmlElement('w:tblBorders')
@@ -165,15 +178,14 @@ def set_table_borders(tbl):
         el.set(qn('w:val'), 'single'); el.set(qn('w:sz'), '4')
         el.set(qn('w:space'), '0'); el.set(qn('w:color'), '000000')
         borders.append(el)
-    tblPr.append(borders)
+    # schema order: tblBorders comes before shd/tblLayout/tblLook
+    _insert_in_tblpr(tblPr, borders, ('w:shd', 'w:tblLayout', 'w:tblLook'))
 
 def set_col_widths(tbl, grid, total_cm=14.7):
     """Fixed layout with content-proportional column widths (so numeric columns
     stay narrow and long-label columns get the room they need)."""
     ncol = max(len(r) for r in grid)
-    tbl.autofit = False
-    tblPr = tbl._element.tblPr
-    layout = OxmlElement('w:tblLayout'); layout.set(qn('w:type'), 'fixed'); tblPr.append(layout)
+    tbl.autofit = False        # adds a schema-ordered <w:tblLayout w:type="fixed"/>
     # per-column weight = max content length (floored), dampened for very long cells
     weights = []
     for c in range(ncol):
@@ -294,11 +306,23 @@ def main():
         return t
     started = False
     tcount = 0
+    current_chapter = None
+    pending_leadin = None      # cohesive-chapter run-in label awaiting its paragraph
+
+    def flush_leadin():         # emit a stranded lead-in as its own bold line (rare)
+        nonlocal pending_leadin
+        if pending_leadin:
+            pp = doc.add_paragraph(style='Normal')
+            r = pp.add_run(pending_leadin + '.'); set_sylfaen(r, 12, bold=True)
+            pending_leadin = None
+
     for b in poured:
         if b[0] == 'h1':
             if b[1].strip() == 'ანოტაცია':
                 continue
             started = True
+            m = re.match(r'^(\d+)\.', norm_heading(b[1]))
+            current_chapter = m.group(1) if m else None
             p = doc.add_paragraph(style='Heading 1')
             suppress_numbering(p)
             p.paragraph_format.page_break_before = True     # GTU: chapters start on a new page
@@ -307,19 +331,29 @@ def main():
         if not started:
             continue
         if b[0] == 'h2':
+            if current_chapter in COHESIVE_CHAPTERS:
+                pending_leadin = re.sub(r'^\d+\.\d+\s*', '', b[1]).strip()   # drop "1.1 "
+                continue
             p = doc.add_paragraph(style='Heading 2')
             suppress_numbering(p)
             run = p.add_run(b[1]); set_sylfaen(run, 13, bold=True)
         elif b[0] == 'p':
-            p = doc.add_paragraph(style='Normal'); run = p.add_run(clean_prose(b[1])); set_sylfaen(run, 12)
+            p = doc.add_paragraph(style='Normal')
+            if pending_leadin:
+                lead = p.add_run(pending_leadin + '. '); set_sylfaen(lead, 12, bold=True)
+                pending_leadin = None
+            run = p.add_run(clean_prose(b[1])); set_sylfaen(run, 12)
         elif b[0] == 'bullet':
+            flush_leadin()
             t = clean_prose(re.sub(r'^•\s*\t?\s*', '', b[1]))
             p = doc.add_paragraph(style='Normal')
             run = p.add_run('•  ' + t); set_sylfaen(run, 12)
         elif b[0] == 'num':
+            flush_leadin()
             t = clean_prose(re.sub(r'^(\d+)\s*\t\s*', r'\1. ', b[1]))
             p = doc.add_paragraph(style='Normal'); run = p.add_run(t); set_sylfaen(run, 12)
         elif b[0] == 'table':
+            flush_leadin()
             grid = b[1]
             num, title = TABLE_META[tcount]; tcount += 1
             cap = doc.add_paragraph(style='Normal')      # caption above table (GTU)
@@ -427,11 +461,15 @@ def patch_textboxes(path, repls, title):
     # final logo sizing is a trivial manual drag in Word/Pages.
     data['word/document.xml'] = xml.encode('utf-8')
 
-    # tell Word/LibreOffice to update all fields (TOC) on open
+    # tell Word/LibreOffice to update all fields (TOC) on open — insert in schema
+    # order (updateFields sits after characterSpacingControl, before footnotePr).
     sx = data['word/settings.xml'].decode('utf-8')
     if 'updateFields' not in sx:
-        sx = sx.replace('<w:settings ', '<w:settings ', 1)
-        sx = re.sub(r'(<w:settings[^>]*>)', r'\1<w:updateFields w:val="true"/>', sx, count=1)
+        tag = '<w:updateFields w:val="true"/>'
+        for anchor in ('<w:footnotePr', '<w:endnotePr', '<w:compat', '<w:rsids', '</w:settings>'):
+            if anchor in sx:
+                sx = sx.replace(anchor, tag + anchor, 1)
+                break
         data['word/settings.xml'] = sx.encode('utf-8')
     with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as zout:
         for n in names:

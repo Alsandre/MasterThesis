@@ -136,21 +136,6 @@ def border_tables(d):
     log(f"tables: single-line grid borders ({len(d.tables)})")
 
 # ---------- TOC ----------
-def ensure_toc_styles(d):
-    existing = {s.name for s in d.styles}
-    for lvl, nm in enumerate(TOC_STYLES, start=1):
-        if nm not in existing:
-            st = d.styles.add_style(nm, WD_STYLE_TYPE.PARAGRAPH)
-            st.base_style = d.styles['Normal']
-        st = d.styles[nm]
-        st.font.name = FONT; st.font.size = Pt(12); st.font.color.rgb = BLACK
-        pf = st.paragraph_format
-        pf.line_spacing = 1.0; pf.space_after = Pt(0); pf.space_before = Pt(0)
-        pf.left_indent = TOC_INDENT[lvl]
-        for ts in list(pf.tab_stops):            # reset tabs
-            pf.tab_stops._pPr.find(qn('w:tabs')).remove(ts._tab_stop)
-        pf.tab_stops.add_tab_stop(TOC_TAB, WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
-
 def collect_headings(d):
     out = []
     for p in d.paragraphs:
@@ -191,15 +176,19 @@ def build_entries(d, headings, page_of):
     assert toc_h is not None, "no 'შინაარსი' TOC Heading found"
     anchor = toc_h._p
     for lvl, text in headings:
-        p = d.add_paragraph(style=TOC_STYLES[lvl - 1])
-        p.add_run(text)
-        p.add_run('\t')
-        p.add_run(str(page_of.get(text, '?')))
+        p = d.add_paragraph()                    # Normal + direct fmt (Word-robust)
+        pf = p.paragraph_format
+        pf.line_spacing = 1.0
+        pf.space_before = Pt(0); pf.space_after = Pt(0)
+        pf.left_indent = TOC_INDENT[lvl]
+        # dot-leader right tab DIRECTLY on the paragraph — Word renders this
+        pf.tab_stops.add_tab_stop(TOC_TAB, WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
+        for chunk in (text, '\t', str(page_of.get(text, '?'))):
+            r = p.add_run(chunk); r.font.name = FONT; r.font.size = Pt(12)
         anchor.addnext(p._p); anchor = p._p
 
 def regen_toc(d, docx_path):
     headings = collect_headings(d)
-    ensure_toc_styles(d)
     clear_old_toc(d)
     # pass 1: placeholder pages -> fixes TOC length/pagination
     PLACE = 'XPGX'

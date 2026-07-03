@@ -148,6 +148,12 @@ TOC regen rules it must keep obeying:
   „ცხრილების ნუსხა" (list of tables) sections** that follow the TOC.
 - Chapters start new pages via `page_break_before=True` on the H1 — don't add
   manual break paragraphs.
+- **Dot leaders MUST be a direct tab stop on each entry paragraph**
+  (`w:val="right" w:leader="dot"`), NOT inherited from a `TOC n` style. Word
+  ignores the built-in TOC style's default leader that LibreOffice silently
+  supplies — so a style-based leader renders in LibreOffice but shows blank in
+  Word. Verify the leader in Word (or grep `w:leader="dot"` in the entry's XML),
+  never trust the LibreOffice preview for this.
 - ⚠️ Page numbers are LibreOffice-computed; they can differ from Word by a page.
   Verify in Word before submission. It's a static TOC (no live field).
 
