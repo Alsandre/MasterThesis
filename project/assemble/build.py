@@ -261,6 +261,41 @@ def rebuild_title_page(doc):
     line('თბილისი, 0160, საქართველო', align='center')
     line(f'{MONTH}, {YEAR} წელი', align='center')
 
+def collapse_to_single_section(doc):
+    """Merge the template's two sections into one, like the passed reference.
+    A mid-document nextPage section break makes GOOGLE DOCS insert a phantom
+    blank page (Word/LibreOffice absorb it). One section + 'different first page'
+    (titlePg) keeps the title page unnumbered without a section break; a plain
+    page break starts the recommendation on the next page. Numbering: start=0 so
+    the hidden title page is page 0 and the recommendation reads as page 1."""
+    body = doc.element.body
+    paras = doc.paragraphs
+    brk_i = next((i for i, p in enumerate(paras)
+                  if p._p.find(qn('w:pPr')) is not None
+                  and p._p.find(qn('w:pPr')).find(qn('w:sectPr')) is not None), None)
+    if brk_i is None or brk_i + 1 >= len(paras):
+        return
+    # push the paragraph after the break onto a fresh page, then drop the sectPr
+    paras[brk_i + 1].paragraph_format.page_break_before = True
+    ppr = paras[brk_i]._p.find(qn('w:pPr'))
+    ppr.remove(ppr.find(qn('w:sectPr')))
+    # final (now single) sectPr: titlePg + pgNumType start=0, both in schema order
+    final = body.find(qn('w:sectPr'))
+    pg = final.find(qn('w:pgNumType'))
+    if pg is None:
+        pg = OxmlElement('w:pgNumType')
+        anchor = final.find(qn('w:cols'))
+        (anchor.addprevious if anchor is not None else final.append)(pg)
+    pg.set(qn('w:start'), '0')
+    if final.find(qn('w:titlePg')) is None:
+        tp = OxmlElement('w:titlePg')
+        anchor = None
+        for tag in ('w:textDirection', 'w:docGrid'):   # titlePg precedes these
+            el = final.find(qn(tag))
+            if el is not None:
+                anchor = el; break
+        (anchor.addprevious if anchor is not None else final.append)(tp)
+
 def suppress_numbering(p):
     """Override the Heading style's automatic outline numbering (numId=30) with
     numId=0 so only our manual '1.', '1.1' numbers appear (no double-numbering)."""
@@ -323,6 +358,8 @@ def main():
 
     # ---- A2. title page: floating boxes -> inline text + small logo ----
     rebuild_title_page(doc)
+    # ---- A3. collapse 2 sections -> 1 (avoids a Google Docs phantom blank page)
+    collapse_to_single_section(doc)
 
     # ---- B. რეზიუმე (Georgian abstract) ----
     idx = para_index(doc, 'რეზიუმე')
