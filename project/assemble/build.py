@@ -10,9 +10,9 @@ Sources:
 
 Output: project/thesis-ka.docx
 """
-import re, copy, sys, zipfile, shutil, os, subprocess, json
+import re, copy, sys, zipfile, shutil, os, subprocess, json, io
 from docx import Document
-from docx.shared import Pt, Cm
+from docx.shared import Pt, Cm, Mm
 from docx.enum.text import WD_LINE_SPACING, WD_TAB_ALIGNMENT, WD_TAB_LEADER, WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
@@ -211,6 +211,56 @@ def clean_prose(t):
     """Light polish: drop the § section-marker so prose matches the §-less headings."""
     return t.replace('§', '')
 
+def rebuild_title_page(doc):
+    """Replace the template's floating-box title page (effectively a full-page
+    image) with clean inline text + a small centred logo — reproduces the
+    f187836 format-session layout so it survives every content rebuild and stays
+    searchable / plagiarism-safe."""
+    with zipfile.ZipFile(TEMPLATE) as z:
+        logo_bytes = z.read('word/media/image1.png')
+    # locate the section-0 break paragraph (holds the title-page sectPr)
+    sect_p = None
+    for p in doc.paragraphs:
+        ppr = p._p.find(qn('w:pPr'))
+        if ppr is not None and ppr.find(qn('w:sectPr')) is not None:
+            sect_p = p._p; break
+    # delete every paragraph before that break (the floating-box title page)
+    for p in list(doc.paragraphs):
+        if p._p is sect_p:
+            break
+        p._p.getparent().remove(p._p)
+    # section-0 margins: match the body (38/25) instead of the 5 mm full-bleed
+    s0 = doc.sections[0]
+    s0.left_margin, s0.right_margin = Mm(38), Mm(25)
+    s0.top_margin, s0.bottom_margin = Mm(25), Mm(25)
+    ALIGN = {'center': WD_ALIGN_PARAGRAPH.CENTER, 'right': WD_ALIGN_PARAGRAPH.RIGHT,
+             'left': WD_ALIGN_PARAGRAPH.LEFT}
+
+    def line(text='', img=False, size=12, bold=False, align='center', width_cm=11):
+        par = doc.add_paragraph()                 # append (has image-part access)
+        par.alignment = ALIGN[align]
+        par.paragraph_format.line_spacing = 1.0
+        par.paragraph_format.space_after = Pt(0)
+        if img:
+            par.add_run().add_picture(io.BytesIO(logo_bytes), width=Cm(width_cm))
+        elif text:
+            set_sylfaen(par.add_run(text), size, bold=bold)
+        sect_p.addprevious(par._p)                # relocate before the break, in order
+        return par
+
+    shifri = SHIFRI if SHIFRI != '[შიფრი]' else '[___]'
+    line(img=True, width_cm=11)                   # logo
+    line()
+    line(AUTHOR, size=12, bold=True, align='right')
+    line()
+    line(TITLE, size=16, bold=True, align='center')
+    line()
+    line('შიფრი: ' + shifri, size=14, bold=True, align='center')
+    line(); line()
+    line('საქართველოს ტექნიკური უნივერსიტეტი', align='center')
+    line('თბილისი, 0160, საქართველო', align='center')
+    line(f'{MONTH}, {YEAR} წელი', align='center')
+
 def suppress_numbering(p):
     """Override the Heading style's automatic outline numbering (numId=30) with
     numId=0 so only our manual '1.', '1.1' numbers appear (no double-numbering)."""
@@ -270,6 +320,9 @@ def main():
         if p.paragraph_format.line_spacing == 1.0:
             p.paragraph_format.line_spacing = 1.5
             p.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
+
+    # ---- A2. title page: floating boxes -> inline text + small logo ----
+    rebuild_title_page(doc)
 
     # ---- B. რეზიუმე (Georgian abstract) ----
     idx = para_index(doc, 'რეზიუმე')
