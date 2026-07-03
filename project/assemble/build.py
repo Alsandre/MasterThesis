@@ -261,40 +261,40 @@ def rebuild_title_page(doc):
     line('თბილისი, 0160, საქართველო', align='center')
     line(f'{MONTH}, {YEAR} წელი', align='center')
 
-def collapse_to_single_section(doc):
-    """Merge the template's two sections into one, like the passed reference.
-    A mid-document nextPage section break makes GOOGLE DOCS insert a phantom
-    blank page (Word/LibreOffice absorb it). One section + 'different first page'
-    (titlePg) keeps the title page unnumbered without a section break; a plain
-    page break starts the recommendation on the next page. Numbering: start=0 so
-    the hidden title page is page 0 and the recommendation reads as page 1."""
-    body = doc.element.body
+def fix_front_matter_pagination(doc):
+    """Make front-matter pages separate cleanly in Word, LibreOffice AND Google
+    Docs. Google Docs inflates an empty 'page-break paragraph' plus a run of
+    spacer empties into a phantom blank page (recommendation -> copyright). Fix:
+    (1) convert explicit page breaks to pageBreakBefore on the following
+    paragraph (delete the empty break paragraph); (2) collapse long runs of
+    spacer empties. Keeps the 2-section structure, so page numbering is intact."""
+    # 1. explicit page-break paragraphs -> pageBreakBefore on the next paragraph
     paras = doc.paragraphs
-    brk_i = next((i for i, p in enumerate(paras)
-                  if p._p.find(qn('w:pPr')) is not None
-                  and p._p.find(qn('w:pPr')).find(qn('w:sectPr')) is not None), None)
-    if brk_i is None or brk_i + 1 >= len(paras):
-        return
-    # push the paragraph after the break onto a fresh page, then drop the sectPr
-    paras[brk_i + 1].paragraph_format.page_break_before = True
-    ppr = paras[brk_i]._p.find(qn('w:pPr'))
-    ppr.remove(ppr.find(qn('w:sectPr')))
-    # final (now single) sectPr: titlePg + pgNumType start=0, both in schema order
-    final = body.find(qn('w:sectPr'))
-    pg = final.find(qn('w:pgNumType'))
-    if pg is None:
-        pg = OxmlElement('w:pgNumType')
-        anchor = final.find(qn('w:cols'))
-        (anchor.addprevious if anchor is not None else final.append)(pg)
-    pg.set(qn('w:start'), '0')
-    if final.find(qn('w:titlePg')) is None:
-        tp = OxmlElement('w:titlePg')
-        anchor = None
-        for tag in ('w:textDirection', 'w:docGrid'):   # titlePg precedes these
-            el = final.find(qn(tag))
-            if el is not None:
-                anchor = el; break
-        (anchor.addprevious if anchor is not None else final.append)(tp)
+    to_del = []
+    for i, p in enumerate(paras):
+        if not p.text.strip() and 'w:br' in p._p.xml and 'type="page"' in p._p.xml:
+            if i + 1 < len(paras):
+                paras[i + 1].paragraph_format.page_break_before = True
+            to_del.append(p._p)
+    for el in to_del:
+        if el.getparent() is not None:
+            el.getparent().remove(el)
+    # 2. collapse runs of >=4 empty spacer paragraphs down to 2 (keeps signature
+    #    spacing, removes the page-fill padding that overflows into a blank page)
+    paras = doc.paragraphs
+    run, to_del = [], []
+    def flush():
+        if len(run) >= 4:
+            to_del.extend(run[2:])
+    for p in paras:
+        if not p.text.strip() and '<w:drawing' not in p._p.xml and 'w:br' not in p._p.xml:
+            run.append(p._p)
+        else:
+            flush(); run.clear()
+    flush()
+    for el in to_del:
+        if el.getparent() is not None:
+            el.getparent().remove(el)
 
 def suppress_numbering(p):
     """Override the Heading style's automatic outline numbering (numId=30) with
@@ -358,8 +358,8 @@ def main():
 
     # ---- A2. title page: floating boxes -> inline text + small logo ----
     rebuild_title_page(doc)
-    # ---- A3. collapse 2 sections -> 1 (avoids a Google Docs phantom blank page)
-    collapse_to_single_section(doc)
+    # ---- A3. front-matter page separation robust across Word/LibreOffice/Google Docs
+    fix_front_matter_pagination(doc)
 
     # ---- B. რეზიუმე (Georgian abstract) ----
     idx = para_index(doc, 'რეზიუმე')
