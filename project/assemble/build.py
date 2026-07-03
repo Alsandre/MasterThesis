@@ -35,7 +35,7 @@ TITLE  = "სასაუბრო ხელოვნური ინტელ�
 AUTHOR = "ალექსანდრე იმნაიშვილი"         # confirmed by Lekso
 YEAR   = "2026"                          # cover year (default; editable)
 MONTH  = "ივლისი"                        # cover month (default; editable)
-SHIFRI = "[შიფრი]"                       # TODO from Lekso
+SHIFRI = "0163"                          # confirmed by Lekso
 PROGRAM= "[სამაგისტრო პროგრამა]"         # TODO from Lekso
 SUPERVISOR = "ოთარ თავდიშვილი"           # confirmed by Lekso
 DEFENSE_DATE = "[სხდომის თარიღი]"        # TODO
@@ -462,6 +462,24 @@ def main():
                 break            # keep the page-break paragraph
             to_del.append(p._p)
         for el in to_del:
+            el.getparent().remove(el)
+
+    # strip empty spacer paragraphs immediately BEFORE any hard page break — at 1.5
+    # front-matter spacing they overflow onto a blank page (e.g. recommendation ->
+    # copyright). Mid-page spacing empties (not before a break) are kept.
+    def is_break(p):
+        return 'w:br' in p._p.xml and 'type="page"' in p._p.xml
+    def is_empty(p):
+        return not p.text.strip() and '<w:drawing' not in p._p.xml and not is_break(p)
+    paras = list(doc.paragraphs)
+    to_del = []
+    for i, p in enumerate(paras):
+        if is_break(p):
+            j = i - 1
+            while j >= 0 and is_empty(paras[j]):
+                to_del.append(paras[j]._p); j -= 1
+    for el in to_del:
+        if el.getparent() is not None:
             el.getparent().remove(el)
 
     doc.save(OUT)

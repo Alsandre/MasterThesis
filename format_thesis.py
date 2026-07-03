@@ -132,7 +132,14 @@ def border_tables(d):
             el.set(qn('w:val'), 'single'); el.set(qn('w:sz'), '4')
             el.set(qn('w:space'), '0'); el.set(qn('w:color'), 'auto')
             b.append(el)
-        tblPr.append(b)
+        # insert in OOXML schema order (tblBorders before shd/tblLayout/tblLook),
+        # not at the end — appending after tblLook is invalid and fails validation
+        anchor = next((tblPr.find(qn('w:' + tag)) for tag in ('shd', 'tblLayout', 'tblLook')
+                       if tblPr.find(qn('w:' + tag)) is not None), None)
+        if anchor is not None:
+            anchor.addprevious(b)
+        else:
+            tblPr.append(b)
     log(f"tables: single-line grid borders ({len(d.tables)})")
 
 # ---------- TOC ----------
