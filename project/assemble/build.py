@@ -211,11 +211,15 @@ def clean_prose(t):
     """Light polish: drop the § section-marker so prose matches the §-less headings."""
     return t.replace('§', '')
 
-def rebuild_title_page(doc):
+def rebuild_title_page(doc, author=None, title=None, shifri_line=None, org_lines=None):
     """Replace the template's floating-box title page (effectively a full-page
     image) with clean inline text + a small centred logo — reproduces the
     f187836 format-session layout so it survives every content rebuild and stays
-    searchable / plagiarism-safe."""
+    searchable / plagiarism-safe. Title-page text is parameterized; the defaults
+    reproduce the Georgian cover (so build.py is unchanged), while build_en.py
+    passes English values."""
+    author = author if author is not None else AUTHOR
+    title  = title  if title  is not None else TITLE
     with zipfile.ZipFile(TEMPLATE) as z:
         logo_bytes = z.read('word/media/image1.png')
     # locate the section-0 break paragraph (holds the title-page sectPr)
@@ -249,17 +253,22 @@ def rebuild_title_page(doc):
         return par
 
     shifri = SHIFRI if SHIFRI != '[შიფრი]' else '[___]'
+    if shifri_line is None:
+        shifri_line = 'შიფრი: ' + shifri
+    if org_lines is None:
+        org_lines = ['საქართველოს ტექნიკური უნივერსიტეტი',
+                     'თბილისი, 0160, საქართველო',
+                     f'{MONTH}, {YEAR} წელი']
     line(img=True, width_cm=11)                   # logo
     line()
-    line(AUTHOR, size=12, bold=True, align='right')
+    line(author, size=12, bold=True, align='right')
     line()
-    line(TITLE, size=16, bold=True, align='center')
+    line(title, size=16, bold=True, align='center')
     line()
-    line('შიფრი: ' + shifri, size=14, bold=True, align='center')
+    line(shifri_line, size=14, bold=True, align='center')
     line(); line()
-    line('საქართველოს ტექნიკური უნივერსიტეტი', align='center')
-    line('თბილისი, 0160, საქართველო', align='center')
-    line(f'{MONTH}, {YEAR} წელი', align='center')
+    for ol in org_lines:
+        line(ol, align='center')
 
 def fix_front_matter_pagination(doc):
     """Make front-matter pages separate cleanly in Word, LibreOffice AND Google

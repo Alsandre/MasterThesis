@@ -31,6 +31,12 @@ from blueprint import parse_blueprint, strip_md
 MD     = build.MD
 OUT_EN = build.R("project/thesis-en.docx")
 
+# English title-page text (the Georgian front-matter pages stay Georgian; only the
+# cover is anglicized for the English edition).
+TITLE_EN  = "Conversational AI: The Evolution from Assistant to Interlocutor"
+AUTHOR_EN = "Aleksandre Imnaishvili"        # romanization of ალექსანდრე იმნაიშვილი
+MONTH_EN  = "July"
+
 # English table captions — same numbering as the Georgian TABLE_META (must match
 # the "Table N.M" references written into the English prose).
 TABLE_META_EN = [
@@ -77,7 +83,11 @@ def main():
             p.paragraph_format.line_spacing = 1.5
             p.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
 
-    rebuild_title_page(doc)                   # Georgian title page (same as thesis-ka)
+    rebuild_title_page(doc, author=AUTHOR_EN, title=TITLE_EN,
+                       shifri_line=f'Code: {build.SHIFRI}',
+                       org_lines=['Georgian Technical University',
+                                  'Tbilisi, 0160, Georgia',
+                                  f'{MONTH_EN} {YEAR}'])   # English cover
     fix_front_matter_pagination(doc)
 
     # ---- B. რეზიუმე (Georgian abstract, from the poured Georgian blocks) ----
