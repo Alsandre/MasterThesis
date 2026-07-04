@@ -48,8 +48,10 @@ ARXIV_RE = re.compile(r'arXiv:\s?(\d{4}\.\d{4,5})(v\d+)?', re.I)
 DOI_RE   = re.compile(r'(?:doi:?\s?)?(10\.\d{4,9}/[^\s]+)', re.I)
 LINK_STYLE    = 'url'      # 'url' = show full https address (reference style); 'label' = arXiv:id / doi:…
 LINK_COLOR    = '467886'   # muted steel-blue — matches the reference thesis' Hyperlink style
-VERIFIED_NOTE = 'უკანასკნელად იქნა გადამოწმებული'   # "last verified" — reference convention
-VERIFIED_DATE = '04.07.2026'   # access/verification date (DD.MM.YYYY); set to your submission date
+VERIFIED_NOTE    = 'უკანასკნელად იქნა გადამოწმებული'   # "last verified" — reference convention (Georgian doc)
+VERIFIED_NOTE_EN = 'last verified'                     # English-body doc
+VERIFIED_DATE    = '04.07.2026'   # access/verification date (DD.MM.YYYY); set to your submission date
+BIB_HEADING_RE   = r'ბიბლიოგრაფია|ლიტერატურა|Bibliography|References'
 
 # ---------- helpers ----------
 def norm(s): return re.sub(r'\s+', ' ', s).strip()
@@ -122,7 +124,7 @@ def justify_body(d):
     start = next((i for i in range(toc_i + 1, len(paras))
                   if paras[i].style.name == 'Heading 1' and paras[i].text.strip()), None)
     bib = next((i for i, p in enumerate(paras)
-                if p.style.name.startswith('Heading') and 'ბიბლიოგრაფია' in p.text), len(paras))
+                if p.style.name.startswith('Heading') and re.search(BIB_HEADING_RE, p.text)), len(paras))
     if start is None:
         log("body start not found — justify skipped"); return
     n = 0
@@ -218,16 +220,16 @@ def _plain_run(src, text):
     r.append(t)
     return r
 
-def _note_run(src, text):
-    """Georgian 'last verified' note: inherit font/size from src, force ka-GE lang
-    (it's Georgian text) and default (dark) color — NOT the link color."""
+def _note_run(src, text, lang='ka-GE'):
+    """'last verified' note run: inherit font/size from src, tag its language
+    (ka-GE Georgian / en-US English) and default (dark) color — NOT the link color."""
     r = OxmlElement('w:r'); rPr = OxmlElement('w:rPr')
     s = src.find(qn('w:rPr')) if src is not None else None
     if s is not None and s.find(qn('w:rFonts')) is not None:
         rPr.append(copy.deepcopy(s.find(qn('w:rFonts'))))
     if s is not None and s.find(qn('w:sz')) is not None:
         rPr.append(copy.deepcopy(s.find(qn('w:sz'))))
-    lang = OxmlElement('w:lang'); lang.set(qn('w:val'), 'ka-GE'); rPr.append(lang)
+    el = OxmlElement('w:lang'); el.set(qn('w:val'), lang); rPr.append(el)
     r.append(rPr)
     t = OxmlElement('w:t'); t.set(qn('xml:space'), 'preserve'); t.text = text
     r.append(t)
@@ -241,7 +243,7 @@ def _hyperlink(part, url, disp, tmpl):
     r.append(t); hl.append(r)
     return hl
 
-def _linkify_run(r, part):
+def _linkify_run(r, part, note, note_lang):
     t_el = r.find(qn('w:t'))
     if t_el is None or not t_el.text:
         return 0
@@ -264,13 +266,12 @@ def _linkify_run(r, part):
         if h[0] >= last:
             pruned.append(h); last = h[1]
     rPr = r.find(qn('w:rPr'))
-    note = f" - {VERIFIED_NOTE} - {VERIFIED_DATE}"
     nodes, pos = [], 0
     for s, e, disp, url in pruned:
         if s > pos:
             nodes.append(_plain_run(r, text[pos:s]))
         nodes.append(_hyperlink(part, url, disp, rPr))
-        nodes.append(_note_run(r, note))          # "last verified - date" after each link
+        nodes.append(_note_run(r, note, note_lang))   # "last verified - date" after each link
         pos = e
     if pos < len(text):
         nodes.append(_plain_run(r, text[pos:]))
@@ -286,14 +287,16 @@ def linkify_bibliography(d):
     re-run skips them."""
     part = d.part
     paras = d.paragraphs
-    start = next((i for i, p in enumerate(paras)
-                  if p.style.name.startswith('Heading')
-                  and re.search(r'ბიბლიოგრაფია|ლიტერატურა', p.text)), 0)
+    bib_i = next((i for i, p in enumerate(paras)
+                  if p.style.name.startswith('Heading') and re.search(BIB_HEADING_RE, p.text)), 0)
+    is_en = bool(bib_i and re.search(r'Bibliography|References', paras[bib_i].text))
+    note = f" - {VERIFIED_NOTE_EN if is_en else VERIFIED_NOTE} - {VERIFIED_DATE}"
+    note_lang = 'en-US' if is_en else 'ka-GE'
     total = 0
-    for p in paras[start:]:
+    for p in paras[bib_i:]:
         for r in list(p._p.findall(qn('w:r'))):   # direct children only -> idempotent
-            total += _linkify_run(r, part)
-    log(f"bibliography: linkified {total} identifiers (arXiv + DOI), from para {start}")
+            total += _linkify_run(r, part, note, note_lang)
+    log(f"bibliography: linkified {total} identifiers (arXiv + DOI), from para {bib_i} ({'EN' if is_en else 'KA'} note)")
 
 # ---------- TOC ----------
 def collect_headings(d):
