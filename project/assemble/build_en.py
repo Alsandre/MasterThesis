@@ -90,9 +90,7 @@ def main():
                                   f'{MONTH_EN} {YEAR}'])   # English cover
     fix_front_matter_pagination(doc)
 
-    # ---- B. რეზიუმე (Georgian abstract, from the poured Georgian blocks) ----
-    idx = para_index(doc, 'რეზიუმე')
-    anchor = doc.paragraphs[idx]
+    # collect the Georgian abstract text (from the poured Georgian blocks)
     ka_abs, collecting = [], False
     for b in poured:
         if b[0] == 'h1':
@@ -102,16 +100,22 @@ def main():
                 break
         elif collecting:
             ka_abs.append(b[1])
-    prev = anchor
-    for t in ka_abs:
-        prev = insert_paragraph_after(prev, clean_prose(t), style='Normal',
-                                      spacing=WD_LINE_SPACING.SINGLE)
 
-    # ---- C. Abstract (English) ----
-    idx = para_index(doc, 'Abstract')
+    # Mirror of the Georgian edition: this English edition leads with the ENGLISH
+    # abstract (რეზიუმე slot = the edition's primary language) and carries the
+    # GEORGIAN abstract in the second "Abstract" slot.
+    # ---- B. რეზიუმე slot -> English abstract ----
+    idx = para_index(doc, 'რეზიუმე')
     prev = doc.paragraphs[idx]
     for t in en_abs:
         prev = insert_paragraph_after(prev, t, style='Normal',
+                                      spacing=WD_LINE_SPACING.SINGLE)
+
+    # ---- C. Abstract slot -> Georgian abstract ----
+    idx = para_index(doc, 'Abstract')
+    prev = doc.paragraphs[idx]
+    for t in ka_abs:
+        prev = insert_paragraph_after(prev, clean_prose(t), style='Normal',
                                       spacing=WD_LINE_SPACING.SINGLE)
 
     # ---- D. Contents -> live Word TOC field ----
@@ -219,8 +223,8 @@ def main():
         for r in p.runs:
             if '`' in r.text:
                 r.text = r.text.replace('`', '')
-    kw = next((i for i, p in enumerate(doc.paragraphs)
-               if p.text.strip().startswith('Keywords:')), -1)
+    kw = max([i for i, p in enumerate(doc.paragraphs)
+              if re.match(r'^(Keywords:|საკვანძო)', p.text.strip())], default=-1)
     if kw >= 0:
         to_del = []
         for p in doc.paragraphs[kw+1:]:
