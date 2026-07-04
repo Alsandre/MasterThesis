@@ -17,13 +17,14 @@ Deps (already on this machine):
 
 It does NOT touch wording/content — only formatting + the TOC scaffold.
 """
-import sys, os, re, subprocess, tempfile
+import sys, os, re, copy, subprocess, tempfile
 from docx import Document
 from docx.shared import Pt, Mm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH as AL, WD_TAB_ALIGNMENT, WD_TAB_LEADER
 from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
 
 DOCX     = sys.argv[1] if len(sys.argv) > 1 else "project/thesis-ka.docx"
 SOFFICE  = "/Applications/LibreOffice.app/Contents/MacOS/soffice"
@@ -38,6 +39,13 @@ TOC_STYLES  = ('TOC 1', 'TOC 2', 'TOC 3')
 HEAD_SPACING = {'Heading 1': (18, 4), 'Heading 2': (8, 4), 'Heading 3': (8, 4)}
 
 log = lambda m: print("  -", m)
+
+# script detection for per-run proofing language
+GEO_RE = re.compile(r'[Ⴀ-ჿᲐ-Ჿⴀ-⴯]')  # Georgian (Mkhedruli/Mtavruli)
+LAT_RE = re.compile(r'[A-Za-z]')
+# bibliography identifier patterns -> clickable links
+ARXIV_RE = re.compile(r'arXiv:\s?(\d{4}\.\d{4,5})(v\d+)?', re.I)
+DOI_RE   = re.compile(r'10\.\d{4,9}/[^\s]+')
 
 # ---------- helpers ----------
 def norm(s): return re.sub(r'\s+', ' ', s).strip()
@@ -121,6 +129,44 @@ def justify_body(d):
             p.paragraph_format.alignment = AL.JUSTIFY; n += 1
     log(f"body: justified {n} prose paragraphs (idx {start}..{bib})")
 
+def _set_run_lang(r, code):
+    """Set <w:lang w:val> on a run, creating rPr/lang in schema order."""
+    rPr = r.find(qn('w:rPr'))
+    if rPr is None:
+        rPr = OxmlElement('w:rPr'); r.insert(0, rPr)
+    lang = rPr.find(qn('w:lang'))
+    if lang is None:
+        lang = OxmlElement('w:lang')
+        # w:lang precedes eastAsianLayout/specVanish/oMath in the rPr schema
+        after = next((rPr.find(qn('w:' + t)) for t in ('eastAsianLayout', 'specVanish', 'oMath')
+                      if rPr.find(qn('w:' + t)) is not None), None)
+        if after is not None: after.addprevious(lang)
+        else: rPr.append(lang)
+    lang.set(qn('w:val'), code)
+
+def set_language(d, primary='ka-GE', latin='en-US'):
+    """Tag EACH run in the language it's actually written in, so Word / Word-for-web
+    proof Georgian against the Georgian dictionary and English against English —
+    instead of red-squiggling one language as misspellings of the other. This is
+    what a well-formed bilingual thesis does (the reference tags every run too).
+    A single document default can't serve both scripts. Editor-only cosmetics —
+    never affects print/PDF."""
+    # document default = Georgian (the thesis's primary language)
+    styles = d.styles.element
+    for lang in styles.iter(qn('w:lang')):
+        lang.set(qn('w:val'), primary)
+    # per-run: detect script, tag explicitly (Georgian wins in mixed runs)
+    n_ka = n_en = 0
+    for r in d.element.body.iter(qn('w:r')):
+        txt = ''.join((t.text or '') for t in r.findall(qn('w:t')))
+        if not txt.strip():
+            continue
+        if GEO_RE.search(txt):
+            _set_run_lang(r, primary); n_ka += 1
+        elif LAT_RE.search(txt):
+            _set_run_lang(r, latin); n_en += 1
+    log(f"language: default {primary}; per-run tagged {n_ka} {primary} + {n_en} {latin} runs")
+
 def border_tables(d):
     for t in d.tables:
         tblPr = t._tbl.tblPr
@@ -141,6 +187,89 @@ def border_tables(d):
         else:
             tblPr.append(b)
     log(f"tables: single-line grid borders ({len(d.tables)})")
+
+# ---------- bibliography hyperlinks ----------
+def _link_rPr(tmpl):
+    """Fresh, schema-ordered rPr for a hyperlink run: blue + underline, inheriting
+    font/size/lang from the identifier's original run."""
+    rPr = OxmlElement('w:rPr')
+    rs = OxmlElement('w:rStyle'); rs.set(qn('w:val'), 'Hyperlink'); rPr.append(rs)
+    if tmpl is not None and tmpl.find(qn('w:rFonts')) is not None:
+        rPr.append(copy.deepcopy(tmpl.find(qn('w:rFonts'))))
+    col = OxmlElement('w:color'); col.set(qn('w:val'), '0563C1'); rPr.append(col)
+    if tmpl is not None and tmpl.find(qn('w:sz')) is not None:
+        rPr.append(copy.deepcopy(tmpl.find(qn('w:sz'))))
+    u = OxmlElement('w:u'); u.set(qn('w:val'), 'single'); rPr.append(u)
+    if tmpl is not None and tmpl.find(qn('w:lang')) is not None:
+        rPr.append(copy.deepcopy(tmpl.find(qn('w:lang'))))
+    return rPr
+
+def _plain_run(src, text):
+    """Clone src run's formatting, replace its text with `text`."""
+    r = copy.deepcopy(src)
+    for ch in list(r):
+        if ch.tag != qn('w:rPr'):
+            r.remove(ch)
+    t = OxmlElement('w:t'); t.set(qn('xml:space'), 'preserve'); t.text = text
+    r.append(t)
+    return r
+
+def _hyperlink(part, url, disp, tmpl):
+    rid = part.relate_to(url, RT.HYPERLINK, is_external=True)
+    hl = OxmlElement('w:hyperlink'); hl.set(qn('r:id'), rid)
+    r = OxmlElement('w:r'); r.append(_link_rPr(tmpl))
+    t = OxmlElement('w:t'); t.set(qn('xml:space'), 'preserve'); t.text = disp
+    r.append(t); hl.append(r)
+    return hl
+
+def _linkify_run(r, part):
+    t_el = r.find(qn('w:t'))
+    if t_el is None or not t_el.text:
+        return 0
+    text = t_el.text
+    hits = []
+    for m in ARXIV_RE.finditer(text):
+        hits.append((m.start(), m.end(), m.group(0),
+                     'https://arxiv.org/abs/' + m.group(1) + (m.group(2) or '')))
+    for m in DOI_RE.finditer(text):
+        doi = m.group(0).rstrip('.,;)')
+        hits.append((m.start(), m.start() + len(doi), doi, 'https://doi.org/' + doi))
+    if not hits:
+        return 0
+    hits.sort(key=lambda x: x[0])
+    pruned, last = [], -1
+    for h in hits:                      # drop overlaps (keep leftmost)
+        if h[0] >= last:
+            pruned.append(h); last = h[1]
+    rPr = r.find(qn('w:rPr'))
+    nodes, pos = [], 0
+    for s, e, disp, url in pruned:
+        if s > pos:
+            nodes.append(_plain_run(r, text[pos:s]))
+        nodes.append(_hyperlink(part, url, disp, rPr))
+        pos = e
+    if pos < len(text):
+        nodes.append(_plain_run(r, text[pos:]))
+    for nd in nodes:
+        r.addprevious(nd)
+    r.getparent().remove(r)
+    return len(pruned)
+
+def linkify_bibliography(d):
+    """Wrap every arXiv id / DOI in the bibliography in a real clickable hyperlink
+    (blue + underline) WITHOUT changing any wording. Idempotent: already-linked
+    identifiers live inside <w:hyperlink> and aren't direct <w:r> children, so a
+    re-run skips them."""
+    part = d.part
+    paras = d.paragraphs
+    start = next((i for i, p in enumerate(paras)
+                  if p.style.name.startswith('Heading')
+                  and re.search(r'ბიბლიოგრაფია|ლიტერატურა', p.text)), 0)
+    total = 0
+    for p in paras[start:]:
+        for r in list(p._p.findall(qn('w:r'))):   # direct children only -> idempotent
+            total += _linkify_run(r, part)
+    log(f"bibliography: linkified {total} identifiers (arXiv + DOI), from para {start}")
 
 # ---------- TOC ----------
 def collect_headings(d):
@@ -228,6 +357,8 @@ def main():
     format_abstract(d)
     justify_body(d)
     border_tables(d)
+    set_language(d)
+    linkify_bibliography(d)
     regen_toc(d, DOCX)          # saves internally
     d.save(DOCX)
     print("DONE.")
