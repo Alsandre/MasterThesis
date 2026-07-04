@@ -45,7 +45,8 @@ GEO_RE = re.compile(r'[Ⴀ-ჿᲐ-Ჿⴀ-⴯]')  # Georgian (Mkhedruli/Mtavruli)
 LAT_RE = re.compile(r'[A-Za-z]')
 # bibliography identifier patterns -> clickable links
 ARXIV_RE = re.compile(r'arXiv:\s?(\d{4}\.\d{4,5})(v\d+)?', re.I)
-DOI_RE   = re.compile(r'10\.\d{4,9}/[^\s]+')
+DOI_RE   = re.compile(r'(?:doi:?\s?)?(10\.\d{4,9}/[^\s]+)', re.I)
+LINK_STYLE    = 'url'      # 'url' = show full https address (reference style); 'label' = arXiv:id / doi:…
 LINK_COLOR    = '467886'   # muted steel-blue — matches the reference thesis' Hyperlink style
 VERIFIED_NOTE = 'უკანასკნელად იქნა გადამოწმებული'   # "last verified" — reference convention
 VERIFIED_DATE = '04.07.2026'   # access/verification date (DD.MM.YYYY); set to your submission date
@@ -247,11 +248,14 @@ def _linkify_run(r, part):
     text = t_el.text
     hits = []
     for m in ARXIV_RE.finditer(text):
-        hits.append((m.start(), m.end(), m.group(0),
-                     'https://arxiv.org/abs/' + m.group(1) + (m.group(2) or '')))
+        url = 'https://arxiv.org/abs/' + m.group(1) + (m.group(2) or '')
+        disp = url if LINK_STYLE == 'url' else m.group(0)
+        hits.append((m.start(), m.end(), disp, url))
     for m in DOI_RE.finditer(text):
-        doi = m.group(0).rstrip('.,;)')
-        hits.append((m.start(), m.start() + len(doi), doi, 'https://doi.org/' + doi))
+        doi = m.group(1).rstrip('.,;)')
+        url = 'https://doi.org/' + doi
+        disp = url if LINK_STYLE == 'url' else m.group(0).rstrip('.,;)')
+        hits.append((m.start(), m.start(1) + len(doi), disp, url))   # span covers any 'doi:' prefix
     if not hits:
         return 0
     hits.sort(key=lambda x: x[0])
