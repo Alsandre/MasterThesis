@@ -36,9 +36,10 @@ AUTHOR = "ალექსანდრე იმნაიშვილი"        
 YEAR   = "2026"                          # cover year (default; editable)
 MONTH  = "ივლისი"                        # cover month (default; editable)
 SHIFRI = "0163"                          # confirmed by Lekso
-PROGRAM= "[სამაგისტრო პროგრამა]"         # TODO from Lekso
 SUPERVISOR = "ოთარ თავდიშვილი"           # confirmed by Lekso
-DEFENSE_DATE = "[სხდომის თარიღი]"        # TODO
+# No program-name / defense-date fields are inserted: the commission page carries
+# the defense date as a fill-in-the-blank dash line (completed by hand at the
+# defense session), and this template's front matter has no program-name field.
 
 # chapters rendered cohesively: subsection headings become bold run-in lead-ins
 # (flowing prose, no numbered sub-headings) — like the passed GTU reference.
