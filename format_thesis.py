@@ -46,6 +46,9 @@ LAT_RE = re.compile(r'[A-Za-z]')
 # bibliography identifier patterns -> clickable links
 ARXIV_RE = re.compile(r'arXiv:\s?(\d{4}\.\d{4,5})(v\d+)?', re.I)
 DOI_RE   = re.compile(r'10\.\d{4,9}/[^\s]+')
+LINK_COLOR    = '467886'   # muted steel-blue — matches the reference thesis' Hyperlink style
+VERIFIED_NOTE = 'უკანასკნელად იქნა გადამოწმებული'   # "last verified" — reference convention
+VERIFIED_DATE = '04.07.2026'   # access/verification date (DD.MM.YYYY); set to your submission date
 
 # ---------- helpers ----------
 def norm(s): return re.sub(r'\s+', ' ', s).strip()
@@ -196,7 +199,7 @@ def _link_rPr(tmpl):
     rs = OxmlElement('w:rStyle'); rs.set(qn('w:val'), 'Hyperlink'); rPr.append(rs)
     if tmpl is not None and tmpl.find(qn('w:rFonts')) is not None:
         rPr.append(copy.deepcopy(tmpl.find(qn('w:rFonts'))))
-    col = OxmlElement('w:color'); col.set(qn('w:val'), '0563C1'); rPr.append(col)
+    col = OxmlElement('w:color'); col.set(qn('w:val'), LINK_COLOR); rPr.append(col)
     if tmpl is not None and tmpl.find(qn('w:sz')) is not None:
         rPr.append(copy.deepcopy(tmpl.find(qn('w:sz'))))
     u = OxmlElement('w:u'); u.set(qn('w:val'), 'single'); rPr.append(u)
@@ -210,6 +213,21 @@ def _plain_run(src, text):
     for ch in list(r):
         if ch.tag != qn('w:rPr'):
             r.remove(ch)
+    t = OxmlElement('w:t'); t.set(qn('xml:space'), 'preserve'); t.text = text
+    r.append(t)
+    return r
+
+def _note_run(src, text):
+    """Georgian 'last verified' note: inherit font/size from src, force ka-GE lang
+    (it's Georgian text) and default (dark) color — NOT the link color."""
+    r = OxmlElement('w:r'); rPr = OxmlElement('w:rPr')
+    s = src.find(qn('w:rPr')) if src is not None else None
+    if s is not None and s.find(qn('w:rFonts')) is not None:
+        rPr.append(copy.deepcopy(s.find(qn('w:rFonts'))))
+    if s is not None and s.find(qn('w:sz')) is not None:
+        rPr.append(copy.deepcopy(s.find(qn('w:sz'))))
+    lang = OxmlElement('w:lang'); lang.set(qn('w:val'), 'ka-GE'); rPr.append(lang)
+    r.append(rPr)
     t = OxmlElement('w:t'); t.set(qn('xml:space'), 'preserve'); t.text = text
     r.append(t)
     return r
@@ -242,11 +260,13 @@ def _linkify_run(r, part):
         if h[0] >= last:
             pruned.append(h); last = h[1]
     rPr = r.find(qn('w:rPr'))
+    note = f" - {VERIFIED_NOTE} - {VERIFIED_DATE}"
     nodes, pos = [], 0
     for s, e, disp, url in pruned:
         if s > pos:
             nodes.append(_plain_run(r, text[pos:s]))
         nodes.append(_hyperlink(part, url, disp, rPr))
+        nodes.append(_note_run(r, note))          # "last verified - date" after each link
         pos = e
     if pos < len(text):
         nodes.append(_plain_run(r, text[pos:]))
