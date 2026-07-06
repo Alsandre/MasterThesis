@@ -9,7 +9,7 @@ Binding terminology for the thesis. Seeded from the 2026-06-12 academic-Georgian
 | "companion" (genre label) | ე.წ. „კომპანიონი“ | ONLY quoted/attributed, never adopted |
 | assistant | ასისტენტი | |
 | social presence | სოციალური თანდასწრება | ASAQ construct |
-| user–agent alliance | მომხმარებელ-აგენტის ალიანსი | always full form, don't shorten to „ალიანსი" in claims |
+| user–agent alliance | მომხმარებლისა და ხელოვნური აგენტის ალიანსი | always full form, don't shorten to „ალიანსი" in claims |
 | perceived humanlikeness | აღქმული ადამიანურობა | ASAQ construct |
 
 ## Technical terms
@@ -24,13 +24,13 @@ Binding terminology for the thesis. Seeded from the 2026-06-12 academic-Georgian
 | within-subject design | განმეორებითი გაზომვების (within-subject) დიზაინი | not „შიდასუბიექტური" |
 | scale (psychometric) | სკალა | not „შკალა" (Russian-influenced) |
 | grounded (in theory) | დაფუძნებული / (თეორიულად) დასაბუთებული | not „ფუნდირებული" (barbarism) |
-| reproducible | რეპროდუცირებადი | not „კვლავწარმოებადი" (economics term) |
+| reproducible | განმეორებადი | not „კვლავწარმოებადი" (economics term); nor borrowed „რეპროდუცირებადი" |
 | privacy (comfort/concern) | კონფიდენციალურობა | „კონფიდენციალურობასთან დაკავშირებული კომფორტი" |
 | temporal reasoning | დროითი (ტემპორალური) მსჯელობა | |
 | consolidation | კონსოლიდაცია | |
 | multi-store model | მრავალსაცავიანი მოდელი | Atkinson–Shiffrin |
 | forgetting curve | დავიწყების მრუდი | |
-| behavioral signature | ქცევითი სიგნატურა | |
+| behavioral signature | ქცევითი თავისებურება | native, replaces borrowed „სიგნატურა" ||
 | research preview | კვლევითი წინასწარი ვერსია (research preview) | |
 | interaction | ურთიერთქმედება | not „ინტერაქცია" |
 | discussion (chapter) | განხილვა | not „განსჯა" |
