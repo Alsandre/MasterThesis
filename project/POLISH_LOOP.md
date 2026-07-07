@@ -4,14 +4,22 @@ Section-by-section Sonnet-5 polish of the Georgian translation, each verified ag
 the English + glossary before it lands. Both editions rebuild from source, so Georgian
 polish flows into `thesis-ka` (body) and `thesis-en` (its Georgian abstract slot).
 
-## Position at pause  (25/30 sections)
-- DONE + committed: **§1 (1.1–1.6), §2 (2.1–2.8), §3 (3.1–3.8), §4.1, §4.2**
-- IN FLIGHT at pause: **§4.3** — Sonnet-5 agent writing `scratchpad/polished_4.3.json`.
-  ON RESUME: if that file exists & is valid JSON (3 prose units: 140,142,143 — 141 is Table 4.3),
-  verify + write back + commit; else relaunch the §4.3 polish agent.
-- REMAINING: §4.3, §4.4, §4.5, §5.1, §5.2, §5.3, then a **TABLE-TERMINOLOGY pass** over the
-  5 tables (2.1, 3.1, 4.1, 4.2, 4.3) which the prose loop skips (extractor drops tables).
-- `git log --oneline` is the authoritative done-list (one `polish(§x.y)` commit per section).
+## Position — COMPLETE (30/30 sections + abstract + tables)
+- DONE + committed: **ALL of §1–§5 (§1.1–§5.3)**, the **რეზიუმე/English Abstract** (`polish(abstract)`),
+  and the **5-table terminology pass** (`polish(tables)`). 37 `polish(...)` commits total.
+- The §5.3 closing line now echoes the thesis title (ასისტენტიდან თანამოსაუბრემდე ევოლუცია).
+- The §5.3 & §2.3 headings + TOC were realigned to the glossary term (future work→სამომავლო გეგმები;
+  LLM→დიდი ენობრივი მოდელი).
+- Table pass also fixed the SAME terms wherever they lagged in body prose (curation→კურირება in 6
+  paras; verbatim→სიტყვასიტყვითი; confound→ამრევი ფაქტორი; decay→დაქრობა), so the whole doc is
+  now terminologically consistent.
+- `git log --oneline | grep polish` is the authoritative done-list.
+
+## Remaining open items (NOT part of the polish loop)
+- Fold in the user's richer fluent Georgian abstract rewrite (Word/OneDrive) IF desired — the current
+  რეზიუმე is now terminology-aligned, so this is optional, not required.
+- VERIFIED_DATE (bibliography "last verified") = 04.07.2026 → set to real submission date if needed.
+- Front-matter task #3 "fill front-matter facts" (no placeholders remain; confirm program/defense date).
 
 ## Per-section mechanism
 1. Extract: `python3 project/assemble/extract_chunk.py <sec>`  → JSON {units:[{i,type,en,ka}]}.
