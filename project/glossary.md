@@ -30,7 +30,9 @@ Binding terminology for the thesis. Seeded from the 2026-06-12 academic-Georgian
 | consolidation | კონსოლიდაცია | |
 | multi-store model | მრავალსაცავიანი მოდელი | Atkinson–Shiffrin |
 | forgetting curve | დავიწყების მრუდი | |
-| behavioral signature | ქცევითი ნიშან-თვისება | native, replaces borrowed „სიგნატურა" ||
+| behavioral signature | ქცევითი ნიშან-თვისება | native, replaces borrowed „სიგნატურა" |
+| proof of concept | კონცეფციის დამტკიცება | one rendering everywhere (not დამადასტურებელი/დასაბუთება) |
+| future work | სამომავლო გეგმები | render "future work" thus (not სამომავლო სამუშაო) ||
 | research preview | კვლევითი წინასწარი ვერსია (research preview) | |
 | interaction | ურთიერთქმედება | not „ინტერაქცია" |
 | discussion (chapter) | განხილვა | not „განსჯა" |
