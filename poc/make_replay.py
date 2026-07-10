@@ -88,35 +88,35 @@ def _hl(line):
     return "".join(out)
 
 FUNCS = [
-    ("end_session", "MemC.end_session — კოდირება", _func_block("def end_session", after="class MemC:"), {
-        "sals = _salience_batch(events)": "LLM ერთ ჯერზე აფასებს ყველა ფრაზას — რომელია მნიშვნელოვანი და რომელი არა",
-        "S0 = DECAY_S_BASE * max(0.1, sal)": "რაც უფრო მნიშვნელოვანია, მით უფრო მყარად იმახსოვრება; წვრილმანი — სუსტად",
+    ("end_session", "MemC.end_session - კოდირება", _func_block("def end_session", after="class MemC:"), {
+        "sals = _salience_batch(events)": "LLM ერთ ჯერზე აფასებს ყველა ფრაზას - რომელია მნიშვნელოვანი და რომელი არა",
+        "S0 = DECAY_S_BASE * max(0.1, sal)": "რაც უფრო მნიშვნელოვანია, მით უფრო მყარად იმახსოვრება; წვრილმანი - სუსტად",
         "g, anchor = _gist_anchor(ev)": "ინახება ნათქვამის აზრი (gist) და ერთი ზუსტი ციტატა (anchor)",
         "self._consolidate(sid)": "საუბრის ბოლოს მოწმდება: ხომ არ გამეორდა რომელიმე თემა",
     }),
-    ("_consolidate", "MemC._consolidate — კონსოლიდაცია", _func_block("def _consolidate", after="class MemC:"), {
+    ("_consolidate", "MemC._consolidate - კონსოლიდაცია", _func_block("def _consolidate", after="class MemC:"), {
         'if cos(a["emb"], self.episodes[j]["emb"]) > 0.55:': "მსგავსი მოგონებები ერთად ჯგუფდება",
         "if len(cluster) >= CONSOLIDATE_N:": "ფაქტი მხოლოდ მაშინ იბადება, თუ თემა ორჯერ მაინც გამეორდა",
         "fact = _semantic_fact(gists)": "ჯგუფიდან იწერება ერთი ზოგადი ფაქტი მომხმარებელზე",
         'if all(cos(femb, s["emb"]) < 0.8 for s in self.semantic):': "ერთი და იგივე ფაქტი ორჯერ არ ინახება",
         'self.semantic.append({"fact": fact, "emb": femb, "S": DECAY_S_BASE * 2.5,': "ფაქტი უფრო მყარია, ვიდრე ჩვეულებრივი მოგონება (S = 5.0)",
     }),
-    ("_R", "MemC._R — დავიწყების მრუდი", _func_block("def _R", after="class MemC:"), {
+    ("_R", "MemC._R - დავიწყების მრუდი", _func_block("def _R", after="class MemC:"), {
         "def _R(self, m, now):": "ითვლის, რამდენად „ცოცხალია“ მოგონება ამ მომენტში",
         'dt = max(0, now - m["last"])': "რამდენი სესია გავიდა, რაც ეს მოგონება ბოლოს გამოვიყენეთ",
-        'return math.exp(-dt / max(0.3, m["S"]))': "დროსთან ერთად მოგონება სუსტდება; მყარი — ნელა, სუსტი — სწრაფად",
+        'return math.exp(-dt / max(0.3, m["S"]))': "დროსთან ერთად მოგონება სუსტდება; მყარი - ნელა, სუსტი - სწრაფად",
     }),
-    ("retrieve", "MemC.retrieve — მოძიება და გამყარება", _func_block("def retrieve", after="class MemC:"), {
-        "if R < FORGET_FLOOR: continue": "ძალიან სუსტი მოგონება დავიწყებულია — აღარც განიხილება",
+    ("retrieve", "MemC.retrieve - მოძიება და გამყარება", _func_block("def retrieve", after="class MemC:"), {
+        "if R < FORGET_FLOOR: continue": "ძალიან სუსტი მოგონება დავიწყებულია - აღარც განიხილება",
         'cands.append((cos(q, m["emb"]) * R * SEM_BONUS, ("semantic", m["fact"]), m))': "ფაქტის ქულა: რამდენად ჰგავს კითხვას × რამდენად ცოცხალია × 1.25",
         'cands.append((cos(q, m["emb"]) * R, ("episodic", m["gist"]), m))': "ჩვეულებრივი მოგონების ქულა: იგივე, ოღონდ ბონუსის გარეშე",
-        "cands.sort(key=lambda x: x[0], reverse=True)": "ლაგდება ქულით — საუკეთესოები წინ",
+        "cands.sort(key=lambda x: x[0], reverse=True)": "ლაგდება ქულით - საუკეთესოები წინ",
         "top = cands[:RETRIEVE_K]": "ბრუნდება მხოლოდ 4 საუკეთესო",
         'm["S"] += 0.5; m["last"] = now': "რაც გახსენდა, ის მაგრდება და ისევ ახალივით ითვლება",
     }),
-    ("llm", "llm() — რეალური გამოძახებები", _func_block("def llm("), {
-        'r = _post("https://api.openai.com/v1/chat/completions",': "ნამდვილი მოთხოვნა იგზავნება OpenAI-სთან — პასუხები წინასწარ არ არსებობს",
-        'USAGE["chat_calls"] += 1; USAGE["chat_in"] += u.get("prompt_tokens", 0); USAGE["chat_out"] += u.get("completion_tokens", 0)': "ითვლება ყველა გამოძახება და ტოკენი — ეს რიცხვები ჩანს ბოლო სტრიქონში",
+    ("llm", "llm() - რეალური გამოძახებები", _func_block("def llm("), {
+        'r = _post("https://api.openai.com/v1/chat/completions",': "ნამდვილი მოთხოვნა იგზავნება OpenAI-სთან - პასუხები წინასწარ არ არსებობს",
+        'USAGE["chat_calls"] += 1; USAGE["chat_in"] += u.get("prompt_tokens", 0); USAGE["chat_out"] += u.get("completion_tokens", 0)': "ითვლება ყველა გამოძახება და ტოკენი - ეს რიცხვები ჩანს ბოლო სტრიქონში",
     }),
 ]
 
