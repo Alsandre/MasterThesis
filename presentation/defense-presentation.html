@@ -304,10 +304,11 @@ async function pptSnap(btn){
     btn.textContent='⏳…';
     await pptEnsure(true);
     var p=pptNew();
+    slides.forEach(function(sc){sc.style.animation='none'});
     for(var k=0;k<slides.length;k++){
       btn.textContent='📷 '+(k+1)+'/'+slides.length;
       show(k);
-      await new Promise(function(r){setTimeout(r,80)});
+      await new Promise(function(r){setTimeout(r,120)});
       var canvas=await html2canvas(slides[k],{backgroundColor:'#0f1013',scale:2,logging:false});
       var sl=p.addSlide();sl.background={color:PPT_DARK.bg};
       var W=13.33,H=7.5,ar=canvas.width/canvas.height,w,h;
@@ -315,10 +316,11 @@ async function pptSnap(btn){
       sl.addImage({data:canvas.toDataURL('image/png'),x:(W-w)/2,y:(H-h)/2,w:w,h:h});
       var n=(slides[k].dataset.notes||'').replace(/\s+/g,' ').trim();if(n)sl.addNotes(n);
     }
+    slides.forEach(function(sc){sc.style.animation=''});
     show(back);
     await p.writeFile({fileName:'defense-presentation-visual.pptx'});
     btn.textContent='✓';setTimeout(function(){btn.textContent=old},2200);
-  }catch(e){alert('PPT ვერ შეიქმნა: '+e.message);btn.textContent=old;show(back)}
+  }catch(e){alert('PPT ვერ შეიქმნა: '+e.message);btn.textContent=old;slides.forEach(function(sc){sc.style.animation=''});show(back)}
 }
 document.getElementById('bppt').onclick=function(){pptText(this)};
 document.getElementById('bppts').onclick=function(){pptSnap(this)};
