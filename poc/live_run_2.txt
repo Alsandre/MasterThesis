@@ -1,0 +1,75 @@
+
+[1m  Profile C — LIVE [0m[2m(რეალური harness.py · OpenAI gpt-4o-mini + text-embedding-3-small)[0m
+
+[2m────────────────────────────────────────────────────────────────────[0m
+[1m  სესია 1[0m[2m  — რეალური კოდირება (3 რეპლიკა) · OpenAI[0m
+     salience [1m0.90[0m [[38;5;114mმნიშვნელოვანი[0m]  ← „მე მქვია ლექსო, თბილისში ვცხოვრობ“
+     salience [1m0.80[0m [[38;5;114mმნიშვნელოვანი[0m]  ← „ხვალ პროექტის დედლაინი მაქვს“
+     salience [1m0.20[0m [[38;5;179mტრივია[0m]  ← „დღეს ამინდი მზიანია“
+       gist:   [2mLexo introduces himself and mentions he lives in Tbilisi.[0m
+       anchor: [2mმე მქვია ლექსო, თბილისში ვცხოვრობ[0m
+       gist:   [2mThey have a project deadline tomorrow.[0m
+       anchor: [2mხვალ პროექტის დედლაინი მაქვს[0m
+       gist:   [2mThe weather today is sunny.[0m
+       anchor: [2mდღეს ამინდი მზიანია[0m
+
+[1m  მეხსიერების მდგომარეობა:[0m
+   [[2mEPI[0m] R=[1m1.000[0m [38;5;114mცოცხალი[0m  S=1.8 sal=0.90  [2mLexo introduces himself and mentions he [0m
+   [[2mEPI[0m] R=[1m1.000[0m [38;5;114mცოცხალი[0m  S=1.6 sal=0.80  [2mThey have a project deadline tomorrow.[0m
+   [[2mEPI[0m] R=[1m1.000[0m [38;5;114mცოცხალი[0m  S=0.4 sal=0.20  [2mThe weather today is sunny.[0m
+[2m────────────────────────────────────────────────────────────────────[0m
+[1m  სესია 2[0m[2m  — რეალური კოდირება (2 რეპლიკა) · OpenAI[0m
+     salience [1m0.90[0m [[38;5;114mმნიშვნელოვანი[0m]  ← „ისევ დედლაინის სტრესში ვარ“
+     salience [1m0.10[0m [[38;5;179mტრივია[0m]  ← „წუხელ ფილმი ვნახე, სახელი დამავიწყდა“
+       gist:   [2mShe is once again under stress in Dedline.[0m
+       anchor: [2mისევ დედლაინის სტრესში ვარ[0m
+       gist:   [2mThey watched a movie last night but forgot its name.[0m
+       anchor: [2mწუხელ ფილმი ვნახე, სახელი დამავიწყდა[0m
+
+[1m  მეხსიერების მდგომარეობა:[0m
+   [[2mEPI[0m] R=[1m0.574[0m [38;5;114mცოცხალი[0m  S=1.8 sal=0.90  [2mLexo introduces himself and mentions he [0m
+   [[2mEPI[0m] R=[1m0.535[0m [38;5;114mცოცხალი[0m  S=1.6 sal=0.80  [2mThey have a project deadline tomorrow.[0m
+   [[2mEPI[0m] R=[38;5;179m0.082[0m [38;5;179mდავიწყებული ✗[0m  S=0.4 sal=0.20  [2mThe weather today is sunny.[0m
+   [[2mEPI[0m] R=[1m1.000[0m [38;5;114mცოცხალი[0m  S=1.8 sal=0.90  [2mShe is once again under stress in Dedlin[0m
+   [[2mEPI[0m] R=[1m1.000[0m [38;5;114mცოცხალი[0m  S=0.2 sal=0.10  [2mThey watched a movie last night but forg[0m
+[2m────────────────────────────────────────────────────────────────────[0m
+[1m  სესია 3[0m[2m  — რეალური კოდირება (2 რეპლიკა) · OpenAI[0m
+     salience [1m0.20[0m [[38;5;179mტრივია[0m]  ← „ამ კვირას კიდევ ერთი დედლაინი მომიწია“
+     salience [1m0.80[0m [[38;5;114mმნიშვნელოვანი[0m]  ← „არაქისზე ალერგია მაქვს“
+       gist:   [2mThey have another deadline this week.[0m
+       anchor: [2mამ კვირას კიდევ ერთი დედლაინი მომიწია[0m
+       gist:   [2mThe speaker has a peanut allergy.[0m
+       anchor: [2mარაქისზე ალერგია მაქვს[0m
+   [38;5;111m⚙ კონსოლიდაცია → სემანტიკური ფაქტი: [0m[1m[38;5;114mThey frequently work under tight deadlines.[0m[0m[2m  (S=5.0)[0m
+
+[1m  მეხსიერების მდგომარეობა:[0m
+   [[38;5;111mSEM[0m] R=[1m1.000[0m [38;5;114mცოცხალი[0m  S=5.0  [2mThey frequently work under tight deadlines.[0m
+   [[2mEPI[0m] R=[1m0.329[0m [38;5;114mცოცხალი[0m  S=1.8 sal=0.90  [2mLexo introduces himself and mentions he [0m
+   [[2mEPI[0m] R=[1m0.287[0m [38;5;114mცოცხალი[0m  S=1.6 sal=0.80  [2mThey have a project deadline tomorrow.[0m
+   [[2mEPI[0m] R=[38;5;179m0.007[0m [38;5;179mდავიწყებული ✗[0m  S=0.4 sal=0.20  [2mThe weather today is sunny.[0m
+   [[2mEPI[0m] R=[1m0.574[0m [38;5;114mცოცხალი[0m  S=1.8 sal=0.90  [2mShe is once again under stress in Dedlin[0m
+   [[2mEPI[0m] R=[38;5;179m0.036[0m [38;5;179mდავიწყებული ✗[0m  S=0.2 sal=0.10  [2mThey watched a movie last night but forg[0m
+   [[2mEPI[0m] R=[1m1.000[0m [38;5;114mცოცხალი[0m  S=0.4 sal=0.20  [2mThey have another deadline this week.[0m
+   [[2mEPI[0m] R=[1m1.000[0m [38;5;114mცოცხალი[0m  S=1.6 sal=0.80  [2mThe speaker has a peanut allergy.[0m
+[2m────────────────────────────────────────────────────────────────────[0m
+[1m  მოძიება[0m[2m  query: „დამეხმარე, როგორ დავგეგმო სამუშაო დედლაინამდე“[0m
+[1m  კვალის მდგომარეობა მოძიების წინ (R = exp(−Δt/S)):[0m
+   [[38;5;111mSEM[0m] R=[1m0.819[0m [38;5;114mცოცხალი[0m  S=5.0  [2mThey frequently work under tight deadlines.[0m
+   [[2mEPI[0m] R=[1m0.189[0m [38;5;114mცოცხალი[0m  S=1.8 sal=0.90  [2mLexo introduces himself and mentions he [0m
+   [[2mEPI[0m] R=[1m0.153[0m [38;5;114mცოცხალი[0m  S=1.6 sal=0.80  [2mThey have a project deadline tomorrow.[0m
+   [[2mEPI[0m] R=[38;5;179m0.001[0m [38;5;179mდავიწყებული ✗[0m  S=0.4 sal=0.20  [2mThe weather today is sunny.[0m
+   [[2mEPI[0m] R=[1m0.329[0m [38;5;114mცოცხალი[0m  S=1.8 sal=0.90  [2mShe is once again under stress in Dedlin[0m
+   [[2mEPI[0m] R=[38;5;179m0.001[0m [38;5;179mდავიწყებული ✗[0m  S=0.2 sal=0.10  [2mThey watched a movie last night but forg[0m
+   [[2mEPI[0m] R=[38;5;179m0.082[0m [38;5;179mდავიწყებული ✗[0m  S=0.4 sal=0.20  [2mThey have another deadline this week.[0m
+   [[2mEPI[0m] R=[1m0.535[0m [38;5;114mცოცხალი[0m  S=1.6 sal=0.80  [2mThe speaker has a peanut allergy.[0m
+
+[1m  → დაბრუნებული TOP-4  [0m[2m(0.2 ms)[0m
+      • ([38;5;111msemantic[0m) They frequently work under tight deadlines.
+      • ([38;5;111mepisodic[0m) The speaker has a peanut allergy.
+      • ([38;5;111mepisodic[0m) She is once again under stress in Dedline.
+      • ([38;5;111mepisodic[0m) Lexo introduces himself and mentions he lives in Tbilisi.
+   [38;5;111m⟳ გამყარება: [0m[2mდაბრუნებულ მოგონებებზე S += 0.5[0m
+[2m────────────────────────────────────────────────────────────────────[0m
+[38;5;114m  API გამოძახებები (რეალური): [0mchat=11 (in 883/out 277 tok) · embed=9 (153 tok)
+[2m  ↑ ეს ამტკიცებს, რომ კოდი ნამდვილად მუშაობს — არა წინასწარ ჩაწერილი პასუხები.[0m
+

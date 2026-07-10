@@ -1,0 +1,248 @@
+<!doctype html><html lang="ka" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>კონფიგურაცია — საცდელი გარემო (ცხრილი 2)</title>
+<style>
+:root{--bg:#0f1013;--fg:#e9eaf0;--mut:#9a9daa;--line:#2a2c35;--acc:#9aa6ff;--card:#16171c;--ok:#5bbf7b;--warn:#e0a13a;--sem:#c58bff}
+:root[data-theme=light]{--bg:#f6f7f9;--fg:#1c1e24;--mut:#6b6f7a;--line:#e2e3ea;--acc:#3b4cca;--card:#fff;--ok:#2e9e57;--warn:#b5730f;--sem:#7b3fd6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,"Segoe UI",Roboto,"Noto Sans Georgian",sans-serif;padding-top:36px}
+.xnav{position:fixed;top:0;left:0;right:0;height:36px;z-index:60;display:flex;align-items:center;gap:3px;background:#0b0c0f;border-bottom:1px solid #23252d;padding:0 10px;font:600 12.5px/1 -apple-system,"Noto Sans Georgian",sans-serif}
+.xnav a{color:#9aa0ad;text-decoration:none;padding:6px 10px;border-radius:6px;white-space:nowrap}
+.xnav a:hover{color:#fff;background:#181a20}.xnav a.cur{color:#fff;background:#3b4cca}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 20px 60px}
+h1{font-size:1.5rem;margin:0 0 3px}
+.sub{color:var(--mut);font-size:.8rem;margin:0 0 16px;font-family:"SF Mono",ui-monospace,Menlo,monospace}
+.lead{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:12px 16px;font-size:.95rem;margin-bottom:18px}
+.lead b{color:var(--acc)}
+.bar{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:9px;padding:7px 14px;font-size:.85rem}
+button:hover{border-color:var(--acc);color:var(--acc)}
+.hint{color:var(--mut);font-size:.78rem}
+#edit.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+body.editing td.pn,body.editing td.pv,body.editing td.pr,body.editing .wy,body.editing .lead{outline:1px dashed var(--acc);outline-offset:2px;cursor:text}
+body.editing tr.p{cursor:text}
+body.editing tr.p:hover td{background:none}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+thead th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--mut);padding:11px 14px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--card) 70%,var(--bg))}
+tr.p td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;font-size:.92rem}
+tr.p{cursor:pointer}
+tr.p:hover td{background:color-mix(in srgb,var(--acc) 7%,transparent)}
+td.pn{font-weight:700;white-space:nowrap}
+td.pn .chev{display:inline-block;color:var(--mut);font-size:.7rem;margin-right:7px;transition:transform .18s}
+tr.p.open .chev{transform:rotate(90deg);color:var(--acc)}
+td.pv{white-space:nowrap}
+td.pv code{background:var(--line);padding:2px 7px;border-radius:5px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:.82em;color:var(--acc)}
+td.pr{color:var(--mut)}
+tr.why{display:none}
+tr.why.show{display:table-row}
+tr.why td{padding:0 14px 13px 33px;border-bottom:1px solid var(--line);font-size:.86rem;background:color-mix(in srgb,var(--acc) 5%,transparent)}
+tr.why .wy{border-left:2px solid var(--acc);padding:8px 12px;color:var(--fg)}
+tr.why .wy b{color:var(--acc);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:3px}
+.tip{border-bottom:1px dotted var(--acc);cursor:help;position:relative}
+.tip:hover::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 7px);z-index:30;width:310px;max-width:min(310px,72vw);background:#1b1d26;color:#e9eaf0;border:1px solid #383b48;border-radius:9px;padding:10px 12px;font-size:.78rem;line-height:1.5;font-weight:400;white-space:normal;box-shadow:0 10px 28px rgba(0,0,0,.5)}
+:root[data-theme=light] .tip:hover::after{background:#fff;color:#1c1e24;border-color:#d6d8e0;box-shadow:0 10px 28px rgba(30,34,60,.18)}
+td:last-child .tip:hover::after,td.pv .tip:hover::after{left:auto;right:0}
+.foot{margin-top:22px;color:var(--mut);font-size:.78rem;border-top:1px solid var(--line);padding-top:12px;line-height:1.7}
+.foot code{background:var(--line);padding:1px 5px;border-radius:4px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:.85em}
+@media(max-width:760px){td.pv,td.pn{white-space:normal}}
+</style></head><body>
+<div class="xnav"><a href="../THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-profileC-demo.html">⚙ დემო</a><a href="defense-replay.html">🖥 Replay</a><a href="defense-config.html" class="cur">🛠 კონფიგურაცია</a><span style="flex:1"></span><button id="th" style="border:none;background:none;font-size:1rem;padding:2px 6px" title="თემა">☀︎</button></div>
+<div class="wrap">
+<h1>საცდელი გარემოს კონფიგურაცია</h1>
+<p class="sub">ცხრილი 2 · thesis §3.6 „სისტემის კონფიგურაცია" · წყარო-კოდი: poc/harness.py</p>
+
+<div class="lead">კარკასის ყოველი პარამეტრი <b>წინასწარ, აპრიორულად არის დაფიქსირებული</b>, ისე როგორც ამას თავი 2 მოითხოვს — არცერთი მნიშვნელობა ვერ მოერგება აღქმულ შედეგს. სადაც მნიშვნელობა გარე წყაროდანაა აღებული (მაგ. MemoryBank), ეს პირდაპირაა მითითებული.</div>
+
+<div class="bar">
+  <button id="toggleAll">▸ ყველა დასაბუთების გახსნა</button>
+  <button id="edit">✎ რედაქტირება</button>
+  <button id="exp" title="ჩამოტვირთე რედაქტირებული ვერსია ფაილად">⬇ ექსპორტი</button>
+  <button id="clr" title="ბრაუზერში შენახული რედაქტირებების წაშლა">⌫</button><button id="ghpush" title="ცვლილებების პირდაპირ GitHub-ზე დაკომიტება">⇪ GitHub</button>
+  <span class="hint">ჰოვერი წერტილოვან ტერმინზე — განმარტება · მწკრივზე კლიკი — დასაბუთება · E — რედაქტირება (ინახება ბრაუზერში) · ⬇ — ფაილად შენახვა</span>
+</div>
+
+<table>
+<thead><tr><th style="width:26%">პარამეტრი</th><th style="width:24%">მნიშვნელობა</th><th>როლი</th></tr></thead>
+<tbody>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span>ჩატის მოდელი</td>
+<td class="pv"><code><span class="tip" data-tip="OpenAI-ის მცირე, სწრაფი და იაფი ჩატ-მოდელი (LLM). პროტოტიპში ის ასრულებს ყველა „აზროვნებით" როლს — ქულების მინიჭებას, პარაფრაზს, განზოგადებას, საუბარსა და შეფასებას.">gpt-4o-mini</span></code></td>
+<td class="pr">ყველა LLM როლისთვის: <span class="tip" data-tip="salience — ქულა 0.0–1.0, რამდენად „დასამახსოვრებელია" რეპლიკა პერსონალური კომპანიონისთვის. ტრივია (ამინდი, ერთჯერადი წვრილმანი) → 0.0–0.2; ძირითადი პირადი ფაქტები, ალერგიები, ემოციები, განმეორებადი საზრუნავები → 0.7–1.0.">მნიშვნელოვნება</span>, <span class="tip" data-tip="gist — მოვლენის არსობრივი შინაარსის ერთწინადადებიანი პარაფრაზი მესამე პირში (≤20 სიტყვა). ინახება სიტყვასიტყვითი ტექსტის ნაცვლად — ადამიანის მეხსიერებაც აზრს ინახავს და არა ჩანაწერს.">არსობრივი შინაარსი (gist)</span>, <span class="tip" data-tip="განმეორებადი ეპიზოდური მოგონებებიდან ერთი მდგრადი, განზოგადებული ფაქტის ჩამოყალიბება (ეპიზოდური → სემანტიკური გადასვლა, CLS თეორიის ანალოგი).">კონსოლიდაცია</span>, აგენტი, <span class="tip" data-tip="LLM-as-judge — მოდელი, რომელიც ტრანსკრიპტს აფასებს მომხმარებლის აღქმის კონსტრუქტებზე (სოციალური თანდასწრება, ალიანსი და ა.შ.) და ამოწმებს გახსენების სიზუსტეს.">შემფასებელი</span></td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>ერთი და იგივე მოდელი ყველა როლში და ოთხივე პირობაში (A / B / B+ / C): განსხვავებული შედეგი მხოლოდ მეხსიერების არქიტექტურიდან უნდა მოდიოდეს და არა მოდელის სიძლიერიდან. ამავდროულად ეს F18-ის „ყველაზე იაფი სიცოცხლისუნარიანი ჭრილის" პრინციპია — მინიმალური ღირებულება, სრული ფუნქციური დემონსტრაცია.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span>ემბედინგის მოდელი</td>
+<td class="pv"><code><span class="tip" data-tip="OpenAI-ის ემბედინგ-მოდელი: ტექსტი → 1536-განზომილებიანი რიცხვითი ვექტორი. მსგავსი მნიშვნელობის ტექსტები ვექტორულ სივრცეში ახლოს ხვდებიან; მრავალენოვანია, ამიტომ ქართული და ინგლისური gist-ებიც შედარებადია.">text-embedding-3-small</span></code></td>
+<td class="pr"><span class="tip" data-tip="cosine similarity — კუთხის კოსინუსი ორ ვექტორს შორის (0-დან 1-მდე მსგავსი ტექსტებისთვის). ეს არის საზომი, რომლითაც ხდება top-k მოძიება, კონსოლიდაციის კლასტერიზაცია და დუბლიკატების ამოცნობა.">მოძიების მსგავსება</span></td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>ერთი საზომი (კოსინუსური მსგავსება) ყველა პირობისთვის — B, B+ და C ერთსა და იმავე ვექტორულ სივრცეში ეძებენ. ასე C-ის უპირატესობა ვერ აიხსნება „უკეთესი საძიებო მოდელით".</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span><span class="tip" data-tip="working memory — ბოლო ტურების ცვალებადი ბუფერი, ბადელეის სამუშაო მეხსიერების ანალოგი: მცირე ტევადობის, სწრაფად განახლებადი მიმდინარე კონტექსტი.">სამუშაო ფანჯარა</span></td>
+<td class="pv"><code>6 ტური</code></td>
+<td class="pr">საერთო, ცვალებადი, ბოლოდროინდელი კონტექსტი (ყველა პირობისთვის)</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>ყველა პირობას (მეხსიერების გარეშეც კი) ერთნაირი ბოლოდროინდელი კონტექსტი აქვს — ასე უზრუნველყოფილია, რომ პირობებს შორის სხვაობა მხოლოდ გრძელვადიანი მეხსიერების დიზაინიდან მოდის და არა „ვინ მეტს ხედავს ახლო წარსულიდან".</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span>მოძიების ბიუჯეტი <span class="tip" data-tip="top-k — მოძიებისას ბრუნდება მხოლოდ k ყველაზე მაღალქულიანი მოგონება (აქ: ქულა = cosine × R, სემანტიკურზე ×1.25). ეს ზღუდავს კონტექსტში ჩაშვებული მეხსიერების მოცულობას.">k</span></td>
+<td class="pv"><code>4</code></td>
+<td class="pr">გრძელვადიანი მეხსიერებები, თითო ტურში დამატებული (საერთო)</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>თანაბარი „ინექციის ბიუჯეტი" ყველა მეხსიერებიან პირობაში — აღრევის კონტროლის (ცხრილი 1) მოთხოვნა: C-ის უპირატესობა არ უნდა მოდიოდეს უბრალოდ მეტი კონტექსტიდან, არამედ იმისგან, <i>რა</i> და <i>რა ფორმით</i> ბრუნდება ამ ბიუჯეტში.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span><span class="tip" data-tip="S (stability) — ებინგჰაუზის დავიწყების მრუდის სტაბილურობის პარამეტრი: R = exp(−Δt/S). რაც მეტია S, მით ნელა ქრება კვალი. საწყისი S₀ = 2.0 × მნიშვნელოვნება — ტრივია სუსტად ინახება, მნიშვნელოვანი მყარად.">დაქვეითების საბაზისო სტაბილურობა</span></td>
+<td class="pv"><code>2.0 სესია-ერთეული</code></td>
+<td class="pr">ებინგჰაუზის S₀; საწყისი მნიშვნელობა აღებულია MemoryBank-იდან [6]</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>მნიშვნელობა გარედანაა დამაგრებული (MemoryBank-ის ებინგჰაუზისეული პარამეტრიზაცია) და წინასწარ დაფიქსირებული — ექსპერიმენტატორს არ დაუწერია ისეთი რიცხვი, რომელიც შედეგს მოერგებოდა. სესია-ერთეულებში გაზომვა კი დროის ნაცვლად „შეხვედრების რაოდენობას" აქცევს დავიწყების ღერძად.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span><span class="tip" data-tip="FORGET_FLOOR — მოძიებადობის (R) ზღვარი: თუ R < 0.10, კვალი მოძიების კანდიდატებში აღარ მონაწილეობს. ეს „რბილი წაშლაა" — ჩანაწერი ფიზიკურად რჩება, ფუნქციურად კი დავიწყებულია.">დავიწყების ქვედა ზღვარი</span></td>
+<td class="pv"><code>0.10</code></td>
+<td class="pr">მოძიებადობის დონე, რომლის ქვემოთაც კვალი ქრება</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>დავიწყება აქ ფუნქციაა და არა ხარვეზი: ტრივია (დაბალი S₀) რამდენიმე სესიაში ზღვარს ჩამოსცდება და აღარ დააბინძურებს მოძიებას. ეს ამცირებს ხმაურს top-k-ში და პასუხობს პრივატულობის კომფორტსაც — სისტემა „ყველაფერს სამუდამოდ" არ იმახსოვრებს.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span>კონსოლიდაციის ტრიგერი</td>
+<td class="pv"><code><span class="tip" data-tip="ორი ეპიზოდის gist-ვექტორებს შორის კოსინუსური მსგავსება უნდა აღემატებოდეს 0.55-ს, რომ ისინი ერთი განმეორებადი თემის კლასტერად ჩაითვალოს.">cosine &gt; 0.55</span>, ≥ 2 მოვლენა</code></td>
+<td class="pr">სემანტიკური ფაქტის ჩამოსაყალიბებლად საჭირო განმეორებადობა</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>განზოგადება მხოლოდ განმეორებად თემებზეა დაშვებული — ერთჯერადი მოვლენა „მდგრად ფაქტად" არ იქცევა. ეს CLS თეორიის (McClelland et al.) ანალოგია: ეპიზოდურიდან სემანტიკურისკენ გადასვლა ნელი და განმეორებაზე დაფუძნებულია, რაც ნაჩქარევი (და მცდარი) განზოგადებისგან იცავს.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span><span class="tip" data-tip="კონსოლიდირებული (სემანტიკური) ფაქტის სტაბილურობა: S = 2.0 × 2.5 = 5.0 — ის გაცილებით ნელა ქრება, ვიდრე ცალკეული ეპიზოდი.">სემანტიკური გამძლეობა</span></td>
+<td class="pv"><code>2.5 × ბაზისური</code></td>
+<td class="pr">კონსოლიდირებული ფაქტის სტაბილურობის ბონუსი</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>სისტემური კონსოლიდაციის პრინციპი: განზოგადებული ცოდნა („მუდმივად დედლაინებში მუშაობს") უფრო მდგრადია, ვიდრე ერთი კონკრეტული საღამოს ეპიზოდი. ბონუსი ზომიერია — სემანტიკური ფაქტებიც დროთა განმავლობაში ქრებიან, თუ აღარ მაგრდებიან.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span>სემანტიკური მოძიების ბონუსი</td>
+<td class="pv"><code>1.25 <span class="tip" data-tip="capped — ბონუსი ფიქსირებული მამრავლია და არა ღია კოეფიციენტი; ის ვერ გაიზრდება ისე, რომ სემანტიკურმა ფაქტებმა ეპიზოდური დეტალები მთლიანად გამოდევნონ top-k-დან.">(ჭერით შეზღუდული)</span></code></td>
+<td class="pr">არსობრივი შინაარსის (gist) პრიორიტეტი</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>„gist-პირველი" მოძიების პრინციპი: განზოგადებული ფაქტი, როგორც წესი, უფრო სასარგებლოა საუბრისთვის, ვიდრე ნედლი ეპიზოდი — მაგრამ ჭერი უზრუნველყოფს, რომ ახალი, ჯერ არაკონსოლიდირებული დეტალები კონკურენციიდან არ ამოვარდნენ.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span>დუბლირებული ფაქტის ზღვარი</td>
+<td class="pv"><code>cosine 0.80</code></td>
+<td class="pr">თითქმის იდენტური სემანტიკური ფაქტების დათრგუნვა</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>ყოველი ახალი სესია კონსოლიდაციას თავიდან ამოწმებს — დაცვის გარეშე იგივე თემა ყოველ ჯერზე ახალ, თითქმის იდენტურ ფაქტს დაამატებდა. ზღვარი 0.80: საკმარისად მაღალი, რომ ნამდვილად ახალი ცოდნა არ დაიბლოკოს, საკმარისად დაბალი, რომ პარაფრაზირებული დუბლიკატები მოიჭრას.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span>გაძლიერების ნაბიჯი</td>
+<td class="pv"><code>S += 0.5 <span class="tip" data-tip="reinforcement — როცა მოგონება მოძიებით ბრუნდება (top-k-ში ხვდება), მისი სტაბილურობა იზრდება და „ბოლო შეხების" დრო ნულდება. რაც გამოიყენება, ის მაგრდება.">გახსენებისას</span></code></td>
+<td class="pr">დაშორებული გამეორების ეფექტი</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>ტესტირების ეფექტის (testing effect) და დაშორებული გამეორების (spaced repetition) ანალოგი: გახსენება თავად აძლიერებს კვალს. შედეგად მეხსიერება თვითორგანიზებადია — რაც მომხმარებელს რეალურად სჭირდება, ის ცოცხლობს; რაც არა — ბუნებრივად ქრება.</div></td></tr>
+
+<tr class="p"><td class="pn"><span class="chev">▶</span>LLM <span class="tip" data-tip="temperature — LLM-ის შემთხვევითობის ხარისხი: 0.0 = მაქსიმალურად დეტერმინისტული, განმეორებადი გამოსავალი; მაღალი მნიშვნელობა = მრავალფეროვანი, „ცოცხალი" ტექსტი.">ტემპერატურები</span></td>
+<td class="pv"><code>0.0 · 0.2 · 0.5</code></td>
+<td class="pr">0.0 მნიშვნელოვნება/შემფასებელი · 0.2 არსობრივი შინაარსი (gist)/ფაქტი · 0.5 აგენტი — დეტერმინიზმი იქ, სადაც საჭიროა</td></tr>
+<tr class="why"><td colspan="3"><div class="wy"><b>დასაბუთება</b>სამსაფეხურიანი ლოგიკა: სადაც <i>გაზომვაა</i> (მნიშვნელოვნების ქულა, შემფასებელი) — სრული დეტერმინიზმი (0.0), რომ შედეგი განმეორებადი იყოს; პარაფრაზს (gist/ფაქტი) მცირე თავისუფლება (0.2) სჭირდება ბუნებრივი ფორმულირებისთვის; საუბრის აგენტს კი ზომიერი ვარიაცია (0.5), რომ კომპანიონი მექანიკურად არ ჟღერდეს.</div></td></tr>
+
+</tbody></table>
+
+<div class="foot">
+ფორმულები: მოძიებადობა <code>R = exp(−Δt / S)</code> · საწყისი სტაბილურობა <code>S₀ = 2.0 × max(0.1, salience)</code> · კონსოლიდირებული ფაქტი <code>S = 5.0</code> · მოძიების ქულა <code>cos × R</code> (სემანტიკურზე <code>× 1.25</code>)<br>
+ყველა მნიშვნელობა იდენტურია <code>poc/harness.py</code>-ის კონსტანტებისა — ეს გვერდი ცხრილი 2-ის (§3.6) ზუსტი ასლია, დამატებული განმარტებებით.
+</div>
+</div>
+<script>
+const rows=[...document.querySelectorAll('tr.p')];
+rows.forEach(tr=>tr.addEventListener('click',e=>{
+  if(e.target.closest('.tip')||document.body.classList.contains('editing'))return;
+  tr.classList.toggle('open');
+  tr.nextElementSibling.classList.toggle('show');
+}));
+
+// --- editable + localStorage ---
+const EDIT_KEY='cfg_edits';
+const cells=[];
+rows.forEach((tr,i)=>{
+  cells.push({el:tr.querySelector('td.pn'),k:'pn'+i});
+  cells.push({el:tr.querySelector('td.pv'),k:'pv'+i});
+  cells.push({el:tr.querySelector('td.pr'),k:'pr'+i});
+  cells.push({el:tr.nextElementSibling.querySelector('.wy'),k:'wy'+i});
+});
+cells.push({el:document.querySelector('.lead'),k:'lead'});
+try{
+  const sv=JSON.parse(localStorage.getItem(EDIT_KEY)||'{}');
+  cells.forEach(c=>{if(c.el&&sv[c.k]!=null)c.el.innerHTML=sv[c.k]});
+}catch(e){}
+function saveEdits(){
+  const sv={};cells.forEach(c=>{if(c.el)sv[c.k]=c.el.innerHTML});
+  localStorage.setItem(EDIT_KEY,JSON.stringify(sv));
+}
+const eb=document.getElementById('edit');
+let editing=false;
+function setEdit(on){
+  editing=on;document.body.classList.toggle('editing',on);eb.classList.toggle('on',on);
+  eb.textContent=on?'✓ შენახვა':'✎ რედაქტირება';
+  cells.forEach(c=>{if(c.el)c.el.contentEditable=on});
+  if(on){rows.forEach(tr=>{tr.classList.add('open');tr.nextElementSibling.classList.add('show')})}
+  else saveEdits();
+}
+eb.addEventListener('click',()=>setEdit(!editing));
+let edT;
+document.addEventListener('input',()=>{if(editing){clearTimeout(edT);edT=setTimeout(saveEdits,400)}});
+document.addEventListener('keydown',e=>{
+  if((e.key==='e'||e.key==='E')&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&
+     !(document.activeElement&&document.activeElement.isContentEditable))setEdit(!editing);
+});
+document.getElementById('exp').addEventListener('click',()=>{
+  if(editing)saveEdits();
+  const clone=document.documentElement.cloneNode(true);
+  clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
+  const bd=clone.querySelector('body');if(bd)bd.classList.remove('editing');
+  const ebc=clone.querySelector('#edit');if(ebc){ebc.classList.remove('on');ebc.textContent='✎ რედაქტირება'}
+  const blob=new Blob(['<!doctype html>'+clone.outerHTML],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='defense-config.html';a.click();
+});
+document.getElementById('clr').addEventListener('click',()=>{
+  if(confirm('წაიშალოს ბრაუზერში შენახული რედაქტირებები და დაბრუნდეს ორიგინალი?')){
+    localStorage.removeItem(EDIT_KEY);location.reload();
+  }
+});
+const ta=document.getElementById('toggleAll');
+ta.addEventListener('click',()=>{
+  const open=rows.some(tr=>!tr.classList.contains('open'));
+  rows.forEach(tr=>{tr.classList.toggle('open',open);tr.nextElementSibling.classList.toggle('show',open)});
+  ta.textContent=open?'▾ ყველა დასაბუთების დახურვა':'▸ ყველა დასაბუთების გახსნა';
+});
+const root=document.documentElement,th=document.getElementById('th');
+th.addEventListener('click',()=>{
+  const d=root.dataset.theme==='dark';root.dataset.theme=d?'light':'dark';
+  th.textContent=d?'☾':'☀︎';localStorage.setItem('cfg_theme',root.dataset.theme);
+});
+const saved=localStorage.getItem('cfg_theme');
+if(saved){root.dataset.theme=saved;th.textContent=saved==='dark'?'☀︎':'☾'}
+</script>
+
+<script>
+window.GH={owner:'Alsandre',repo:'MasterThesis',branch:'main'};
+window.GH_PATH='project/defense-config.html';
+window.__merged=function(){
+  const c=document.documentElement.cloneNode(true);
+  if(window.__mergeClean)window.__mergeClean(c);
+  return '<!doctype html>\n'+c.outerHTML;
+};
+window.__b64=function(str){const by=new TextEncoder().encode(str);let bin='';const CH=32768;
+  for(let i=0;i<by.length;i+=CH)bin+=String.fromCharCode.apply(null,by.subarray(i,i+CH));return btoa(bin)};
+window.__ghToken=function(force){let t=localStorage.getItem('gh_pat');
+  if(!t||force){t=prompt('GitHub fine-grained token (Contents: Read/Write \u2014 '+GH.owner+'/'+GH.repo+')');
+    if(t){t=t.trim();localStorage.setItem('gh_pat',t)}}return t};
+window.ghCommit=async function(path,content,btn){
+  const label=btn?btn.textContent:'';
+  try{
+    let t=__ghToken(false);if(!t)return false;
+    if(btn)btn.textContent='\u23f3\u2026';
+    const api='https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+encodeURIComponent(path).replace(/%2F/g,'/');
+    let H={authorization:'Bearer '+t,accept:'application/vnd.github+json'};
+    let r=await fetch(api+'?ref='+GH.branch,{headers:H});
+    if(r.status===401){t=__ghToken(true);if(!t)throw new Error('no token');
+      H.authorization='Bearer '+t;r=await fetch(api+'?ref='+GH.branch,{headers:H});}
+    const sha=r.ok?(await r.json()).sha:undefined;
+    const body={message:'docs: browser edit \u2014 '+path,content:__b64(content),branch:GH.branch};
+    if(sha)body.sha=sha;
+    const res=await fetch(api,{method:'PUT',headers:Object.assign({'content-type':'application/json'},H),body:JSON.stringify(body)});
+    if(!res.ok)throw new Error('HTTP '+res.status+' '+(await res.text()).slice(0,140));
+    if(btn){btn.textContent='\u2713 \u10e8\u10d4\u10dc\u10d0\u10ee\u10e3\u10da\u10d8\u10d0';setTimeout(function(){btn.textContent=label},2500)}
+    return true;
+  }catch(e){alert('GitHub commit \u10d5\u10d4\u10e0 \u10db\u10dd\u10ee\u10d4\u10e0\u10ee\u10d3\u10d0: '+e.message);if(btn)btn.textContent=label;return false}
+};
+(function(){const b=document.getElementById('ghpush');if(!b)return;
+  b.addEventListener('click',function(){ghCommit(GH_PATH,__merged(),b)})})();
+
+window.__mergeClean=function(c){
+  c.querySelectorAll('[contenteditable]').forEach(function(n){n.removeAttribute('contenteditable')});
+  var b=c.querySelector('body');if(b)b.classList.remove('editing');
+  var e=c.querySelector('#edit');if(e){e.classList.remove('on');e.textContent='\u270e \u10e0\u10d4\u10d3\u10d0\u10e5\u10e2\u10d8\u10e0\u10d4\u10d1\u10d0'}
+};
+
+</script>
+</body></html>
