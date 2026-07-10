@@ -17,7 +17,7 @@ background:#0b0c0f;border-bottom:1px solid #23252d;padding:0 10px;font:600 12.5p
 .xnav a:hover{color:#fff;background:#181a20} .xnav a.cur{color:#fff;background:#3b4cca}
 .xnav .xsp{flex:1} .xnav .xk{color:#5c6070;font-weight:500;font-size:11px}
 .stage{position:fixed;inset:36px 0 0;display:flex;align-items:center;justify-content:center;padding:4vh 7vw 12vh}
-.slide{display:none;width:100%;max-width:1000px;animation:fade .25s ease}
+.slide{display:none;width:100%;max-width:1000px;animation:fade .25s ease;position:relative}
 .slide[data-active]{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
 .sec{color:var(--acc);font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:14px}
@@ -71,13 +71,54 @@ padding:10px 15px;margin:8px 0;font:.92rem/1.5 "SF Mono",ui-monospace,Menlo,mono
 code.cl2{display:block;font:.78rem/1.5 "SF Mono",ui-monospace,Menlo,monospace;color:var(--mut)}
 code.cl2 b{color:var(--acc);font-weight:700}
 @media(max-width:640px){.tc{grid-template-columns:1fr}pre.scode{font-size:.75rem}}
+/* ---- builder ---- */
+#sb{position:fixed;left:0;top:36px;bottom:0;width:192px;z-index:50;background:#0c0d11;border-right:1px solid var(--line);transform:translateX(-100%);transition:transform .2s;display:flex;flex-direction:column}
+body.sbopen #sb{transform:none}
+body.sbopen .stage{inset:36px 0 0 192px}
+body.sbopen .bar{left:192px}
+#sb .sbh{display:flex;align-items:center;gap:6px;padding:9px 10px;border-bottom:1px solid var(--line);color:var(--mut);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em}
+#sb .sbh button{margin-left:auto;background:none;border:none;color:var(--mut);cursor:pointer;font-size:.85rem;padding:0 4px}
+#sb .sbh button:hover{color:var(--fg)}
+#sblist{flex:1;overflow-y:auto;padding:8px}
+.sbcard{position:relative;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--card);cursor:pointer;overflow:hidden}
+.sbcard.cur{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.sbcard.dragover{border-top:3px solid var(--acc)}
+.sbthumbwrap{height:96px;overflow:hidden;pointer-events:none}
+.sbthumb{width:1000px;transform:scale(.17);transform-origin:0 0;animation:none!important}
+.sbnum{position:absolute;left:6px;top:6px;z-index:2;font-size:.62rem;font-weight:800;color:#fff;background:rgba(20,21,26,.85);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.sbdel{position:absolute;right:5px;top:5px;z-index:2;background:rgba(20,21,26,.9);border:1px solid var(--line);border-radius:5px;color:var(--mut);cursor:pointer;font-size:.68rem;padding:1px 5px;display:none}
+.sbcard:hover .sbdel{display:block}
+.sbdel:hover{color:#ff6b62;border-color:#ff6b62}
+#sbadd{margin:4px 8px 10px;padding:8px;border:1px dashed var(--line);background:none;color:var(--mut);border-radius:8px;cursor:pointer;font:inherit;font-size:.85rem}
+#sbadd:hover{color:var(--acc);border-color:var(--acc)}
+/* floating elements */
+.fel{position:absolute;z-index:3}
+.fel img{width:100%;height:auto;display:block;border-radius:4px}
+.feltxt{min-width:40px;min-height:1em;outline:none;line-height:1.35}
+body.editing .fel{outline:1px dashed color-mix(in srgb,var(--acc) 45%,transparent);outline-offset:2px;cursor:default}
+.fel.sel{outline:2px solid var(--acc)!important;outline-offset:2px}
+body:not(.editing) .fel{pointer-events:none}
+body:not(.editing) #baddtxt,body:not(.editing) #baddimg{display:none}
+#felbox{position:fixed;z-index:70;display:none;pointer-events:none}
+#felbox .fbtn{position:absolute;width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:var(--acc);color:#fff;border-radius:6px;border:none;cursor:pointer;font-size:11px;pointer-events:auto;touch-action:none}
+#felgrip{left:-11px;top:-11px;cursor:grab}
+#felx{right:-11px;top:-11px;background:#c9463d}
+#felse{right:-11px;bottom:-11px;cursor:nwse-resize}
+#feltools{position:absolute;left:0;top:-46px;display:flex;gap:6px;background:#14151a;border:1px solid var(--line);border-radius:9px;padding:6px 8px;align-items:center;pointer-events:auto}
+#feltools input[type=number]{width:54px;font:inherit;font-size:.8rem;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px}
+#feltools input[type=color]{width:26px;height:26px;border:none;background:none;padding:0;cursor:pointer}
+#feltools button{font:700 12px/1 -apple-system,sans-serif;background:none;border:1px solid var(--line);color:var(--mut);border-radius:6px;width:26px;height:26px;cursor:pointer}
+#feltools button.on{color:#fff;background:var(--acc);border-color:var(--acc)}
+#bnr{position:fixed;top:44px;left:50%;transform:translateX(-50%);z-index:90;background:#26200e;border:1px solid var(--warn);color:var(--fg);border-radius:10px;padding:9px 14px;font-size:.85rem;display:none;gap:10px;align-items:center}
+#bnr button{font:inherit;font-size:.8rem;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:7px;padding:4px 10px;cursor:pointer}
+#bnr button:hover{border-color:var(--acc)}
 /* edit mode */
 body.editing .slide h2,body.editing .slide .body,body.editing .nb{outline:1px dashed var(--acc);outline-offset:4px;border-radius:5px}
 body.editing .arrow{display:none}
 #editbadge{display:none;color:var(--warn);font-weight:700} body.editing #editbadge{display:inline}
 @media(max-width:640px){h2{font-size:1.7rem}.body{font-size:1.1rem}.two,.grid2{grid-template-columns:1fr}.formula{font-size:1.7rem}}
 </style></head><body class="">
-<div class="xnav"><a href="THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html" class="cur">▶ პრეზენტაცია</a><a href="defense-replay.html">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span class="xsp"></span><span class="xk">← → სლაიდი · N ჩანაწერები · E რედაქტ. · T ტაიმერი · F სრული</span></div>
+<div class="xnav"><a href="THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html" class="cur">▶ პრეზენტაცია</a><a href="defense-replay.html">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span class="xsp"></span><span class="xk">← → სლაიდი · N ჩანაწერები · E რედაქტ. · S სლაიდები · T ტაიმერი · F სრული</span></div>
 <div class="bar" id="bar" style="width: 64.7059%;"></div>
 <button class="arrow l" id="prev" aria-label="prev"></button>
 <button class="arrow r" id="next" aria-label="next"></button>
@@ -90,77 +131,80 @@ if len(cluster) &gt;= CONSOLIDATE_N:</pre></div><div class="tc"><div class="th">
     dt = max(0, now - m["last"])
     return math.exp(-dt / max(0.3, m["S"]))</pre><ul><li><b>R</b> — მოძიებადობა (0–1) · <b>Δt</b> — გასული დრო · <b>S</b> — სტაბილურობა</li><li>დავიწყების ზღვარი 0.10 — <b>რბილი</b> დავიწყება, არა წაშლა</li><li>ყველა ძვირი ოპერაცია <b>ოფლაინ</b>; მოძიება — ერთი embedding, ნულ LLM-გამოძახება ტურზე</li></ul></div><div><div class="plate"><img src="fig/nakhazi2_decay.png" alt="ნახაზი 2"></div><div class="figcap">ნახაზი 2 — დავიწყების მრუდები: ტრივია · სალიენტური · სემანტიკური (ნაშრომიდან)</div></div></div></div></section><section class="slide" data-notes="ეს არის ამბავი ერთ ჭკვიან ხრიკზე. თუ ჩემი სისტემა C მოიგებს, სკეპტიკოსი მკითხავს — იქნებ უბრალოდ იმიტომ, რომ მისი ტექსტი უფრო სუფთაა? ამიტომ შევქმენი B+ — იგივე სუფთა, დამუშავებული მეხსიერება, ოღონდ ცოცხალი დინამიკის გარეშე. თუ C მოიგებს B+-ს, მაშინ ეს ნამდვილად დინამიკაა და არა კოსმეტიკა. (ეს ალბათ ყველაზე ხშირად დასმული კითხვაა კომისიისგან — პასუხი მზად მაქვს.)" data-time="1:30"><div class="sec">7 · ექსპერიმენტული დიზაინი</div><h2>ოთხი პირობა და აქტიური კონტროლი B+</h2><div class="body"><div class="cond"><span>A</span><div class="ct2">მეხსიერების გარეშე — ცივი დაწყება<code class="cl2">def end_session(self, sid, events): pass · def retrieve(self, query, now): return [], 0.0</code></div></div><div class="cond"><span>B</span><div class="ct2">სიტყვასიტყვითი RAG — top-k<code class="cl2">append({"text": ev, …}) → <b>cos(q, m["emb"])</b></code></div></div><div class="cond hot"><span>B+</span><div class="ct2">კურირებული, <b>სტატიკური</b> — gist, მაგრამ დაქვეითების/salience/კონსოლიდაციის გარეშე<code class="cl2">append({"gist": _gist(ev), …}) → <b>cos(q, m["emb"])</b></code></div></div><div class="cond hot"><span>C</span><div class="ct2">სრული Profile C — ადამიანისებრი დინამიკა<code class="cl2">append({"gist": g, "anchor": anchor, "S": S0, …}) → <b>cos(q, m["emb"]) · R</b> (სემანტ. ×1.25)</code></div></div><p class="q"><b>C vs B+</b> — ეს კონტრასტი განასხვავებს <b>დინამიკას</b> უბრალო <b>კურაციისგან</b>. <span style="color:var(--mut);font-size:.9rem">(ოთხივე კლასი: poc/harness.py — განსხვავება მხოლოდ მეხსიერების ლოგიკაშია)</span></p></div></section><section class="slide" data-notes="ეს არის ამბავი იმაზე, თუ როგორ ვზომავ ამ ყველაფერს — სამი გზით, თანდათან უფრო რეალურით: ტექნიკური ტესტი, სიმულირებული მომხმარებელი, და ბოლოს ცოცხალი ადამიანების კვლევა. ერთ რამეს გულახდილად ვამბობ: ეს ბოლო ჯერ არ ჩამიტარებია. პლატფორმის აგებას ერთი ადამიანი 12-16 კვირას ანდომებდა — ვადებში არ ჯდებოდა. ამიტომ ამ ნაშრომში არცერთი დასკვნა არ ეყრდნობა ადამიანების მონაცემებს — და ეს განზრახ და პატიოსნადაა." data-time="1:15"><div class="sec">8 · შეფასება</div><h2>სამი მიმართულება — და გულახდილობა</h2><div class="body"><ul><li><b>ტექნიკური შეფასება</b> (თავი 4) — მოძიების ხარისხი, ლატენტურობა.</li><li><b>სიმულირებული მომხმარებელი</b> (თავი 5) — LLM-მსაჯი, მექანიზმის სიგნალი.</li><li><b>ადამიან-პროტოკოლი</b> (თავი 2) — სრულად დაპროექტებული, <b>მომავალი სამუშაო</b>.</li></ul><p class="q">ამ ნაშრომში <b>არცერთი მტკიცება არ ეყრდნობა ადამიანების მონაცემებს</b>&nbsp;</p></div></section><section class="slide" data-notes="ეს არის ამბავის ყველაზე გულახდილი ნაწილი. ჩემი მთავარი შედარება — C vs B+ — იმდენად ნატიფია, რომ ოც ადამიანზე მისი დამტკიცება უბრალოდ შეუძლებელია; საჭირო იქნებოდა ასზე მეტი მონაწილე. ამიტომ მე მას არ ვასაღებ როგორც „დამტკიცებულს“ — ვზომავ და ვაჩვენებ სანდოობის ინტერვალით. ცარიელი შედეგიც კი ღირებულია. ეს სისუსტე კი არა, სიმკაცრეა — და აჩვენებს, რომ სტატისტიკა მესმის." data-time="1:15"><div class="sec">9 · სტატისტიკური პოზიცია</div><h2>C &gt; B+ — შეფასების სამიზნე, არა ტესტი</h2><div class="body"><ul><li>C vs B+ ეფექტი კონსტრუქციით <b>მცირეა</b> (dz ≈ 0.28).</li><li>n ≈ 20-ზე მისი დადასტურება <b>შეუძლებელია</b> (საჭიროა n ≈ 116–159).</li><li>ამიტომ ის <b>წინასწარ რეგისტრირებული შეფასების სამიზნეა</b> (ეფექტის სიდიდე + 95% CI).</li><li>ზუსტი <b>ნული — შინაარსობრივი, გამოსაქვეყნებელი შედეგია</b>. სწორედ ამისთვის არსებობს B+.</li></ul></div></section><section class="slide" data-notes="ეს ნაშრომი სამ რამეს ტოვებს. პირველი — Profile C: არქიტექტურა, სადაც თითოეული თეორია გაზომვად მექანიზმად იქცა. მეორე — მეთოდოლოგია, რომელსაც შეუძლია დინამიკა კურაციისგან განასხვავოს. მესამე — მუშა პროტოტიპი, რომელიც დღესვე ეშვება. (თითო წინადადება თითოზე, დარწმუნებით — თითოეული კონკრეტულ თავს უკავშირდება.)" data-time="0:45"><div class="sec">10 · წვლილი</div><h2>სამი წვლილი</h2><div class="body"><ol class="steps"><li><b>Profile C</b> — კოგნიტურ თეორიაზე დაფუძნებული მეხსიერების არქიტექტურა.</li><li><b>კურაციაზე-კონტროლირებადი მეთოდოლოგია</b> — აქტიური კონტროლი B+.</li><li><b>კონცეფციის დადასტურება</b> — იმპლემენტაცია + ტექნიკური და სიმულირებული შეფასება.</li></ol></div></section><section class="slide" data-notes="ეს არის ამბავი იმაზე, თუ რა არის უკვე რეალური — განსხვავებით მომავალი ადამიან-კვლევისგან. ტექნიკურად: დავიწყება რბილია და არა გატეხილი, სიჩქარე თანაბარია პირობებს შორის. სიმულაციაში: პირობები ნამდვილად სხვადასხვანაირად იქცევიან. მაგრამ ფრთხილად ვამბობ — ეს მექანიზმის სიგნალია, არა ადამიანის აღქმის მტკიცება. და დიაგრამის მთავარი დეტალი: პრივატულობის კომფორტზე LLM-შემფასებელმა ზუსტად საპირისპირო სურათი დახატა, ვიდრე ადამიანებში მყარად ცნობილი ეფექტია — ჩემი წაკითხვით, ეს იმის მტკიცებულებაა, რომ ადამიანის აღქმას სიმულაცია ვერ ჩაანაცვლებს. სწორედ ამიტომ სჭირდება ამ კვლევას ნამდვილი ადამიანები." data-time="1:00"><div class="sec">11 · შედეგები</div><h2>კონცეფციის დადასტურება — რა არის რეალური</h2><div class="body"><div class="two"><div><div class="k">ტექნიკური</div><p>რბილი დავიწყება დადასტურდა · ლატენტური პარიტეტი B/B+/C-სთვის · მოძიების სიზუსტე დახასიათებული.</p></div><div><div class="k">სიმულირებული</div><p>პირობები <b>განსხვავებულ</b> ქცევას წარმოქმნიან — მექანიზმის სიგნალი, არა აღქმის მტკიცება.</p></div></div><div class="chartwrap"><svg id="t5chart" viewBox="0 0 900 310" style="width:100%;height:auto;display:block" font-family="-apple-system,Noto Sans Georgian,sans-serif"><line x1="44" y1="276" x2="882" y2="276" stroke="#2a2c35" stroke-width="1"></line><text x="36" y="280" text-anchor="end" fill="#9a9daa" font-size="11">1</text><line x1="44" y1="235" x2="882" y2="235" stroke="#2a2c35" stroke-width="1"></line><text x="36" y="239" text-anchor="end" fill="#9a9daa" font-size="11">2</text><line x1="44" y1="194" x2="882" y2="194" stroke="#2a2c35" stroke-width="1"></line><text x="36" y="198" text-anchor="end" fill="#9a9daa" font-size="11">3</text><line x1="44" y1="153" x2="882" y2="153" stroke="#2a2c35" stroke-width="1"></line><text x="36" y="157" text-anchor="end" fill="#9a9daa" font-size="11">4</text><line x1="44" y1="112" x2="882" y2="112" stroke="#2a2c35" stroke-width="1"></line><text x="36" y="116" text-anchor="end" fill="#9a9daa" font-size="11">5</text><line x1="44" y1="71" x2="882" y2="71" stroke="#2a2c35" stroke-width="1"></line><text x="36" y="75" text-anchor="end" fill="#9a9daa" font-size="11">6</text><line x1="44" y1="30" x2="882" y2="30" stroke="#2a2c35" stroke-width="1"></line><text x="36" y="34" text-anchor="end" fill="#9a9daa" font-size="11">7</text><rect x="600" y="4" width="12" height="12" rx="3" fill="#7c8090"></rect><text x="617" y="14" fill="#e9eaf0" font-size="12">A</text><rect x="672" y="4" width="12" height="12" rx="3" fill="#5bbf7b"></rect><text x="689" y="14" fill="#e9eaf0" font-size="12">B</text><rect x="744" y="4" width="12" height="12" rx="3" fill="#e0a13a"></rect><text x="761" y="14" fill="#e9eaf0" font-size="12">B+</text><rect x="816" y="4" width="12" height="12" rx="3" fill="#9aa6ff"></rect><text x="833" y="14" fill="#e9eaf0" font-size="12">C</text><rect x="722" y="18" width="152" height="298" rx="9" fill="none" stroke="#e0a13a" stroke-dasharray="5 4" stroke-width="1.4"></rect><rect x="60" y="71" width="30" height="205" rx="3" fill="#7c8090"></rect><text x="75" y="67" text-anchor="middle" fill="#9a9daa" font-size="9">6</text><rect x="95" y="71" width="30" height="205" rx="3" fill="#5bbf7b"></rect><text x="110" y="67" text-anchor="middle" fill="#9a9daa" font-size="9">6</text><rect x="130" y="71" width="30" height="205" rx="3" fill="#e0a13a"></rect><text x="145" y="67" text-anchor="middle" fill="#9a9daa" font-size="9">6</text><rect x="165" y="71" width="30" height="205" rx="3" fill="#9aa6ff"></rect><text x="180" y="67" text-anchor="middle" fill="#9a9daa" font-size="9">6</text><text x="128" y="298" text-anchor="middle" fill="#9a9daa" font-size="12">თანდასწრება</text><rect x="228" y="98" width="30" height="178" rx="3" fill="#7c8090"></rect><text x="243" y="94" text-anchor="middle" fill="#9a9daa" font-size="9">5.33</text><rect x="263" y="71" width="30" height="205" rx="3" fill="#5bbf7b"></rect><text x="278" y="67" text-anchor="middle" fill="#9a9daa" font-size="9">6</text><rect x="298" y="57" width="30" height="219" rx="3" fill="#e0a13a"></rect><text x="313" y="53" text-anchor="middle" fill="#9a9daa" font-size="9">6.33</text><rect x="333" y="71" width="30" height="205" rx="3" fill="#9aa6ff"></rect><text x="348" y="67" text-anchor="middle" fill="#9a9daa" font-size="9">6</text><text x="295" y="298" text-anchor="middle" fill="#9a9daa" font-size="12">ალიანსი</text><rect x="396" y="98" width="30" height="178" rx="3" fill="#7c8090"></rect><text x="410" y="94" text-anchor="middle" fill="#9a9daa" font-size="9">5.33</text><rect x="430" y="112" width="30" height="164" rx="3" fill="#5bbf7b"></rect><text x="446" y="108" text-anchor="middle" fill="#9a9daa" font-size="9">5</text><rect x="466" y="98" width="30" height="178" rx="3" fill="#e0a13a"></rect><text x="480" y="94" text-anchor="middle" fill="#9a9daa" font-size="9">5.33</text><rect x="500" y="112" width="30" height="164" rx="3" fill="#9aa6ff"></rect><text x="516" y="108" text-anchor="middle" fill="#9a9daa" font-size="9">5</text><text x="463" y="298" text-anchor="middle" fill="#9a9daa" font-size="12">ადამიანურობა</text><rect x="563" y="112" width="30" height="164" rx="3" fill="#7c8090"></rect><text x="578" y="108" text-anchor="middle" fill="#9a9daa" font-size="9">5</text><rect x="598" y="71" width="30" height="205" rx="3" fill="#5bbf7b"></rect><text x="613" y="67" text-anchor="middle" fill="#9a9daa" font-size="9">6</text><rect x="633" y="71" width="30" height="205" rx="3" fill="#e0a13a"></rect><text x="648" y="67" text-anchor="middle" fill="#9a9daa" font-size="9">6</text><rect x="668" y="85" width="30" height="191" rx="3" fill="#9aa6ff"></rect><text x="683" y="81" text-anchor="middle" fill="#9a9daa" font-size="9">5.67</text><text x="631" y="298" text-anchor="middle" fill="#9a9daa" font-size="12">ინტელექტი</text><rect x="731" y="98" width="30" height="178" rx="3" fill="#7c8090"></rect><text x="746" y="94" text-anchor="middle" fill="#9a9daa" font-size="9">5.33</text><rect x="766" y="30" width="30" height="246" rx="3" fill="#5bbf7b"></rect><text x="781" y="26" text-anchor="middle" fill="#9a9daa" font-size="9">7</text><rect x="801" y="30" width="30" height="246" rx="3" fill="#e0a13a"></rect><text x="816" y="26" text-anchor="middle" fill="#9a9daa" font-size="9">7</text><rect x="836" y="85" width="30" height="191" rx="3" fill="#9aa6ff"></rect><text x="851" y="81" text-anchor="middle" fill="#9a9daa" font-size="9">5.67</text><text x="798" y="298" text-anchor="middle" fill="#e0a13a" font-size="12" font-weight="700">პრივატულობა ⚠</text></svg><div class="figcap">ცხრილი 5 — სიმულირებული აღქმა (LLM-შემფასებელი, 1–7): C ვერსად აჭარბებს B+-ს; <b style="color:var(--warn)">პრივატულობის კომფორტზე</b> შედეგი ადამიანური ეფექტის (Cox) საპირისპიროა — სიმულაციის საზღვრის მტკიცებულება</div></div></div></section><section class="slide" data-notes="ეს არის ამბავი საზღვრებზე — და ვამბობ გულახდილად. კვლევა ინგლისურ ენაზეა, მხოლოდ ხმაზე. ინტერფერენცია — ადამიანის დავიწყების მთავარი ნაწილი — არ მიმიბაძავს. და ცოცხალი ადამიანების კვლევა ჯერ წინ არის. მაგრამ თითოეული ეს საზღვარი მომავალი ნაბიჯია, არა ხვრელი — და ეს აჩვენებს, რომ ვიცი ჩემი ნაშრომის ფარგლები." data-time="0:45"><div class="sec">12 · შეზღუდვები</div><h2>შეზღუდვები და მომავალი სამუშაო</h2><div class="body"><ul><li>ერთენოვანი (ინგლისური), მხოლოდ <b>ხმოვანი</b> მოდალობა.</li><li><b>ინტერფერენცია</b> — ადამიანის დავიწყების მთავარი დინამიკა — არ არის მოდელირებული.</li><li>ადამიან-კვლევა <b>ჩასატარებელია</b>.</li><li>მომავალი: სრული ადამიან-პროტოკოლი · ქართული · თეორია-თეორიის შედარება.</li></ul></div></section><section class="slide" data-notes="ერთი წინადადებით: ეს ნაშრომი აშენებს ხელსაწყოსა და მეთოდს, რომ გავზომოთ — ხდის თუ არა ადამიანისებრი მეხსიერების დინამიკა AI-ს უფრო თანამოსაუბრედ, სუფთა კურაციისგან განცალკევებით. (ეს წინადადება — ზეპირად: ეს არის გზავნილი, რომელიც კომისიას უნდა დარჩეს. ნელა, დარწმუნებით, მერე პაუზა.)" data-time="0:45"><div class="sec">13 · დასკვნა</div><h2>დასკვნა</h2><div class="body"><p class="big">ნაშრომი აწვდის <b>აპარატურასა</b> და <b>მეთოდოლოგიას</b>, რომ გავზომოთ — ხდის თუ არა ადამიანისებრი მეხსიერების <b>დინამიკა</b> AI-ს უფრო თანამოსაუბრედ აღქმულ სისტემად, <b>კურაციისგან გამიჯნულად</b>.</p></div></section><section class="slide" data-notes="მადლობთ ყურადღებისთვის! მზად ვარ თქვენს კითხვებზე პასუხისთვის. (მოსალოდნელი კითხვები მომზადებულია: კურაცია vs დინამიკა — Q16; სიმძლავრე C&gt;B+ — Q23; ბენჩმარკის რიცხვები — Q4/Q12. ყოველ კითხვაზე: სუნთქვა, პაუზა, მერე პასუხი.)" data-time="—"><div class="sec">მადლობა</div><h2>მადლობა ყურადღებისთვის</h2><div class="body"><p class="lead">მზად ვარ თქვენი კითხვებისთვის.</p><p class="by">ალექსანდრე იმნაიშვილი · სტუ · 2026</p></div></section></div>
 <div class="hud" style="bottom: 169px;">
+  <button id="bsb" title="სლაიდების პანელი (S)">☰</button>
   <button id="bprev">‹</button>
-  <span class="count"><span id="cur">11</span> / 17</span>
+  <span class="count"><span id="cur">1</span> / <span id="cnt">17</span></span>
   <button id="bnext">›</button>
   <span>·</span>
   <button id="bnotes">ჩანაწერები (N)</button>
-  <button id="bedit">✎ რედაქტ.</button><span id="editbadge">● რედაქტირება</span>
+  <button id="bedit">✎ რედაქტ.</button><span id="editbadge">● რედაქტირება</span><button id="baddtxt" title="ტექსტური ბლოკის ჩასმა">Ｔ+</button><button id="baddimg" title="სურათის ჩასმა">🖼</button>
   <button id="bexport">⬇ export</button><button id="bppt" title="PowerPoint — რედაქტირებადი ტექსტით">PPT</button><button id="bppts" title="PowerPoint — ზუსტი ვიზუალი (სურათებად)">PPT 📷</button><button id="ghpush" title="ცვლილებების პირდაპირ GitHub-ზე დაკომიტება">⇪ GitHub</button>
   <span id="timer">00:00</span><button id="btimer">▶ ტაიმერი</button>
   <span class="tot">სამიზნე ≈ 17:30</span>
   <button id="btheme">☾</button>
 </div>
+<aside id="sb"><div class="sbh">სლაიდები<button id="sbclose" title="დამალვა (S)">✕</button></div><div id="sblist"></div><button id="sbadd">＋ ახალი სლაიდი</button></aside>
+<div id="felbox"><button class="fbtn" id="felgrip" title="გადატანა">⠿</button><button class="fbtn" id="felx" title="წაშლა">✕</button><button class="fbtn" id="felse" title="ზომა">⤡</button><div id="feltools"><input type="number" id="ftsize" min="8" max="140" title="შრიფტის ზომა"><input type="color" id="ftcolor" value="#e9eaf0" title="ფერი"><button id="ftb" title="მუქი">B</button><button id="fti" title="დახრილი"><i>I</i></button></div></div>
+<div id="bnr"><span id="bnrtxt"></span><button id="bnrkeep">ლოკალურის დატოვება</button><button id="bnrreset">ფაილიდან ჩატვირთვა</button></div>
+<input type="file" id="felfile" accept="image/*" style="display:none">
 <div class="notes show" id="np">
   <div class="nh"><span>სპიკერის ჩანაწერები</span><span style="display:flex;gap:12px;align-items:center"><span class="nt" id="ntime">⏱ 1:15</span><button id="bnclose" style="background:none;border:none;color:var(--mut);cursor:pointer;font-size:1.05rem;padding:0 2px" title="დახურვა (N)">✕</button></span></div>
   <div class="nb" id="nbody">ეს არის ამბავი იმაზე, თუ როგორ ვზომავ ამ ყველაფერს — სამი გზით, თანდათან უფრო რეალურით: ტექნიკური ტესტი, სიმულირებული მომხმარებელი, და ბოლოს ცოცხალი ადამიანების კვლევა. ერთ რამეს გულახდილად ვამბობ: ეს ბოლო ჯერ არ ჩამიტარებია. პლატფორმის აგებას ერთი ადამიანი 12-16 კვირას ანდომებდა — ვადებში არ ჯდებოდა. ამიტომ ამ ნაშრომში არცერთი დასკვნა არ ეყრდნობა ადამიანების მონაცემებს — და ეს განზრახ და პატიოსნადაა.</div>
 </div>
 <script>
-const slides=[...document.querySelectorAll('.slide')];let i=0,editing=false;
+let slides=[...document.querySelectorAll('.slide')];let i=0,editing=false;
 const cur=document.getElementById('cur'),bar=document.getElementById('bar');
 const np=document.getElementById('np'),nb=document.getElementById('nbody'),ntime=document.getElementById('ntime');
 const hud=document.querySelector('.hud');
 function placeHud(){hud.style.bottom=np.classList.contains('show')?(np.offsetHeight+12)+'px':'14px'}
 new ResizeObserver(placeHud).observe(np);window.addEventListener('resize',placeHud);
-// ---- persisted edits (this HTML is the source of truth) ----
-let edits={};try{edits=JSON.parse(localStorage.getItem('pres_edits')||'{}')}catch(e){}
-function applyEdits(){slides.forEach((s,k)=>{const e=edits[k];if(!e)return;
-  if(e.title!=null)s.querySelector('h2').innerHTML=e.title;
-  if(e.body!=null)s.querySelector('.body').innerHTML=e.body;
-  if(e.notes!=null)s.dataset.notes=e.notes;});}
-function saveEdit(k,f,v){edits[k]=edits[k]||{};edits[k][f]=v;try{localStorage.setItem('pres_edits',JSON.stringify(edits))}catch(e){}}
-applyEdits();
+// persistence: whole-document model (pres_doc_v2) — handled in builder script below
 function show(n){
   i=Math.max(0,Math.min(slides.length-1,n));
   slides.forEach((s,k)=>k===i?s.setAttribute('data-active',''):s.removeAttribute('data-active'));
   cur.textContent=i+1;bar.style.width=((i+1)/slides.length*100)+'%';
   nb.innerHTML=slides[i].dataset.notes;ntime.textContent='⏱ '+slides[i].dataset.time;
+  if(window.__afterShow)__afterShow();
 }
 function nx(){if(!editing)show(i+1)}function pv(){if(!editing)show(i-1)}
 document.getElementById('next').onclick=nx;document.getElementById('prev').onclick=pv;
 document.getElementById('bnext').onclick=()=>show(i+1);document.getElementById('bprev').onclick=()=>show(i-1);
 document.getElementById('bnotes').onclick=()=>{np.classList.toggle('show');placeHud()};
 document.getElementById('bnclose').onclick=()=>{np.classList.remove('show');placeHud()};
-// live-save edits
-document.querySelector('.stage').addEventListener('input',()=>{if(!editing)return;const s=slides[i];
-  saveEdit(i,'title',s.querySelector('h2').innerHTML);saveEdit(i,'body',s.querySelector('.body').innerHTML);});
-nb.addEventListener('input',()=>{if(!editing)return;slides[i].dataset.notes=nb.innerHTML;saveEdit(i,'notes',nb.innerHTML);});
+// live-save: whole-doc, debounced
+document.querySelector('.stage').addEventListener('input',()=>{if(editing&&window.saveDocSoon)saveDocSoon()});
+nb.addEventListener('input',()=>{if(!editing)return;slides[i].dataset.notes=nb.innerHTML;if(window.saveDocSoon)saveDocSoon()});
+function applyEditable(s,on){['.sec','h2','.body'].forEach(q=>{const n=s.querySelector(q);if(n)n.contentEditable=on});
+  s.querySelectorAll('.feltxt').forEach(n=>n.contentEditable=on)}
 function setEdit(on){editing=on;document.body.classList.toggle('editing',on);
-  slides.forEach(s=>{s.querySelector('h2').contentEditable=on;s.querySelector('.body').contentEditable=on;});
-  nb.contentEditable=on;if(on)np.classList.add('show');placeHud();
+  slides.forEach(s=>applyEditable(s,on));
+  nb.contentEditable=on;
+  if(on){np.classList.add('show');if(window.sbToggle)sbToggle(true)}
+  else if(window.felSel){felSel(null)}
+  placeHud();
   document.getElementById('bedit').textContent=on?'✓ დასრულება':'✎ რედაქტ.';}
 document.getElementById('bedit').onclick=()=>setEdit(!editing);
 document.getElementById('bexport').onclick=()=>{
   const wasEdit=editing;setEdit(false);
-  const c=document.documentElement.cloneNode(true);
-  c.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));
-  c.querySelectorAll('.slide').forEach(s=>{s.removeAttribute('data-active')});
-  const first=c.querySelector('.slide');if(first)first.setAttribute('data-active','');
-  const blob=new Blob(['<!doctype html>\n'+c.outerHTML],{type:'text/html'});
+  const blob=new Blob([window.__merged()],{type:'text/html'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='defense-presentation.html';a.click();
   if(wasEdit)setEdit(true);
 };
 document.addEventListener('keydown',e=>{
   if(editing){
     const typing=document.activeElement&&document.activeElement.isContentEditable;
-    if(e.key==='Escape'){setEdit(false);return;}
+    if(e.key==='Escape'){if(window.__felEsc&&__felEsc())return;setEdit(false);return;}
     if(!typing&&(e.key==='e'||e.key==='E')){setEdit(false);return;}
     if(!typing&&(e.key==='n'||e.key==='N')){np.classList.toggle('show');placeHud();return;}
+    if(!typing&&(e.key==='s'||e.key==='S')){if(window.sbToggle)sbToggle();return;}
+    if(!typing&&e.key==='ArrowRight'){e.preventDefault();show(i+1);return;}
+    if(!typing&&e.key==='ArrowLeft'){e.preventDefault();show(i-1);return;}
     return;}
   if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();nx();}
   else if(e.key==='ArrowLeft'||e.key==='PageUp'){pv();}
   else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(slides.length-1);}
   else if(e.key==='n'||e.key==='N'){np.classList.toggle('show');placeHud();}
+  else if(e.key==='s'||e.key==='S'){if(window.sbToggle)sbToggle();}
   else if(e.key==='e'||e.key==='E'){setEdit(!editing);}
   else if(e.key==='t'||e.key==='T'){toggleTimer();}
   else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
@@ -209,13 +253,22 @@ window.ghCommit=async function(path,content,btn){
 (function(){const b=document.getElementById('ghpush');if(!b)return;
   b.addEventListener('click',function(){ghCommit(GH_PATH,__merged(),b).then(function(ok){if(ok&&window.__afterCommit)window.__afterCommit()})})})();
 
-window.__afterCommit=function(){if(location.protocol.indexOf('http')===0){try{localStorage.removeItem('pres_edits')}catch(e){}}};
+window.__afterCommit=function(){if(location.protocol.indexOf('http')===0){try{localStorage.removeItem('pres_edits');localStorage.removeItem('pres_doc_v2')}catch(e){}}};
 window.__mergeClean=function(c){
   c.querySelectorAll('[contenteditable]').forEach(function(n){n.removeAttribute('contenteditable')});
-  var b=c.querySelector('body');if(b)b.classList.remove('editing');
+  var b=c.querySelector('body');if(b){b.classList.remove('editing');b.classList.remove('sbopen')}
   c.querySelectorAll('.slide').forEach(function(s){s.removeAttribute('data-active')});
   var f=c.querySelector('.slide');if(f)f.setAttribute('data-active','');
-  var be=c.querySelector('#bedit');if(be)be.textContent='\u270e \u10e0\u10d4\u10d3\u10d0\u10e5\u10e2.';
+  var be=c.querySelector('#bedit');if(be)be.textContent='✎ რედაქტ.';
+  c.querySelectorAll('.fel.sel').forEach(function(n){n.classList.remove('sel')});
+  var sl=c.querySelector('#sblist');if(sl)sl.innerHTML='';
+  var fb=c.querySelector('#felbox');if(fb)fb.style.display='none';
+  var bn=c.querySelector('#bnr');if(bn)bn.style.display='none';
+  var cu=c.querySelector('#cur');if(cu)cu.textContent='1';
+  var br=c.querySelector('#bar');if(br)br.style.width='';
+  var hd=c.querySelector('.hud');if(hd)hd.style.bottom='';
+  var npp=c.querySelector('#np');if(npp)npp.classList.remove('show');
+  var nbb=c.querySelector('#nbody');if(nbb)nbb.innerHTML='';
 };
 
 </script>
@@ -325,5 +378,193 @@ async function pptSnap(btn){
 }
 document.getElementById('bppt').onclick=function(){pptText(this)};
 document.getElementById('bppts').onclick=function(){pptSnap(this)};
+</script>
+
+<script>
+// ===== Slide Builder =====
+const stage=document.querySelector('.stage');
+const DOCKEY='pres_doc_v2';
+function djb2(x){let h=5381;for(let k=0;k<x.length;k++)h=((h<<5)+h+x.charCodeAt(k))>>>0;return h.toString(36)}
+const FILEREV=djb2(stage.innerHTML);
+window.saveDoc=function(){try{localStorage.setItem(DOCKEY,JSON.stringify({rev:FILEREV,html:stage.innerHTML}))}catch(e){}};
+let __svT;window.saveDocSoon=function(){clearTimeout(__svT);__svT=setTimeout(function(){saveDoc();buildSB()},600)};
+function refreshSlides(){slides=[...stage.querySelectorAll('.slide')];const c=document.getElementById('cnt');if(c)c.textContent=slides.length}
+
+// --- undo ---
+const undoStack=[];let __biT=0;
+function pushUndo(){undoStack.push({html:stage.innerHTML,idx:i});if(undoStack.length>30)undoStack.shift()}
+stage.addEventListener('beforeinput',function(){const n=performance.now();if(n-__biT>2500)pushUndo();__biT=n});
+function doUndo(){const u=undoStack.pop();if(!u)return;felSel(null);stage.innerHTML=u.html;refreshSlides();show(Math.min(u.idx,slides.length-1));if(editing)slides.forEach(s=>applyEditable(s,true));saveDoc();buildSB()}
+
+// --- floating elements (declared before load so felSel exists) ---
+let selFel=null;
+const felbox=document.getElementById('felbox'),feltools=document.getElementById('feltools');
+window.felSel=function(el){
+  if(selFel)selFel.classList.remove('sel');
+  selFel=el;
+  if(!el){felbox.style.display='none';return}
+  el.classList.add('sel');
+  const isTxt=el.classList.contains('feltxt');
+  feltools.style.display=isTxt?'flex':'none';
+  if(isTxt){
+    document.getElementById('ftsize').value=parseInt(getComputedStyle(el).fontSize)||24;
+    document.getElementById('ftb').classList.toggle('on',parseInt(getComputedStyle(el).fontWeight)>=600);
+    document.getElementById('fti').classList.toggle('on',getComputedStyle(el).fontStyle==='italic');
+  }
+  placeFelbox();
+};
+window.__felEsc=function(){if(selFel){felSel(null);return true}return false};
+function placeFelbox(){
+  if(!selFel||!editing){felbox.style.display='none';return}
+  const r=selFel.getBoundingClientRect();
+  felbox.style.display='block';
+  felbox.style.left=r.left+'px';felbox.style.top=r.top+'px';
+  felbox.style.width=r.width+'px';felbox.style.height=r.height+'px';
+}
+window.addEventListener('resize',placeFelbox);
+
+// --- load persisted doc / one-time legacy migration ---
+(function(){
+  let v2=null;try{v2=JSON.parse(localStorage.getItem(DOCKEY)||'null')}catch(e){}
+  if(v2&&v2.html){
+    stage.innerHTML=v2.html;
+    if(v2.rev!==FILEREV){
+      const bnr=document.getElementById('bnr');
+      document.getElementById('bnrtxt').textContent='ფაილი განახლდა მას შემდეგ, რაც ბრაუზერული ვერსია შეინახა — რომელი დავტოვოთ?';
+      bnr.style.display='flex';
+      document.getElementById('bnrkeep').onclick=function(){bnr.style.display='none';saveDoc()};
+      document.getElementById('bnrreset').onclick=function(){localStorage.removeItem(DOCKEY);location.reload()};
+    }
+  }else{
+    let old=null;try{old=JSON.parse(localStorage.getItem('pres_edits')||'null')}catch(e){}
+    if(old&&Object.keys(old).length){
+      slides.forEach(function(sl,k){const e=old[k];if(!e)return;
+        if(e.title!=null)sl.querySelector('h2').innerHTML=e.title;
+        if(e.body!=null)sl.querySelector('.body').innerHTML=e.body;
+        if(e.notes!=null)sl.dataset.notes=e.notes;});
+      saveDoc();
+    }
+  }
+  try{localStorage.removeItem('pres_edits')}catch(e){}
+  refreshSlides();show(0);
+})();
+
+// --- sidebar ---
+const sblist=document.getElementById('sblist');
+window.sbToggle=function(f){const on=f===undefined?!document.body.classList.contains('sbopen'):f;
+  document.body.classList.toggle('sbopen',on);if(on)buildSB()};
+document.getElementById('bsb').onclick=function(){sbToggle()};
+document.getElementById('sbclose').onclick=function(){sbToggle(false)};
+function buildSB(){
+  if(!document.body.classList.contains('sbopen'))return;
+  sblist.innerHTML='';
+  slides.forEach(function(sec,k){
+    const c=document.createElement('div');c.className='sbcard'+(k===i?' cur':'');c.draggable=true;
+    const num=document.createElement('span');num.className='sbnum';num.textContent=k+1;
+    const del=document.createElement('button');del.className='sbdel';del.textContent='🗑';del.title='წაშლა';
+    const tw=document.createElement('div');tw.className='sbthumbwrap';
+    const th=sec.cloneNode(true);th.className='slide sbthumb';th.style.display='block';th.removeAttribute('data-active');
+    th.querySelectorAll('[contenteditable]').forEach(function(n){n.removeAttribute('contenteditable')});
+    tw.appendChild(th);
+    c.appendChild(num);c.appendChild(del);c.appendChild(tw);
+    c.addEventListener('click',function(e){if(e.target===del)return;show(k)});
+    del.addEventListener('click',function(e){e.stopPropagation();
+      if(slides.length<=1){alert('ბოლო სლაიდი ვერ წაიშლება');return}
+      if(!confirm('წაიშალოს სლაიდი '+(k+1)+'?'))return;
+      pushUndo();slides[k].remove();refreshSlides();show(Math.min(i,slides.length-1));saveDoc();buildSB();});
+    c.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',String(k));e.dataTransfer.effectAllowed='move'});
+    c.addEventListener('dragover',function(e){e.preventDefault();c.classList.add('dragover')});
+    c.addEventListener('dragleave',function(){c.classList.remove('dragover')});
+    c.addEventListener('drop',function(e){e.preventDefault();c.classList.remove('dragover');
+      const from=parseInt(e.dataTransfer.getData('text/plain'),10);if(isNaN(from)||from===k)return;
+      pushUndo();
+      const cursec=slides[i],sec2=slides[from],ref=slides[k];
+      if(from<k)ref.after(sec2);else ref.before(sec2);
+      refreshSlides();const ni=slides.indexOf(cursec);show(ni<0?0:ni);saveDoc();buildSB();});
+    sblist.appendChild(c);
+  });
+}
+document.getElementById('sbadd').onclick=function(){
+  pushUndo();
+  const sec=document.createElement('section');sec.className='slide';sec.dataset.notes='';sec.dataset.time='1:00';
+  sec.innerHTML='<div class="sec">ახალი სლაიდი</div><h2>სათაური</h2><div class="body"><p>ტექსტი…</p></div>';
+  slides[i].after(sec);refreshSlides();if(editing)applyEditable(sec,true);show(i+1);saveDoc();buildSB();
+};
+window.__afterShow=function(){
+  if(sblist)[...sblist.children].forEach(function(c,k){c.classList.toggle('cur',k===i)});
+  if(selFel&&!slides[i].contains(selFel))felSel(null);else placeFelbox();
+};
+
+// --- element selection / drag / resize ---
+stage.addEventListener('pointerdown',function(e){
+  if(!editing)return;
+  const f=e.target.closest('.fel');
+  if(f){if(f!==selFel)felSel(f)}
+  else felSel(null);
+});
+stage.addEventListener('input',function(e){if(e.target.closest&&e.target.closest('.fel'))placeFelbox()});
+function felDrag(handle,mode){
+  handle.addEventListener('pointerdown',function(e){
+    if(!selFel)return;e.preventDefault();e.stopPropagation();
+    handle.setPointerCapture(e.pointerId);
+    pushUndo();
+    const sr=selFel.parentElement.getBoundingClientRect(),r=selFel.getBoundingClientRect();
+    const sx=e.clientX,sy=e.clientY,ol=r.left-sr.left,ot=r.top-sr.top,ow=r.width;
+    function mv(ev){const dx=ev.clientX-sx,dy=ev.clientY-sy;
+      if(mode==='m'){selFel.style.left=Math.round(ol+dx)+'px';selFel.style.top=Math.round(ot+dy)+'px'}
+      else{selFel.style.width=Math.max(30,Math.round(ow+dx))+'px'}
+      placeFelbox();}
+    function up(){handle.removeEventListener('pointermove',mv);handle.removeEventListener('pointerup',up);saveDocSoon()}
+    handle.addEventListener('pointermove',mv);handle.addEventListener('pointerup',up);
+  });
+}
+felDrag(document.getElementById('felgrip'),'m');
+felDrag(document.getElementById('felse'),'r');
+document.getElementById('felx').onclick=function(){if(selFel){pushUndo();selFel.remove();felSel(null);saveDocSoon()}};
+
+// --- insert text / image ---
+document.getElementById('baddtxt').onclick=function(){
+  pushUndo();
+  const d=document.createElement('div');d.className='fel feltxt';d.contentEditable=true;
+  d.style.cssText='left:80px;top:80px;width:300px;font-size:24px';d.textContent='ტექსტი';
+  slides[i].appendChild(d);felSel(d);saveDocSoon();
+};
+document.getElementById('baddimg').onclick=function(){document.getElementById('felfile').click()};
+document.getElementById('felfile').addEventListener('change',function(e){
+  const f=e.target.files[0];this.value='';if(!f)return;
+  const rd=new FileReader();
+  rd.onload=function(){
+    const img=new Image();
+    img.onload=function(){
+      let url=rd.result;
+      if(img.naturalWidth>1600||f.size>400000){
+        const c=document.createElement('canvas'),k=Math.min(1,1600/img.naturalWidth);
+        c.width=Math.round(img.naturalWidth*k);c.height=Math.round(img.naturalHeight*k);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        try{url=c.toDataURL('image/jpeg',.85)}catch(err){}
+      }
+      pushUndo();
+      const d=document.createElement('div');d.className='fel felimg';d.style.cssText='left:60px;top:60px;width:320px';
+      const im=document.createElement('img');im.src=url;im.alt='';d.appendChild(im);
+      slides[i].appendChild(d);felSel(d);saveDocSoon();
+    };
+    img.src=rd.result;
+  };
+  rd.readAsDataURL(f);
+});
+
+// --- text toolbar ---
+document.getElementById('ftsize').addEventListener('input',function(){if(selFel){selFel.style.fontSize=this.value+'px';placeFelbox();saveDocSoon()}});
+document.getElementById('ftcolor').addEventListener('input',function(){if(selFel){selFel.style.color=this.value;saveDocSoon()}});
+document.getElementById('ftb').onclick=function(){if(!selFel)return;const on=selFel.style.fontWeight==='700';selFel.style.fontWeight=on?'':'700';this.classList.toggle('on',!on);saveDocSoon()};
+document.getElementById('fti').onclick=function(){if(!selFel)return;const on=selFel.style.fontStyle==='italic';selFel.style.fontStyle=on?'':'italic';this.classList.toggle('on',!on);saveDocSoon()};
+
+// --- keys: undo, delete selected element ---
+document.addEventListener('keydown',function(e){
+  if((e.metaKey||e.ctrlKey)&&(e.key==='z'||e.key==='Z')){if(editing){e.preventDefault();doUndo()}return}
+  const typing=document.activeElement&&document.activeElement.isContentEditable;
+  if(typing)return;
+  if((e.key==='Backspace'||e.key==='Delete')&&selFel&&editing){e.preventDefault();pushUndo();selFel.remove();felSel(null);saveDocSoon()}
+});
 </script>
 </body></html>
