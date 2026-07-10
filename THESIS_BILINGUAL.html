@@ -74,7 +74,7 @@ td.ed,th.ed{min-width:60px}
 .edbar #editclear{background:var(--panel);color:var(--muted)}
 @media(max-width:860px){.pair{grid-template-columns:1fr}.card.ka{margin-top:-4px}}
 @media print{.copybtn,.toast,.edbar{display:none!important}.card{border:none;padding:0}.ed.edited{background:none}}
-</style><style id="xnav-css">.xnav{position:fixed;top:0;left:0;right:0;height:36px;z-index:99999;display:flex;align-items:center;gap:3px;background:#0b0c0f;border-bottom:1px solid #23252d;padding:0 10px;font:600 12.5px/1 -apple-system,"Noto Sans Georgian",sans-serif}.xnav a{color:#9aa0ad;text-decoration:none;padding:6px 10px;border-radius:6px;white-space:nowrap}.xnav a:hover{color:#fff;background:#181a20}.xnav a.cur{color:#fff;background:#3b4cca}body{margin-top:36px !important}</style></head><body><div class="xnav"><a href="THESIS_BILINGUAL.html" class="cur">📄 დოკუმენტი</a><a href="project/defense-prep.html">📋 Defense prep</a><a href="project/defense-presentation.html">▶ პრეზენტაცია</a><a href="project/defense-profileC-demo.html">⚙ დემო</a><span style="flex:1"></span></div><div class="wrap">
+</style><style id="xnav-css">.xnav{position:fixed;top:0;left:0;right:0;height:36px;z-index:99999;display:flex;align-items:center;gap:3px;background:#0b0c0f;border-bottom:1px solid #23252d;padding:0 10px;font:600 12.5px/1 -apple-system,"Noto Sans Georgian",sans-serif}.xnav a{color:#9aa0ad;text-decoration:none;padding:6px 10px;border-radius:6px;white-space:nowrap}.xnav a:hover{color:#fff;background:#181a20}.xnav a.cur{color:#fff;background:#3b4cca}body{margin-top:36px !important}</style></head><body><div class="xnav"><a href="THESIS_BILINGUAL.html" class="cur">📄 დოკუმენტი</a><a href="project/defense-prep.html">📋 Defense prep</a><a href="project/defense-presentation.html">▶ პრეზენტაცია</a><a href="project/defense-profileC-demo.html">⚙ დემო</a><a href="project/defense-replay.html">🖥 Replay</a><a href="project/defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span><button id="ghpush" style="font:600 12px -apple-system,'Noto Sans Georgian',sans-serif;cursor:pointer;border:1px solid #383b48;background:#181a20;color:#9aa0ad;border-radius:6px;padding:5px 10px">⇪ GitHub</button></div><div class="wrap">
 <div class="titlepage"><div class="author">Aleksandre Imnaishvili</div>
 <div class="title">Conversational AI: The Evolution from Assistant to Interlocutor</div>
 <div class="meta">Master&#8217;s Thesis · Georgian Technical University · July 2026 · Bilingual EN / KA</div></div>
@@ -310,4 +310,42 @@ td.ed,th.ed{min-width:60px}
  });
 })();
 </script>
-</div></body></html>
+</div>
+<script>
+window.GH={owner:'Alsandre',repo:'MasterThesis',branch:'main'};
+window.GH_PATH='THESIS_BILINGUAL.html';
+window.__merged=function(){
+  const c=document.documentElement.cloneNode(true);
+  if(window.__mergeClean)window.__mergeClean(c);
+  return '<!doctype html>\n'+c.outerHTML;
+};
+window.__b64=function(str){const by=new TextEncoder().encode(str);let bin='';const CH=32768;
+  for(let i=0;i<by.length;i+=CH)bin+=String.fromCharCode.apply(null,by.subarray(i,i+CH));return btoa(bin)};
+window.__ghToken=function(force){let t=localStorage.getItem('gh_pat');
+  if(!t||force){t=prompt('GitHub fine-grained token (Contents: Read/Write \u2014 '+GH.owner+'/'+GH.repo+')');
+    if(t){t=t.trim();localStorage.setItem('gh_pat',t)}}return t};
+window.ghCommit=async function(path,content,btn){
+  const label=btn?btn.textContent:'';
+  try{
+    let t=__ghToken(false);if(!t)return false;
+    if(btn)btn.textContent='\u23f3\u2026';
+    const api='https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+encodeURIComponent(path).replace(/%2F/g,'/');
+    let H={authorization:'Bearer '+t,accept:'application/vnd.github+json'};
+    let r=await fetch(api+'?ref='+GH.branch,{headers:H});
+    if(r.status===401){t=__ghToken(true);if(!t)throw new Error('no token');
+      H.authorization='Bearer '+t;r=await fetch(api+'?ref='+GH.branch,{headers:H});}
+    const sha=r.ok?(await r.json()).sha:undefined;
+    const body={message:'docs: browser edit \u2014 '+path,content:__b64(content),branch:GH.branch};
+    if(sha)body.sha=sha;
+    const res=await fetch(api,{method:'PUT',headers:Object.assign({'content-type':'application/json'},H),body:JSON.stringify(body)});
+    if(!res.ok)throw new Error('HTTP '+res.status+' '+(await res.text()).slice(0,140));
+    if(btn){btn.textContent='\u2713 \u10e8\u10d4\u10dc\u10d0\u10ee\u10e3\u10da\u10d8\u10d0';setTimeout(function(){btn.textContent=label},2500)}
+    return true;
+  }catch(e){alert('GitHub commit \u10d5\u10d4\u10e0 \u10db\u10dd\u10ee\u10d4\u10e0\u10ee\u10d3\u10d0: '+e.message);if(btn)btn.textContent=label;return false}
+};
+(function(){const b=document.getElementById('ghpush');if(!b)return;
+  b.addEventListener('click',function(){ghCommit(GH_PATH,__merged(),b)})})();
+window.__mergeClean=null;
+
+</script>
+</body></html>

@@ -56,7 +56,7 @@ body.editing .arrow{display:none}
 #editbadge{display:none;color:var(--warn);font-weight:700} body.editing #editbadge{display:inline}
 @media(max-width:640px){h2{font-size:1.7rem}.body{font-size:1.1rem}.two,.grid2{grid-template-columns:1fr}.formula{font-size:1.7rem}}
 </style></head><body>
-<div class="xnav"><a href="../THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html" class=cur>▶ პრეზენტაცია</a><a href="defense-profileC-demo.html">⚙ დემო</a><span class="xsp"></span><span class="xk">← → სლაიდი · N ჩანაწერები · E რედაქტ. · T ტაიმერი · F სრული</span></div>
+<div class="xnav"><a href="../THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html" class=cur>▶ პრეზენტაცია</a><a href="defense-profileC-demo.html">⚙ დემო</a><a href="defense-replay.html">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span class="xsp"></span><span class="xk">← → სლაიდი · N ჩანაწერები · E რედაქტ. · T ტაიმერი · F სრული</span></div>
 <div class="bar" id="bar"></div>
 <button class="arrow l" id="prev" aria-label="prev"></button>
 <button class="arrow r" id="next" aria-label="next"></button>
@@ -68,7 +68,7 @@ body.editing .arrow{display:none}
   <span>·</span>
   <button id="bnotes">ჩანაწერები (N)</button>
   <button id="bedit">✎ რედაქტ.</button><span id="editbadge">● რედაქტირება</span>
-  <button id="bexport">⬇ export</button>
+  <button id="bexport">⬇ export</button><button id="ghpush" title="ცვლილებების პირდაპირ GitHub-ზე დაკომიტება">⇪ GitHub</button>
   <span id="timer">00:00</span><button id="btimer">▶ ტაიმერი</button>
   <span class="tot">სამიზნე ≈ 14:30</span>
   <button id="btheme">☾</button>
@@ -136,4 +136,49 @@ document.getElementById('btimer').onclick=toggleTimer;document.getElementById('b
 document.getElementById('btheme').onclick=()=>{const r=document.documentElement;
   const dark=r.dataset.theme?r.dataset.theme==='dark':window.matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark';};
 show(0);
-</script></body></html>
+</script>
+<script>
+window.GH={owner:'Alsandre',repo:'MasterThesis',branch:'main'};
+window.GH_PATH='project/defense-presentation.html';
+window.__merged=function(){
+  const c=document.documentElement.cloneNode(true);
+  if(window.__mergeClean)window.__mergeClean(c);
+  return '<!doctype html>\n'+c.outerHTML;
+};
+window.__b64=function(str){const by=new TextEncoder().encode(str);let bin='';const CH=32768;
+  for(let i=0;i<by.length;i+=CH)bin+=String.fromCharCode.apply(null,by.subarray(i,i+CH));return btoa(bin)};
+window.__ghToken=function(force){let t=localStorage.getItem('gh_pat');
+  if(!t||force){t=prompt('GitHub fine-grained token (Contents: Read/Write \u2014 '+GH.owner+'/'+GH.repo+')');
+    if(t){t=t.trim();localStorage.setItem('gh_pat',t)}}return t};
+window.ghCommit=async function(path,content,btn){
+  const label=btn?btn.textContent:'';
+  try{
+    let t=__ghToken(false);if(!t)return false;
+    if(btn)btn.textContent='\u23f3\u2026';
+    const api='https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+encodeURIComponent(path).replace(/%2F/g,'/');
+    let H={authorization:'Bearer '+t,accept:'application/vnd.github+json'};
+    let r=await fetch(api+'?ref='+GH.branch,{headers:H});
+    if(r.status===401){t=__ghToken(true);if(!t)throw new Error('no token');
+      H.authorization='Bearer '+t;r=await fetch(api+'?ref='+GH.branch,{headers:H});}
+    const sha=r.ok?(await r.json()).sha:undefined;
+    const body={message:'docs: browser edit \u2014 '+path,content:__b64(content),branch:GH.branch};
+    if(sha)body.sha=sha;
+    const res=await fetch(api,{method:'PUT',headers:Object.assign({'content-type':'application/json'},H),body:JSON.stringify(body)});
+    if(!res.ok)throw new Error('HTTP '+res.status+' '+(await res.text()).slice(0,140));
+    if(btn){btn.textContent='\u2713 \u10e8\u10d4\u10dc\u10d0\u10ee\u10e3\u10da\u10d8\u10d0';setTimeout(function(){btn.textContent=label},2500)}
+    return true;
+  }catch(e){alert('GitHub commit \u10d5\u10d4\u10e0 \u10db\u10dd\u10ee\u10d4\u10e0\u10ee\u10d3\u10d0: '+e.message);if(btn)btn.textContent=label;return false}
+};
+(function(){const b=document.getElementById('ghpush');if(!b)return;
+  b.addEventListener('click',function(){ghCommit(GH_PATH,__merged(),b)})})();
+
+window.__mergeClean=function(c){
+  c.querySelectorAll('[contenteditable]').forEach(function(n){n.removeAttribute('contenteditable')});
+  var b=c.querySelector('body');if(b)b.classList.remove('editing');
+  c.querySelectorAll('.slide').forEach(function(s){s.removeAttribute('data-active')});
+  var f=c.querySelector('.slide');if(f)f.setAttribute('data-active','');
+  var be=c.querySelector('#bedit');if(be)be.textContent='\u270e \u10e0\u10d4\u10d3\u10d0\u10e5\u10e2.';
+};
+
+</script>
+</body></html>
