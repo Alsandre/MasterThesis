@@ -57,10 +57,25 @@ CAPTIONS = [
 ]
 while len(CAPTIONS) < len(steps): CAPTIONS.append(("ნაბიჯი", ""))
 
+CODES = [
+    ("MemC.end_session — კოდირება",
+     'sals = _salience_batch(events)\ng, anchor = _gist_anchor(ev)\nS0 = DECAY_S_BASE * max(0.1, sal)'),
+    ("MemC._consolidate — კონსოლიდაცია",
+     'if cos(a["emb"], self.episodes[j]["emb"]) > 0.55:\nif len(cluster) >= CONSOLIDATE_N:\n    fact = _semantic_fact(gists)   # "S": DECAY_S_BASE * 2.5'),
+    ("MemC._R — დავიწყება · დედუპლიკაცია",
+     'def _R(self, m, now):\n    dt = max(0, now - m["last"])\n    return math.exp(-dt / max(0.3, m["S"]))\nif all(cos(femb, s["emb"]) < 0.8 for s in self.semantic):'),
+    ("MemC.retrieve — ქულა და გამყარება",
+     'if R < FORGET_FLOOR: continue\ncands.append((cos(q, m["emb"]) * R * SEM_BONUS, …))\ncands.append((cos(q, m["emb"]) * R, …))\nm["S"] += 0.5; m["last"] = now'),
+    ("llm() — რეალური გამოძახებების აღრიცხვა",
+     'r = _post("https://api.openai.com/v1/chat/completions", …)\nUSAGE["chat_calls"] += 1\nUSAGE["chat_in"] += u.get("prompt_tokens", 0)'),
+]
+while len(CODES) < len(steps): CODES.append(("", ""))
+
 step_html = "".join(
     f'<div class="step" data-i="{i}"><div class="cap"><span class="ct">{t}</span> {c}</div>'
-    f'<pre class="term">{render(b)}</pre></div>'
-    for i, ((t, c), b) in enumerate(zip(CAPTIONS, steps))
+    f'<pre class="term">{render(b)}</pre>'
+    f'<div class="codestrip"><div class="cl">poc/harness.py · {lbl}</div><pre>{html.escape(code)}</pre></div></div>'
+    for i, ((t, c), b, (lbl, code)) in enumerate(zip(CAPTIONS, steps, CODES))
 )
 
 page = """<!doctype html><html lang="ka" data-theme="dark"><head><meta charset="utf-8">
@@ -102,8 +117,13 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
 .hdr pre.term{padding-top:12px}
 .foot{margin-top:20px;color:var(--mut);font-size:.78rem;border-top:1px solid var(--line);padding-top:12px;line-height:1.7}
 .foot code{background:var(--line);padding:1px 5px;border-radius:4px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:.85em}
+#codebtn.on{border-color:var(--acc);color:var(--acc);font-weight:700}
+.codestrip{display:none;margin:8px 16px 0;border:1px dashed color-mix(in srgb,var(--acc) 55%,transparent);border-radius:9px;padding:8px 12px;background:color-mix(in srgb,var(--acc) 6%,transparent)}
+body.showcode .codestrip{display:block}
+.codestrip .cl{font:700 10.5px "SF Mono",ui-monospace,Menlo,monospace;color:var(--acc);letter-spacing:.05em;margin-bottom:4px}
+.codestrip pre{margin:0;font:12px/1.55 "SF Mono",ui-monospace,Menlo,monospace;color:#c9ccd6;overflow-x:auto}
 </style></head><body>
-<div class="xnav"><a href="../THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-profileC-demo.html">⚙ დემო</a><a href="defense-replay.html" class="cur">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span></div>
+<div class="xnav"><a href="THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-replay.html" class="cur">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span></div>
 <div class="wrap">
 <h1>რეალური გაშვების ჩანაწერი</h1>
 <p class="sub">poc/run_live.py --demo · __DATE__ · უცვლელი გამონატანი (poc/live_run_1.txt) · harness.py + OpenAI</p>
@@ -112,8 +132,9 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
   <button id="back">◀ უკან</button>
   <button id="all">ყველას ჩვენება</button>
   <button id="reset">↺ თავიდან</button>
+  <button id="codebtn">&lt;/&gt; კოდი</button>
   <span class="prog"><span id="pi">0</span>/__N__</span>
-  <span class="kbd">→ / Space — შემდეგი · ← — უკან · A — ყველა · R — თავიდან</span>
+  <span class="kbd">→ / Space — შემდეგი · ← — უკან · A — ყველა · R — თავიდან · C — კოდი</span>
 </div>
 <div class="termwin">
   <div class="tbar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="tt">python3 poc/run_live.py --demo</span></div>
@@ -141,12 +162,16 @@ function bwd(){if(!allMode&&i>0){i--;show();sync();
 function all(){allMode=true;show();sync()}
 function reset(){allMode=false;i=0;show();sync();window.scrollTo({top:0,behavior:'smooth'})}
 next.onclick=fwd;back.onclick=bwd;
+const cb=document.getElementById('codebtn');
+function codeToggle(){document.body.classList.toggle('showcode');cb.classList.toggle('on')}
+cb.onclick=codeToggle;
 document.getElementById('all').onclick=all;document.getElementById('reset').onclick=reset;
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();fwd()}
   else if(e.key==='ArrowLeft'){e.preventDefault();bwd()}
   else if(e.key==='a'||e.key==='A')all();
-  else if(e.key==='r'||e.key==='R')reset();});
+  else if(e.key==='r'||e.key==='R')reset();
+  else if(e.key==='c'||e.key==='C')codeToggle();});
 sync();
 </script>
 </body></html>

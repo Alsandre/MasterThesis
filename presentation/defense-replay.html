@@ -37,8 +37,13 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
 .hdr pre.term{padding-top:12px}
 .foot{margin-top:20px;color:var(--mut);font-size:.78rem;border-top:1px solid var(--line);padding-top:12px;line-height:1.7}
 .foot code{background:var(--line);padding:1px 5px;border-radius:4px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:.85em}
+#codebtn.on{border-color:var(--acc);color:var(--acc);font-weight:700}
+.codestrip{display:none;margin:8px 16px 0;border:1px dashed color-mix(in srgb,var(--acc) 55%,transparent);border-radius:9px;padding:8px 12px;background:color-mix(in srgb,var(--acc) 6%,transparent)}
+body.showcode .codestrip{display:block}
+.codestrip .cl{font:700 10.5px "SF Mono",ui-monospace,Menlo,monospace;color:var(--acc);letter-spacing:.05em;margin-bottom:4px}
+.codestrip pre{margin:0;font:12px/1.55 "SF Mono",ui-monospace,Menlo,monospace;color:#c9ccd6;overflow-x:auto}
 </style></head><body>
-<div class="xnav"><a href="THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-profileC-demo.html">⚙ დემო</a><a href="defense-replay.html" class="cur">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span></div>
+<div class="xnav"><a href="THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-replay.html" class="cur">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span></div>
 <div class="wrap">
 <h1>რეალური გაშვების ჩანაწერი</h1>
 <p class="sub">poc/run_live.py --demo · 10.07.2026 · უცვლელი გამონატანი (poc/live_run_1.txt) · harness.py + OpenAI</p>
@@ -47,8 +52,9 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
   <button id="back">◀ უკან</button>
   <button id="all">ყველას ჩვენება</button>
   <button id="reset">↺ თავიდან</button>
+  <button id="codebtn">&lt;/&gt; კოდი</button>
   <span class="prog"><span id="pi">0</span>/5</span>
-  <span class="kbd">→ / Space — შემდეგი · ← — უკან · A — ყველა · R — თავიდან</span>
+  <span class="kbd">→ / Space — შემდეგი · ← — უკან · A — ყველა · R — თავიდან · C — კოდი</span>
 </div>
 <div class="termwin">
   <div class="tbar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="tt">python3 poc/run_live.py --demo</span></div>
@@ -70,7 +76,9 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
 <span class="b">  მეხსიერების მდგომარეობა:</span>
    [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=1.8 sal=0.90  <span class="d">Lexo introduces himself and states he li</span>
    [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=1.6 sal=0.80  <span class="d">They have a project deadline tomorrow.</span>
-   [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=0.4 sal=0.20  <span class="d">The weather today is sunny.</span></pre></div><div class="step" data-i="1"><div class="cap"><span class="ct">სესია 2 — კონსოლიდაცია</span> დედლაინის თემა მეორდება → <b>⚙ კონსოლიდაცია</b>: იბადება სემანტიკური ფაქტი (S=5.0). ამინდი უკვე დავიწყებულია — R=0.082 &lt; 0.10 ზღვარს.</div><pre class="term"><span class="b">  სესია 2</span><span class="d">  — რეალური კოდირება (2 რეპლიკა) · OpenAI</span>
+   [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=0.4 sal=0.20  <span class="d">The weather today is sunny.</span></pre><div class="codestrip"><div class="cl">poc/harness.py · MemC.end_session — კოდირება</div><pre>sals = _salience_batch(events)
+g, anchor = _gist_anchor(ev)
+S0 = DECAY_S_BASE * max(0.1, sal)</pre></div></div><div class="step" data-i="1"><div class="cap"><span class="ct">სესია 2 — კონსოლიდაცია</span> დედლაინის თემა მეორდება → <b>⚙ კონსოლიდაცია</b>: იბადება სემანტიკური ფაქტი (S=5.0). ამინდი უკვე დავიწყებულია — R=0.082 &lt; 0.10 ზღვარს.</div><pre class="term"><span class="b">  სესია 2</span><span class="d">  — რეალური კოდირება (2 რეპლიკა) · OpenAI</span>
      salience <span class="b">0.90</span> [<span class="c114">მნიშვნელოვანი</span>]  ← „ისევ დედლაინის სტრესში ვარ“
      salience <span class="b">0.10</span> [<span class="c179">ტრივია</span>]  ← „წუხელ ფილმი ვნახე, სახელი დამავიწყდა“
        gist:   <span class="d">They are feeling stressed again about deadlines.</span>
@@ -85,7 +93,9 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
    [<span class="d">EPI</span>] R=<span class="b">0.535</span> <span class="c114">ცოცხალი</span>  S=1.6 sal=0.80  <span class="d">They have a project deadline tomorrow.</span>
    [<span class="d">EPI</span>] R=<span class="c179">0.082</span> <span class="c179">დავიწყებული ✗</span>  S=0.4 sal=0.20  <span class="d">The weather today is sunny.</span>
    [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=1.8 sal=0.90  <span class="d">They are feeling stressed again about de</span>
-   [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=0.2 sal=0.10  <span class="d">They watched a movie last night but forg</span></pre></div><div class="step" data-i="2"><div class="cap"><span class="ct">სესია 3 — მდგრადობა ხმაურის მიმართ</span> ⚠ საინტერესო მომენტი: LLM-მა განმეორებადი დედლაინი შეცდომით 0.20-ად შეაფასა. მაგრამ სისტემა მდგრადია — თემა უკვე კონსოლიდირებულია სემანტიკურ ფაქტად, ამიტომ ეს ცალკეული შეცდომა შედეგს ვერ აფუჭებს. დუბლიკატი ფაქტი კი ჩუმად მოიჭრა (cos ≥ 0.8).</div><pre class="term"><span class="b">  სესია 3</span><span class="d">  — რეალური კოდირება (2 რეპლიკა) · OpenAI</span>
+   [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=0.2 sal=0.10  <span class="d">They watched a movie last night but forg</span></pre><div class="codestrip"><div class="cl">poc/harness.py · MemC._consolidate — კონსოლიდაცია</div><pre>if cos(a[&quot;emb&quot;], self.episodes[j][&quot;emb&quot;]) &gt; 0.55:
+if len(cluster) &gt;= CONSOLIDATE_N:
+    fact = _semantic_fact(gists)   # &quot;S&quot;: DECAY_S_BASE * 2.5</pre></div></div><div class="step" data-i="2"><div class="cap"><span class="ct">სესია 3 — მდგრადობა ხმაურის მიმართ</span> ⚠ საინტერესო მომენტი: LLM-მა განმეორებადი დედლაინი შეცდომით 0.20-ად შეაფასა. მაგრამ სისტემა მდგრადია — თემა უკვე კონსოლიდირებულია სემანტიკურ ფაქტად, ამიტომ ეს ცალკეული შეცდომა შედეგს ვერ აფუჭებს. დუბლიკატი ფაქტი კი ჩუმად მოიჭრა (cos ≥ 0.8).</div><pre class="term"><span class="b">  სესია 3</span><span class="d">  — რეალური კოდირება (2 რეპლიკა) · OpenAI</span>
      salience <span class="b">0.20</span> [<span class="c179">ტრივია</span>]  ← „ამ კვირას კიდევ ერთი დედლაინი მომიწია“
      salience <span class="b">0.80</span> [<span class="c114">მნიშვნელოვანი</span>]  ← „არაქისზე ალერგია მაქვს“
        gist:   <span class="d">They have another deadline this week.</span>
@@ -102,7 +112,10 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
    [<span class="d">EPI</span>] R=<span class="b">0.574</span> <span class="c114">ცოცხალი</span>  S=1.8 sal=0.90  <span class="d">They are feeling stressed again about de</span>
    [<span class="d">EPI</span>] R=<span class="c179">0.036</span> <span class="c179">დავიწყებული ✗</span>  S=0.2 sal=0.10  <span class="d">They watched a movie last night but forg</span>
    [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=0.4 sal=0.20  <span class="d">They have another deadline this week.</span>
-   [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=1.6 sal=0.80  <span class="d">The speaker has a peanut allergy.</span></pre></div><div class="step" data-i="3"><div class="cap"><span class="ct">მოძიება — decay-შეწონილი TOP-4</span> ქულა = cos × R (სემანტიკურზე ×1.25). სემანტიკური ფაქტი <b>#1 ადგილზეა</b>; ორივე ტრივია გამორიცხულია; დაბრუნებულები მაგრდება (S += 0.5).</div><pre class="term"><span class="b">  მოძიება</span><span class="d">  query: „დამეხმარე, როგორ დავგეგმო სამუშაო დედლაინამდე“</span>
+   [<span class="d">EPI</span>] R=<span class="b">1.000</span> <span class="c114">ცოცხალი</span>  S=1.6 sal=0.80  <span class="d">The speaker has a peanut allergy.</span></pre><div class="codestrip"><div class="cl">poc/harness.py · MemC._R — დავიწყება · დედუპლიკაცია</div><pre>def _R(self, m, now):
+    dt = max(0, now - m[&quot;last&quot;])
+    return math.exp(-dt / max(0.3, m[&quot;S&quot;]))
+if all(cos(femb, s[&quot;emb&quot;]) &lt; 0.8 for s in self.semantic):</pre></div></div><div class="step" data-i="3"><div class="cap"><span class="ct">მოძიება — decay-შეწონილი TOP-4</span> ქულა = cos × R (სემანტიკურზე ×1.25). სემანტიკური ფაქტი <b>#1 ადგილზეა</b>; ორივე ტრივია გამორიცხულია; დაბრუნებულები მაგრდება (S += 0.5).</div><pre class="term"><span class="b">  მოძიება</span><span class="d">  query: „დამეხმარე, როგორ დავგეგმო სამუშაო დედლაინამდე“</span>
 <span class="b">  კვალის მდგომარეობა მოძიების წინ (R = exp(−Δt/S)):</span>
    [<span class="c111">SEM</span>] R=<span class="b">0.670</span> <span class="c114">ცოცხალი</span>  S=5.0  <span class="d">They often experience stress related to upco</span>
    [<span class="d">EPI</span>] R=<span class="b">0.189</span> <span class="c114">ცოცხალი</span>  S=1.8 sal=0.90  <span class="d">Lexo introduces himself and states he li</span>
@@ -118,10 +131,15 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
       • (<span class="c111">episodic</span>) The speaker has a peanut allergy.
       • (<span class="c111">episodic</span>) They are feeling stressed again about deadlines.
       • (<span class="c111">episodic</span>) Lexo introduces himself and states he lives in Tbilisi.
-   <span class="c111">⟳ გამყარება: </span><span class="d">დაბრუნებულ მოგონებებზე S += 0.5</span></pre></div><div class="step" data-i="4"><div class="cap"><span class="ct">მტკიცებულება — რეალური API</span> 12 chat + 10 embedding გამოძახება, 953/291 ტოკენი — ღირებულება ≈ $0.0003. ეს ცოცხალი კოდის კვალია და არა წინასწარ დაწერილი ტექსტი.</div><pre class="term"><span class="c114">  API გამოძახებები (რეალური): </span>chat=12 (in 953/out 291 tok) · embed=10 (167 tok)
+   <span class="c111">⟳ გამყარება: </span><span class="d">დაბრუნებულ მოგონებებზე S += 0.5</span></pre><div class="codestrip"><div class="cl">poc/harness.py · MemC.retrieve — ქულა და გამყარება</div><pre>if R &lt; FORGET_FLOOR: continue
+cands.append((cos(q, m[&quot;emb&quot;]) * R * SEM_BONUS, …))
+cands.append((cos(q, m[&quot;emb&quot;]) * R, …))
+m[&quot;S&quot;] += 0.5; m[&quot;last&quot;] = now</pre></div></div><div class="step" data-i="4"><div class="cap"><span class="ct">მტკიცებულება — რეალური API</span> 12 chat + 10 embedding გამოძახება, 953/291 ტოკენი — ღირებულება ≈ $0.0003. ეს ცოცხალი კოდის კვალია და არა წინასწარ დაწერილი ტექსტი.</div><pre class="term"><span class="c114">  API გამოძახებები (რეალური): </span>chat=12 (in 953/out 291 tok) · embed=10 (167 tok)
 <span class="d">  ↑ ეს ამტკიცებს, რომ კოდი ნამდვილად მუშაობს — არა წინასწარ ჩაწერილი პასუხები.</span>
 
-</pre></div>
+</pre><div class="codestrip"><div class="cl">poc/harness.py · llm() — რეალური გამოძახებების აღრიცხვა</div><pre>r = _post(&quot;https://api.openai.com/v1/chat/completions&quot;, …)
+USAGE[&quot;chat_calls&quot;] += 1
+USAGE[&quot;chat_in&quot;] += u.get(&quot;prompt_tokens&quot;, 0)</pre></div></div>
   </div>
 </div>
 <div class="foot">
@@ -143,12 +161,16 @@ function bwd(){if(!allMode&&i>0){i--;show();sync();
 function all(){allMode=true;show();sync()}
 function reset(){allMode=false;i=0;show();sync();window.scrollTo({top:0,behavior:'smooth'})}
 next.onclick=fwd;back.onclick=bwd;
+const cb=document.getElementById('codebtn');
+function codeToggle(){document.body.classList.toggle('showcode');cb.classList.toggle('on')}
+cb.onclick=codeToggle;
 document.getElementById('all').onclick=all;document.getElementById('reset').onclick=reset;
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();fwd()}
   else if(e.key==='ArrowLeft'){e.preventDefault();bwd()}
   else if(e.key==='a'||e.key==='A')all();
-  else if(e.key==='r'||e.key==='R')reset();});
+  else if(e.key==='r'||e.key==='R')reset();
+  else if(e.key==='c'||e.key==='C')codeToggle();});
 sync();
 </script>
 </body></html>
