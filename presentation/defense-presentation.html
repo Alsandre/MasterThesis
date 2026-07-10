@@ -76,6 +76,8 @@ code.cl2 b{color:var(--acc);font-weight:700}
 body.sbopen #sb{transform:none}
 body.sbopen .stage{inset:36px 0 0 192px}
 body.sbopen .bar{left:192px}
+body.sbopen .notes{left:192px}
+body.sbopen .hud{left:192px}
 #sb .sbh{display:flex;align-items:center;gap:6px;padding:9px 10px;border-bottom:1px solid var(--line);color:var(--mut);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em}
 #sb .sbh button{margin-left:auto;background:none;border:none;color:var(--mut);cursor:pointer;font-size:.85rem;padding:0 4px}
 #sb .sbh button:hover{color:var(--fg)}
@@ -112,6 +114,10 @@ body:not(.editing) #baddtxt,body:not(.editing) #baddimg{display:none}
 #bnr{position:fixed;top:44px;left:50%;transform:translateX(-50%);z-index:90;background:#26200e;border:1px solid var(--warn);color:var(--fg);border-radius:10px;padding:9px 14px;font-size:.85rem;display:none;gap:10px;align-items:center}
 #bnr button{font:inherit;font-size:.8rem;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:7px;padding:4px 10px;cursor:pointer}
 #bnr button:hover{border-color:var(--acc)}
+body.editing .slide[data-active]{outline:1px dashed color-mix(in srgb,var(--mut) 45%,transparent);outline-offset:10px;min-height:420px}
+#felup{left:-11px;bottom:-11px}
+#feldn{left:16px;bottom:-11px}
+.sbdup{right:32px!important}
 /* edit mode */
 body.editing .slide h2,body.editing .slide .body,body.editing .nb{outline:1px dashed var(--acc);outline-offset:4px;border-radius:5px}
 body.editing .arrow{display:none}
@@ -137,14 +143,14 @@ if len(cluster) &gt;= CONSOLIDATE_N:</pre></div><div class="tc"><div class="th">
   <button id="bnext">›</button>
   <span>·</span>
   <button id="bnotes">ჩანაწერები (N)</button>
-  <button id="bedit">✎ რედაქტ.</button><span id="editbadge">● რედაქტირება</span><button id="baddtxt" title="ტექსტური ბლოკის ჩასმა">Ｔ+</button><button id="baddimg" title="სურათის ჩასმა">🖼</button>
+  <button id="bedit">✎ რედაქტ.</button><span id="editbadge">● რედაქტირება</span><button id="baddtxt" title="ტექსტური ბლოკის ჩასმა">Ｔ ტექსტი</button><button id="baddimg" title="სურათის ჩასმა — ან ჩასვი Cmd+V-თი, ან ჩააგდე ფაილი სლაიდზე">🖼 სურათი</button>
   <button id="bexport">⬇ export</button><button id="bppt" title="PowerPoint — რედაქტირებადი ტექსტით">PPT</button><button id="bppts" title="PowerPoint — ზუსტი ვიზუალი (სურათებად)">PPT 📷</button><button id="ghpush" title="ცვლილებების პირდაპირ GitHub-ზე დაკომიტება">⇪ GitHub</button>
   <span id="timer">00:00</span><button id="btimer">▶ ტაიმერი</button>
   <span class="tot">სამიზნე ≈ 17:30</span>
   <button id="btheme">☾</button>
 </div>
 <aside id="sb"><div class="sbh">სლაიდები<button id="sbclose" title="დამალვა (S)">✕</button></div><div id="sblist"></div><button id="sbadd">＋ ახალი სლაიდი</button></aside>
-<div id="felbox"><button class="fbtn" id="felgrip" title="გადატანა">⠿</button><button class="fbtn" id="felx" title="წაშლა">✕</button><button class="fbtn" id="felse" title="ზომა">⤡</button><div id="feltools"><input type="number" id="ftsize" min="8" max="140" title="შრიფტის ზომა"><input type="color" id="ftcolor" value="#e9eaf0" title="ფერი"><button id="ftb" title="მუქი">B</button><button id="fti" title="დახრილი"><i>I</i></button></div></div>
+<div id="felbox"><button class="fbtn" id="felgrip" title="გადატანა">⠿</button><button class="fbtn" id="felx" title="წაშლა">✕</button><button class="fbtn" id="felse" title="ზომა">⤡</button><button class="fbtn" id="felup" title="წინა პლანზე">▲</button><button class="fbtn" id="feldn" title="უკანა პლანზე">▼</button><div id="feltools"><input type="number" id="ftsize" min="8" max="140" title="შრიფტის ზომა"><input type="color" id="ftcolor" value="#e9eaf0" title="ფერი"><button id="ftb" title="მუქი">B</button><button id="fti" title="დახრილი"><i>I</i></button></div></div>
 <div id="bnr"><span id="bnrtxt"></span><button id="bnrkeep">ლოკალურის დატოვება</button><button id="bnrreset">ფაილიდან ჩატვირთვა</button></div>
 <input type="file" id="felfile" accept="image/*" style="display:none">
 <div class="notes show" id="np">
@@ -462,12 +468,16 @@ function buildSB(){
     const c=document.createElement('div');c.className='sbcard'+(k===i?' cur':'');c.draggable=true;
     const num=document.createElement('span');num.className='sbnum';num.textContent=k+1;
     const del=document.createElement('button');del.className='sbdel';del.textContent='🗑';del.title='წაშლა';
+    const dup=document.createElement('button');dup.className='sbdel sbdup';dup.textContent='⧉';dup.title='დუბლირება';
     const tw=document.createElement('div');tw.className='sbthumbwrap';
     const th=sec.cloneNode(true);th.className='slide sbthumb';th.style.display='block';th.removeAttribute('data-active');
     th.querySelectorAll('[contenteditable]').forEach(function(n){n.removeAttribute('contenteditable')});
     tw.appendChild(th);
-    c.appendChild(num);c.appendChild(del);c.appendChild(tw);
-    c.addEventListener('click',function(e){if(e.target===del)return;show(k)});
+    c.appendChild(num);c.appendChild(del);c.appendChild(dup);c.appendChild(tw);
+    c.addEventListener('click',function(e){if(e.target===del||e.target===dup)return;show(k)});
+    dup.addEventListener('click',function(e){e.stopPropagation();
+      pushUndo();const cl=slides[k].cloneNode(true);cl.removeAttribute('data-active');
+      slides[k].after(cl);refreshSlides();show(k+1);saveDoc();buildSB();});
     del.addEventListener('click',function(e){e.stopPropagation();
       if(slides.length<=1){alert('ბოლო სლაიდი ვერ წაიშლება');return}
       if(!confirm('წაიშალოს სლაიდი '+(k+1)+'?'))return;
@@ -521,6 +531,12 @@ function felDrag(handle,mode){
 felDrag(document.getElementById('felgrip'),'m');
 felDrag(document.getElementById('felse'),'r');
 document.getElementById('felx').onclick=function(){if(selFel){pushUndo();selFel.remove();felSel(null);saveDocSoon()}};
+document.getElementById('felup').onclick=function(){if(!selFel)return;pushUndo();
+  const zs=[...selFel.parentElement.querySelectorAll('.fel')].map(function(n){return parseInt(n.style.zIndex)||3});
+  selFel.style.zIndex=Math.max.apply(null,zs)+1;saveDocSoon()};
+document.getElementById('feldn').onclick=function(){if(!selFel)return;pushUndo();
+  const zs=[...selFel.parentElement.querySelectorAll('.fel')].map(function(n){return parseInt(n.style.zIndex)||3});
+  selFel.style.zIndex=Math.max(1,Math.min.apply(null,zs)-1);saveDocSoon()};
 
 // --- insert text / image ---
 document.getElementById('baddtxt').onclick=function(){
@@ -530,8 +546,8 @@ document.getElementById('baddtxt').onclick=function(){
   slides[i].appendChild(d);felSel(d);saveDocSoon();
 };
 document.getElementById('baddimg').onclick=function(){document.getElementById('felfile').click()};
-document.getElementById('felfile').addEventListener('change',function(e){
-  const f=e.target.files[0];this.value='';if(!f)return;
+function insertImageFile(f,x,y){
+  if(!f||f.type.indexOf('image/')!==0)return;
   const rd=new FileReader();
   rd.onload=function(){
     const img=new Image();
@@ -544,13 +560,34 @@ document.getElementById('felfile').addEventListener('change',function(e){
         try{url=c.toDataURL('image/jpeg',.85)}catch(err){}
       }
       pushUndo();
-      const d=document.createElement('div');d.className='fel felimg';d.style.cssText='left:60px;top:60px;width:320px';
+      const d=document.createElement('div');d.className='fel felimg';
+      d.style.cssText='left:'+(x!=null?x:60)+'px;top:'+(y!=null?y:60)+'px;width:320px';
       const im=document.createElement('img');im.src=url;im.alt='';d.appendChild(im);
       slides[i].appendChild(d);felSel(d);saveDocSoon();
     };
     img.src=rd.result;
   };
   rd.readAsDataURL(f);
+}
+document.getElementById('felfile').addEventListener('change',function(){
+  insertImageFile(this.files[0]);this.value='';
+});
+document.addEventListener('paste',function(e){
+  if(!editing)return;
+  const items=e.clipboardData&&e.clipboardData.items;if(!items)return;
+  for(const it of items){if(it.type&&it.type.indexOf('image/')===0){e.preventDefault();insertImageFile(it.getAsFile());return}}
+});
+stage.addEventListener('dragover',function(e){
+  if(editing&&e.dataTransfer&&[...e.dataTransfer.types].indexOf('Files')>=0)e.preventDefault();
+});
+stage.addEventListener('drop',function(e){
+  if(!editing||!e.dataTransfer)return;
+  const f=e.dataTransfer.files&&e.dataTransfer.files[0];
+  if(f&&f.type.indexOf('image/')===0){
+    e.preventDefault();
+    const sr=slides[i].getBoundingClientRect();
+    insertImageFile(f,Math.round(e.clientX-sr.left),Math.round(e.clientY-sr.top));
+  }
 });
 
 // --- text toolbar ---
