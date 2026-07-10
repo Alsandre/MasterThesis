@@ -40,7 +40,7 @@ color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:cen
 .cond span{flex:none;width:52px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;background:var(--line);border-radius:8px;color:var(--fg)}
 .cond.hot{border-color:var(--acc)} .cond.hot span{background:var(--acc);color:#fff}
 .bar{position:fixed;top:36px;left:0;height:3px;background:var(--acc);transition:width .25s;z-index:5}
-.hud{position:fixed;bottom:14px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:14px;z-index:5;color:var(--mut);font-size:.85rem;flex-wrap:wrap}
+.hud{position:fixed;bottom:14px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:14px;z-index:9;color:var(--mut);font-size:.85rem;flex-wrap:wrap}
 .hud button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:.8rem}
 .hud button:hover{border-color:var(--acc);color:var(--acc)}
 .count{font-variant-numeric:tabular-nums} #timer{font-variant-numeric:tabular-nums;font-weight:700} #timer.run{color:var(--acc)}
@@ -92,7 +92,7 @@ if len(cluster) >= CONSOLIDATE_N:</pre></div><div class='tc'><div class='th'><b>
   <button id="btheme">☾</button>
 </div>
 <div class="notes" id="np">
-  <div class="nh"><span>სპიკერის ჩანაწერები</span><span class="nt" id="ntime"></span></div>
+  <div class="nh"><span>სპიკერის ჩანაწერები</span><span style="display:flex;gap:12px;align-items:center"><span class="nt" id="ntime"></span><button id="bnclose" style="background:none;border:none;color:var(--mut);cursor:pointer;font-size:1.05rem;padding:0 2px" title="დახურვა (N)">✕</button></span></div>
   <div class="nb" id="nbody"></div>
 </div>
 <script>
@@ -117,6 +117,7 @@ function nx(){if(!editing)show(i+1)}function pv(){if(!editing)show(i-1)}
 document.getElementById('next').onclick=nx;document.getElementById('prev').onclick=pv;
 document.getElementById('bnext').onclick=()=>show(i+1);document.getElementById('bprev').onclick=()=>show(i-1);
 document.getElementById('bnotes').onclick=()=>np.classList.toggle('show');
+document.getElementById('bnclose').onclick=()=>np.classList.remove('show');
 // live-save edits
 document.querySelector('.stage').addEventListener('input',()=>{if(!editing)return;const s=slides[i];
   saveEdit(i,'title',s.querySelector('h2').innerHTML);saveEdit(i,'body',s.querySelector('.body').innerHTML);});
@@ -137,7 +138,12 @@ document.getElementById('bexport').onclick=()=>{
   if(wasEdit)setEdit(true);
 };
 document.addEventListener('keydown',e=>{
-  if(editing){if(e.key==='Escape')setEdit(false);return;}
+  if(editing){
+    const typing=document.activeElement&&document.activeElement.isContentEditable;
+    if(e.key==='Escape'){setEdit(false);return;}
+    if(!typing&&(e.key==='e'||e.key==='E')){setEdit(false);return;}
+    if(!typing&&(e.key==='n'||e.key==='N')){np.classList.toggle('show');return;}
+    return;}
   if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();nx();}
   else if(e.key==='ArrowLeft'||e.key==='PageUp'){pv();}
   else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(slides.length-1);}
