@@ -157,7 +157,7 @@ window.ghCommit=async function(path,content,btn){
   }catch(e){alert('GitHub commit \u10d5\u10d4\u10e0 \u10db\u10dd\u10ee\u10d4\u10e0\u10ee\u10d3\u10d0: '+e.message);if(btn)btn.textContent=label;return false}
 };
 (function(){const b=document.getElementById('ghpush');if(!b)return;
-  b.addEventListener('click',function(){ghCommit(GH_PATH,__merged(),b)})})();
+  b.addEventListener('click',function(){ghCommit(GH_PATH,__merged(),b).then(function(ok){if(ok&&window.__afterCommit)window.__afterCommit()})})})();
 window.__mergeClean=null;
 
 (function(){
@@ -189,6 +189,7 @@ window.__mergeClean=null;
     for(var i=0;i<PAGES.length;i++){var p=PAGES[i];st.textContent='\u23f3 '+p.name+' \u2192 GitHub\u2026';
       try{var h=await loadMerged(p);var ok=await ghCommit(p.path,h,null);if(!ok){st.textContent='\u2717 \u10e8\u10d4\u10ec\u10e7\u10d3\u10d0';return}}
       catch(e){st.textContent='\u2717 '+p.name+': '+e.message;return}}
+    if(location.protocol.indexOf('http')===0){['pres_edits','cfg_edits','thesis_ka_edits_v1'].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}})}
     st.textContent='\u2713 \u10d3\u10d0\u10d9\u10dd\u10db\u10d8\u10e2\u10d3\u10d0 \u2014 Pages \u10d2\u10d0\u10dc\u10d0\u10ee\u10da\u10d3\u10d4\u10d1\u10d0 ~1 \u10ec\u10e3\u10d7\u10e8\u10d8';
   });
 })();
