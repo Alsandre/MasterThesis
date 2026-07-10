@@ -57,25 +57,71 @@ CAPTIONS = [
 ]
 while len(CAPTIONS) < len(steps): CAPTIONS.append(("ნაბიჯი", ""))
 
-CODES = [
-    ("MemC.end_session — კოდირება",
-     'sals = _salience_batch(events)\ng, anchor = _gist_anchor(ev)\nS0 = DECAY_S_BASE * max(0.1, sal)'),
-    ("MemC._consolidate — კონსოლიდაცია",
-     'if cos(a["emb"], self.episodes[j]["emb"]) > 0.55:\nif len(cluster) >= CONSOLIDATE_N:\n    fact = _semantic_fact(gists)   # "S": DECAY_S_BASE * 2.5'),
-    ("MemC._R — დავიწყება · დედუპლიკაცია",
-     'def _R(self, m, now):\n    dt = max(0, now - m["last"])\n    return math.exp(-dt / max(0.3, m["S"]))\nif all(cos(femb, s["emb"]) < 0.8 for s in self.semantic):'),
-    ("MemC.retrieve — ქულა და გამყარება",
-     'if R < FORGET_FLOOR: continue\ncands.append((cos(q, m["emb"]) * R * SEM_BONUS, …))\ncands.append((cos(q, m["emb"]) * R, …))\nm["S"] += 0.5; m["last"] = now'),
-    ("llm() — რეალური გამოძახებების აღრიცხვა",
-     'r = _post("https://api.openai.com/v1/chat/completions", …)\nUSAGE["chat_calls"] += 1\nUSAGE["chat_in"] += u.get("prompt_tokens", 0)'),
+# ---- code strips: verbatim lines extracted from harness.py + Georgian gloss ----
+_SRC = open(os.path.join(HERE, "harness.py"), encoding="utf-8").read().split("\n")
+def _src(anchor):
+    hits = [l for l in _SRC if l.strip() == anchor.strip()]
+    if not hits:
+        raise SystemExit(f"code anchor not found in harness.py: {anchor!r}")
+    return hits[0].rstrip()
+
+_TOK = re.compile(r'("(?:[^"\\]|\\.)*")|\b(def|return|if|for|in|continue|else|not|and|or)\b|(\b\d+(?:\.\d+)?\b)|(\bself\b)|([A-Za-z_][A-Za-z0-9_]*)(?=\()')
+def _hl(line):
+    out, pos = [], 0
+    for m in _TOK.finditer(line):
+        out.append(html.escape(line[pos:m.start()]))
+        cls = 's' if m.group(1) else 'k' if m.group(2) else 'n' if m.group(3) else 'sf' if m.group(4) else 'f'
+        out.append(f'<span class="{cls}">{html.escape(m.group(0))}</span>')
+        pos = m.end()
+    out.append(html.escape(line[pos:]))
+    return "".join(out)
+
+SNIPPETS = [
+    ("MemC.end_session — კოდირება", [
+        ("sals = _salience_batch(events)", "ერთი ჯგუფური LLM-გამოძახება: მნიშვნელოვნების ქულა ყველა რეპლიკას"),
+        ("g, anchor = _gist_anchor(ev)", "თითო მოვლენას — არსი (gist) და ზუსტი ციტატა (anchor)"),
+        ("S0 = DECAY_S_BASE * max(0.1, sal)", "საწყისი სტაბილურობა მნიშვნელოვნების პროპორციულია — ტრივია სუსტად ინახება"),
+    ]),
+    ("MemC._consolidate — კონსოლიდაცია", [
+        ('if cos(a["emb"], self.episodes[j]["emb"]) > 0.55:', "მსგავსი ეპიზოდები (cos > 0.55) ერთ კლასტერად იყრება"),
+        ("if len(cluster) >= CONSOLIDATE_N:", "მინიმუმ ორი განმეორება — ერთჯერადი მოვლენა ფაქტად არ იქცევა"),
+        ("fact = _semantic_fact(gists)", "LLM წერს ერთ განზოგადებულ ფაქტს კლასტერიდან"),
+        ('self.semantic.append({"fact": fact, "emb": femb, "S": DECAY_S_BASE * 2.5,', "ფაქტი ინახება გაძლიერებული სტაბილურობით — S = 2.0 × 2.5 = 5.0"),
+    ]),
+    ("MemC._R — დავიწყება · დედუპლიკაცია", [
+        ("def _R(self, m, now):", "მოძიებადობა — ებინგჰაუზის მრუდის პირდაპირი იმპლემენტაცია"),
+        ('dt = max(0, now - m["last"])', "რამდენი სესია გავიდა კვალთან ბოლო შეხებიდან"),
+        ('return math.exp(-dt / max(0.3, m["S"]))', "R ექსპონენციალურად ეცემა; დიდი S — ნელი ქრობა"),
+        ('if all(cos(femb, s["emb"]) < 0.8 for s in self.semantic):', "თითქმის იდენტური ფაქტი აღარ ემატება (დედუპლიკაცია)"),
+    ]),
+    ("MemC.retrieve — ქულა და გამყარება", [
+        ("if R < FORGET_FLOOR: continue", "R < 0.10 — კვალი ფუნქციურად დავიწყებულია, კანდიდატიც აღარ არის"),
+        ('cands.append((cos(q, m["emb"]) * R * SEM_BONUS, ("semantic", m["fact"]), m))', "სემანტიკური ქულა: მსგავსება × სიახლე × 1.25 ბონუსი"),
+        ('cands.append((cos(q, m["emb"]) * R, ("episodic", m["gist"]), m))', "ეპიზოდური ქულა: მსგავსება × სიახლე"),
+        ('m["S"] += 0.5; m["last"] = now', "გამყარება: დაბრუნებული მოგონება მაგრდება და „ახლდება“"),
+    ]),
+    ("llm() — რეალური გამოძახებების აღრიცხვა", [
+        ('r = _post("https://api.openai.com/v1/chat/completions",', "ცოცხალი HTTP მოთხოვნა OpenAI-ს API-სკენ — არაფერი გათამაშებული"),
+        ('USAGE["chat_calls"] += 1; USAGE["chat_in"] += u.get("prompt_tokens", 0); USAGE["chat_out"] += u.get("completion_tokens", 0)', "ტოკენების ზუსტი აღრიცხვა — ეს ჩანს ბოლო „მტკიცებულების“ სტრიქონში"),
+    ]),
 ]
-while len(CODES) < len(steps): CODES.append(("", ""))
+
+def _strip_html(label, rows):
+    lines = [_src(a) for a, _ in rows]
+    ind = min(len(l) - len(l.lstrip()) for l in lines if l.strip())
+    cells = []
+    for l, (_, gl) in zip(lines, rows):
+        cells.append(f'<code>{_hl(l[ind:])}</code><span class="gl">{html.escape(gl)}</span>')
+    return (f'<div class="codestrip"><div class="cl">poc/harness.py · {label}</div>'
+            f'<div class="ctbl">{"".join(cells)}</div></div>')
+
+_strips = [_strip_html(lbl, rows) for lbl, rows in SNIPPETS]
+while len(_strips) < len(steps): _strips.append("")
 
 step_html = "".join(
     f'<div class="step" data-i="{i}"><div class="cap"><span class="ct">{t}</span> {c}</div>'
-    f'<pre class="term">{render(b)}</pre>'
-    f'<div class="codestrip"><div class="cl">poc/harness.py · {lbl}</div><pre>{html.escape(code)}</pre></div></div>'
-    for i, ((t, c), b, (lbl, code)) in enumerate(zip(CAPTIONS, steps, CODES))
+    f'<pre class="term">{render(b)}</pre>{_strips[i]}</div>'
+    for i, ((t, c), b) in enumerate(zip(CAPTIONS, steps))
 )
 
 page = """<!doctype html><html lang="ka" data-theme="dark"><head><meta charset="utf-8">
@@ -118,10 +164,13 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
 .foot{margin-top:20px;color:var(--mut);font-size:.78rem;border-top:1px solid var(--line);padding-top:12px;line-height:1.7}
 .foot code{background:var(--line);padding:1px 5px;border-radius:4px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:.85em}
 #codebtn.on{border-color:var(--acc);color:var(--acc);font-weight:700}
-.codestrip{display:none;margin:8px 16px 0;border:1px dashed color-mix(in srgb,var(--acc) 55%,transparent);border-radius:9px;padding:8px 12px;background:color-mix(in srgb,var(--acc) 6%,transparent)}
+.codestrip{display:none;margin:10px 16px 0;border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:10px 14px;background:color-mix(in srgb,var(--acc) 7%,#101116)}
 body.showcode .codestrip{display:block}
-.codestrip .cl{font:700 10.5px "SF Mono",ui-monospace,Menlo,monospace;color:var(--acc);letter-spacing:.05em;margin-bottom:4px}
-.codestrip pre{margin:0;font:12px/1.55 "SF Mono",ui-monospace,Menlo,monospace;color:#c9ccd6;overflow-x:auto}
+.codestrip .cl{font:700 10.5px "SF Mono",ui-monospace,Menlo,monospace;color:var(--acc);letter-spacing:.05em;margin-bottom:7px}
+.ctbl{display:grid;grid-template-columns:max-content 1fr;gap:4px 24px;overflow-x:auto;align-items:baseline}
+.ctbl code{font:12.5px/1.55 "SF Mono",ui-monospace,Menlo,monospace;white-space:pre;color:#d6d9e0}
+.ctbl .gl{font:italic 12px/1.5 -apple-system,"Noto Sans Georgian",sans-serif;color:var(--mut)}
+.ctbl .k{color:#c58bff}.ctbl .s{color:#5bbf7b}.ctbl .n{color:#e0a13a}.ctbl .f{color:#9aa6ff}.ctbl .sf{color:#8b8ea0;font-style:italic}
 </style></head><body>
 <div class="xnav"><a href="THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-replay.html" class="cur">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span></div>
 <div class="wrap">
