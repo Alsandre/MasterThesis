@@ -57,70 +57,95 @@ CAPTIONS = [
 ]
 while len(CAPTIONS) < len(steps): CAPTIONS.append(("ნაბიჯი", ""))
 
-# ---- code strips: verbatim lines extracted from harness.py + Georgian gloss ----
+# ---- code modal: whole functions extracted verbatim from harness.py ----
 _SRC = open(os.path.join(HERE, "harness.py"), encoding="utf-8").read().split("\n")
-def _src(anchor):
-    hits = [l for l in _SRC if l.strip() == anchor.strip()]
-    if not hits:
-        raise SystemExit(f"code anchor not found in harness.py: {anchor!r}")
-    return hits[0].rstrip()
+def _find(anchor, start=0):
+    for k in range(start, len(_SRC)):
+        if _SRC[k].strip().startswith(anchor):
+            return k
+    raise SystemExit(f"anchor not found in harness.py: {anchor!r}")
+def _func_block(defanchor, after=None):
+    st = _find(defanchor, _find(after) if after else 0)
+    ind = len(_SRC[st]) - len(_SRC[st].lstrip())
+    out = [_SRC[st]]
+    for l in _SRC[st + 1:]:
+        if l.strip() and (len(l) - len(l.lstrip())) <= ind:
+            break
+        out.append(l)
+    while out and not out[-1].strip():
+        out.pop()
+    return [l[ind:] if len(l) > ind else "" for l in out]
 
-_TOK = re.compile(r'("(?:[^"\\]|\\.)*")|\b(def|return|if|for|in|continue|else|not|and|or)\b|(\b\d+(?:\.\d+)?\b)|(\bself\b)|([A-Za-z_][A-Za-z0-9_]*)(?=\()')
+_TOK = re.compile(r'(#.*)|("(?:[^"\\]|\\.)*")|\b(def|return|if|for|in|continue|else|not|and|or|lambda|break)\b|(\b\d+(?:\.\d+)?\b)|(\bself\b)|([A-Za-z_][A-Za-z0-9_]*)(?=\()')
 def _hl(line):
     out, pos = [], 0
     for m in _TOK.finditer(line):
         out.append(html.escape(line[pos:m.start()]))
-        cls = 's' if m.group(1) else 'k' if m.group(2) else 'n' if m.group(3) else 'sf' if m.group(4) else 'f'
+        cls = 'c' if m.group(1) else 's' if m.group(2) else 'k' if m.group(3) else 'n' if m.group(4) else 'sf' if m.group(5) else 'f'
         out.append(f'<span class="{cls}">{html.escape(m.group(0))}</span>')
         pos = m.end()
     out.append(html.escape(line[pos:]))
     return "".join(out)
 
-SNIPPETS = [
-    ("MemC.end_session — კოდირება", [
-        ("sals = _salience_batch(events)", "ერთი ჯგუფური LLM-გამოძახება: მნიშვნელოვნების ქულა ყველა რეპლიკას"),
-        ("g, anchor = _gist_anchor(ev)", "თითო მოვლენას — არსი (gist) და ზუსტი ციტატა (anchor)"),
-        ("S0 = DECAY_S_BASE * max(0.1, sal)", "საწყისი სტაბილურობა მნიშვნელოვნების პროპორციულია — ტრივია სუსტად ინახება"),
-    ]),
-    ("MemC._consolidate — კონსოლიდაცია", [
-        ('if cos(a["emb"], self.episodes[j]["emb"]) > 0.55:', "მსგავსი ეპიზოდები (cos > 0.55) ერთ კლასტერად იყრება"),
-        ("if len(cluster) >= CONSOLIDATE_N:", "მინიმუმ ორი განმეორება — ერთჯერადი მოვლენა ფაქტად არ იქცევა"),
-        ("fact = _semantic_fact(gists)", "LLM წერს ერთ განზოგადებულ ფაქტს კლასტერიდან"),
-        ('self.semantic.append({"fact": fact, "emb": femb, "S": DECAY_S_BASE * 2.5,', "ფაქტი ინახება გაძლიერებული სტაბილურობით — S = 2.0 × 2.5 = 5.0"),
-    ]),
-    ("MemC._R — დავიწყება · დედუპლიკაცია", [
-        ("def _R(self, m, now):", "მოძიებადობა — ებინგჰაუზის მრუდის პირდაპირი იმპლემენტაცია"),
-        ('dt = max(0, now - m["last"])', "რამდენი სესია გავიდა კვალთან ბოლო შეხებიდან"),
-        ('return math.exp(-dt / max(0.3, m["S"]))', "R ექსპონენციალურად ეცემა; დიდი S — ნელი ქრობა"),
-        ('if all(cos(femb, s["emb"]) < 0.8 for s in self.semantic):', "თითქმის იდენტური ფაქტი აღარ ემატება (დედუპლიკაცია)"),
-    ]),
-    ("MemC.retrieve — ქულა და გამყარება", [
-        ("if R < FORGET_FLOOR: continue", "R < 0.10 — კვალი ფუნქციურად დავიწყებულია, კანდიდატიც აღარ არის"),
-        ('cands.append((cos(q, m["emb"]) * R * SEM_BONUS, ("semantic", m["fact"]), m))', "სემანტიკური ქულა: მსგავსება × სიახლე × 1.25 ბონუსი"),
-        ('cands.append((cos(q, m["emb"]) * R, ("episodic", m["gist"]), m))', "ეპიზოდური ქულა: მსგავსება × სიახლე"),
-        ('m["S"] += 0.5; m["last"] = now', "გამყარება: დაბრუნებული მოგონება მაგრდება და „ახლდება“"),
-    ]),
-    ("llm() — რეალური გამოძახებების აღრიცხვა", [
-        ('r = _post("https://api.openai.com/v1/chat/completions",', "ცოცხალი HTTP მოთხოვნა OpenAI-ს API-სკენ — არაფერი გათამაშებული"),
-        ('USAGE["chat_calls"] += 1; USAGE["chat_in"] += u.get("prompt_tokens", 0); USAGE["chat_out"] += u.get("completion_tokens", 0)', "ტოკენების ზუსტი აღრიცხვა — ეს ჩანს ბოლო „მტკიცებულების“ სტრიქონში"),
-    ]),
+FUNCS = [
+    ("end_session", "MemC.end_session — კოდირება", _func_block("def end_session", after="class MemC:"), {
+        "sals = _salience_batch(events)": "ერთი ჯგუფური LLM-გამოძახება: მნიშვნელოვნების ქულა ყველა რეპლიკას",
+        "S0 = DECAY_S_BASE * max(0.1, sal)": "საწყისი სტაბილურობა მნიშვნელოვნების პროპორციულია — ტრივია სუსტად ინახება",
+        "g, anchor = _gist_anchor(ev)": "არსი (gist) + ზუსტი ციტატა (anchor) თითო მოვლენაზე",
+        "self._consolidate(sid)": "სესიის ბოლოს — ოფლაინ კონსოლიდაცია",
+    }),
+    ("_consolidate", "MemC._consolidate — კონსოლიდაცია", _func_block("def _consolidate", after="class MemC:"), {
+        'if cos(a["emb"], self.episodes[j]["emb"]) > 0.55:': "მსგავსი ეპიზოდები (cos > 0.55) ერთ კლასტერად იყრება",
+        "if len(cluster) >= CONSOLIDATE_N:": "მინიმუმ ორი განმეორება — ერთჯერადი მოვლენა ფაქტად არ იქცევა",
+        "fact = _semantic_fact(gists)": "LLM წერს ერთ განზოგადებულ ფაქტს კლასტერიდან",
+        'if all(cos(femb, s["emb"]) < 0.8 for s in self.semantic):': "დედუპლიკაცია: თითქმის იდენტური ფაქტი აღარ ემატება",
+        'self.semantic.append({"fact": fact, "emb": femb, "S": DECAY_S_BASE * 2.5,': "ფაქტის სტაბილურობა გაძლიერებულია: S = 2.0 × 2.5 = 5.0",
+    }),
+    ("_R", "MemC._R — დავიწყების მრუდი", _func_block("def _R", after="class MemC:"), {
+        "def _R(self, m, now):": "მოძიებადობა — ებინგჰაუზის მრუდის პირდაპირი იმპლემენტაცია",
+        'dt = max(0, now - m["last"])': "რამდენი სესია გავიდა კვალთან ბოლო შეხებიდან",
+        'return math.exp(-dt / max(0.3, m["S"]))': "R ექსპონენციალურად ეცემა; დიდი S — ნელი ქრობა",
+    }),
+    ("retrieve", "MemC.retrieve — მოძიება და გამყარება", _func_block("def retrieve", after="class MemC:"), {
+        "if R < FORGET_FLOOR: continue": "R < 0.10 — ფუნქციურად დავიწყებულია, კანდიდატიც აღარ არის",
+        'cands.append((cos(q, m["emb"]) * R * SEM_BONUS, ("semantic", m["fact"]), m))': "სემანტიკური ქულა: მსგავსება × სიახლე × 1.25 ბონუსი",
+        'cands.append((cos(q, m["emb"]) * R, ("episodic", m["gist"]), m))': "ეპიზოდური ქულა: მსგავსება × სიახლე",
+        "cands.sort(key=lambda x: x[0], reverse=True)": "საუკეთესო ქულით დალაგება",
+        "top = cands[:RETRIEVE_K]": "საერთო ბიუჯეტი: TOP-4",
+        'm["S"] += 0.5; m["last"] = now': "გამყარება: დაბრუნებული მოგონება მაგრდება და „ახლდება“",
+    }),
+    ("llm", "llm() — რეალური გამოძახებები", _func_block("def llm("), {
+        'r = _post("https://api.openai.com/v1/chat/completions",': "ცოცხალი HTTP მოთხოვნა OpenAI-ს API-სკენ — არაფერი გათამაშებული",
+        'USAGE["chat_calls"] += 1; USAGE["chat_in"] += u.get("prompt_tokens", 0); USAGE["chat_out"] += u.get("completion_tokens", 0)': "ტოკენების ზუსტი აღრიცხვა — ბოლო „მტკიცებულების“ სტრიქონის წყარო",
+    }),
 ]
 
-def _strip_html(label, rows):
-    lines = [_src(a) for a, _ in rows]
-    ind = min(len(l) - len(l.lstrip()) for l in lines if l.strip())
-    cells = []
-    for l, (_, gl) in zip(lines, rows):
-        cells.append(f'<code>{_hl(l[ind:])}</code><span class="gl">{html.escape(gl)}</span>')
-    return (f'<div class="codestrip"><div class="cl">poc/harness.py · {label}</div>'
-            f'<div class="ctbl">{"".join(cells)}</div></div>')
+def _pane(lines, gmap):
+    used, rows = set(), []
+    for l in lines:
+        key = l.strip()
+        g = gmap.get(key) if (key in gmap and key not in used) else None
+        cls = ' hl' if g else ''
+        content = _hl(l) if l.strip() else '&nbsp;'
+        rows.append(f'<div class="ln{cls}">{content}</div>')
+        if g:
+            used.add(key)
+            rows.append(f'<div class="lg" style="padding-left:{len(l) - len(l.lstrip())}ch">— {html.escape(g)}</div>')
+    return "".join(rows)
 
-_strips = [_strip_html(lbl, rows) for lbl, rows in SNIPPETS]
-while len(_strips) < len(steps): _strips.append("")
+_tabs = "".join(f'<button data-t="{k}"{" class=on" if k == 0 else ""}>{name}</button>'
+                for k, (name, _, _, _) in enumerate(FUNCS))
+_panes = "".join(f'<div class="cmpane{" on" if k == 0 else ""}"><div class="cmlbl">{label}</div>{_pane(lines, gmap)}</div>'
+                 for k, (name, label, lines, gmap) in enumerate(FUNCS))
+MODAL = ('<div id="codemodal" class="cmodal" hidden><div class="cmbox">'
+         '<div class="cmhead"><div class="cmtabs">' + _tabs + '</div>'
+         '<span style="flex:1"></span><span class="cmfile">poc/harness.py · უცვლელი წყარო</span>'
+         '<button id="cmclose">✕</button></div>'
+         '<div class="cmbody">' + _panes + '</div></div></div>')
 
 step_html = "".join(
     f'<div class="step" data-i="{i}"><div class="cap"><span class="ct">{t}</span> {c}</div>'
-    f'<pre class="term">{render(b)}</pre>{_strips[i]}</div>'
+    f'<pre class="term">{render(b)}</pre></div>'
     for i, ((t, c), b) in enumerate(zip(CAPTIONS, steps))
 )
 
@@ -163,14 +188,24 @@ pre.term .b.c114{color:#74d693}.b.c111{color:#b3bcff}
 .hdr pre.term{padding-top:12px}
 .foot{margin-top:20px;color:var(--mut);font-size:.78rem;border-top:1px solid var(--line);padding-top:12px;line-height:1.7}
 .foot code{background:var(--line);padding:1px 5px;border-radius:4px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:.85em}
-#codebtn.on{border-color:var(--acc);color:var(--acc);font-weight:700}
-.codestrip{display:none;margin:10px 16px 0;border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:10px 14px;background:color-mix(in srgb,var(--acc) 7%,#101116)}
-body.showcode .codestrip{display:block}
-.codestrip .cl{font:700 10.5px "SF Mono",ui-monospace,Menlo,monospace;color:var(--acc);letter-spacing:.05em;margin-bottom:7px}
-.ctbl{display:grid;grid-template-columns:max-content 1fr;gap:4px 24px;overflow-x:auto;align-items:baseline}
-.ctbl code{font:12.5px/1.55 "SF Mono",ui-monospace,Menlo,monospace;white-space:pre;color:#d6d9e0}
-.ctbl .gl{font:italic 12px/1.5 -apple-system,"Noto Sans Georgian",sans-serif;color:var(--mut)}
-.ctbl .k{color:#c58bff}.ctbl .s{color:#5bbf7b}.ctbl .n{color:#e0a13a}.ctbl .f{color:#9aa6ff}.ctbl .sf{color:#8b8ea0;font-style:italic}
+.cmodal{position:fixed;inset:0;z-index:100;background:rgba(5,6,9,.74);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:28px 16px}
+.cmodal[hidden]{display:none}
+.cmbox{width:min(1060px,96vw);max-height:86vh;display:flex;flex-direction:column;background:#101116;border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.6);overflow:hidden}
+.cmhead{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:#14151a}
+.cmtabs{display:flex;gap:4px;flex-wrap:wrap}
+.cmtabs button{font:600 12px "SF Mono",ui-monospace,Menlo,monospace;padding:6px 11px;border-radius:7px;border:1px solid var(--line);background:none;color:var(--mut);cursor:pointer}
+.cmtabs button:hover{color:var(--acc);border-color:var(--acc)}
+.cmtabs button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.cmfile{color:var(--mut);font:11px "SF Mono",ui-monospace,Menlo,monospace;white-space:nowrap}
+#cmclose{border:none;background:none;color:var(--mut);font-size:1.1rem;cursor:pointer;padding:2px 6px}
+#cmclose:hover{color:var(--fg)}
+.cmbody{overflow:auto;padding:14px 20px 18px}
+.cmpane{display:none}.cmpane.on{display:block}
+.cmlbl{font:700 11px "SF Mono",ui-monospace,Menlo,monospace;color:var(--acc);letter-spacing:.05em;margin-bottom:8px}
+.cmpane .ln{white-space:pre;font:13px/1.62 "SF Mono",ui-monospace,Menlo,monospace;color:#d6d9e0;overflow-x:auto}
+.cmpane .ln.hl{background:color-mix(in srgb,var(--acc) 14%,transparent);border-radius:4px;margin:0 -8px;padding:0 8px}
+.cmpane .lg{font:italic 12px/1.5 -apple-system,"Noto Sans Georgian",sans-serif;color:color-mix(in srgb,var(--acc) 70%,var(--mut));margin:2px 0 6px;white-space:normal}
+.cmpane .k{color:#c58bff}.cmpane .s{color:#5bbf7b}.cmpane .n{color:#e0a13a}.cmpane .f{color:#9aa6ff}.cmpane .sf{color:#8b8ea0;font-style:italic}.cmpane .c{color:#6d7280;font-style:italic}
 </style></head><body>
 <div class="xnav"><a href="THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-replay.html" class="cur">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span></div>
 <div class="wrap">
@@ -192,6 +227,7 @@ body.showcode .codestrip{display:block}
     __STEPS__
   </div>
 </div>
+__MODAL__
 <div class="foot">
 ეს გვერდი <code>poc/live_run_1.txt</code>-ის ზუსტი ასლია — ტერმინალის ფერები HTML-ად არის გადაყვანილი, ტექსტი უცვლელია (<code>poc/make_replay.py</code>).
 სარეზერვო ვარიანტი ტერმინალში: <code>cat poc/live_run_1.txt</code> · ცოცხალი გაშვება სცენაზე: <code>python3 poc/run_live.py --demo</code> (იგივე კოდი, ახალი API გამოძახებები).
@@ -211,11 +247,23 @@ function bwd(){if(!allMode&&i>0){i--;show();sync();
 function all(){allMode=true;show();sync()}
 function reset(){allMode=false;i=0;show();sync();window.scrollTo({top:0,behavior:'smooth'})}
 next.onclick=fwd;back.onclick=bwd;
-const cb=document.getElementById('codebtn');
-function codeToggle(){document.body.classList.toggle('showcode');cb.classList.toggle('on')}
+const cb=document.getElementById('codebtn'),cm=document.getElementById('codemodal');
+const cmtabs=[...document.querySelectorAll('.cmtabs button')],cmpanes=[...document.querySelectorAll('.cmpane')];
+let cmi=0;
+function cmShow(t){cmi=t;cmtabs.forEach((b,k)=>b.classList.toggle('on',k===t));cmpanes.forEach((p,k)=>p.classList.toggle('on',k===t))}
+cmtabs.forEach((b,k)=>b.onclick=()=>cmShow(k));
+document.getElementById('cmclose').onclick=()=>{cm.hidden=true};
+cm.addEventListener('click',e=>{if(e.target===cm)cm.hidden=true});
+function codeToggle(){if(cm.hidden){cm.hidden=false;cmShow(Math.min(Math.max(i-1,0),cmpanes.length-1))}else{cm.hidden=true}}
 cb.onclick=codeToggle;
 document.getElementById('all').onclick=all;document.getElementById('reset').onclick=reset;
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!cm.hidden){cm.hidden=true;return}
+  if(!cm.hidden){
+    if(e.key==='ArrowRight'){e.preventDefault();cmShow((cmi+1)%cmpanes.length)}
+    else if(e.key==='ArrowLeft'){e.preventDefault();cmShow((cmi+cmpanes.length-1)%cmpanes.length)}
+    else if(e.key==='c'||e.key==='C')codeToggle();
+    return}
   if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();fwd()}
   else if(e.key==='ArrowLeft'){e.preventDefault();bwd()}
   else if(e.key==='a'||e.key==='A')all();
@@ -228,6 +276,7 @@ sync();
 page = (page.replace("__HEADER__", render(header))
             .replace("__STEPS__", step_html)
             .replace("__N__", str(len(steps)))
-            .replace("__DATE__", run_date))
+            .replace("__DATE__", run_date)
+            .replace("__MODAL__", MODAL))
 open(OUT, "w", encoding="utf-8").write(page)
 print(f"ok: {os.path.normpath(OUT)}  ({len(steps)} steps, {os.path.getsize(OUT)} bytes)")
