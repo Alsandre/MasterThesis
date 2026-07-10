@@ -10,7 +10,7 @@ import re, sys, os, html, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAP = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "live_run_1.txt")
-OUT = os.path.join(HERE, "..", "project", "defense-replay.html")
+OUT = os.path.join(HERE, "..", "presentation", "defense-replay.html")
 
 raw = open(CAP, encoding="utf-8").read()
 run_date = datetime.date.fromtimestamp(os.path.getmtime(CAP)).strftime("%d.%m.%Y")

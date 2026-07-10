@@ -97,7 +97,7 @@ strong{font-weight:700}
 footer{color:var(--mut);font-size:.74rem;text-align:center;margin-top:26px;border-top:1px solid var(--line);padding-top:10px}
 @media print{nav{display:none}.qa details{display:block}}
 </style></head><body>
-<div class="xnav"><a href="../THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html" class="cur">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-profileC-demo.html">⚙ დემო</a><a href="defense-replay.html">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span></div>
+<div class="xnav"><a href="THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html" class="cur">📋 Defense prep</a><a href="defense-presentation.html">▶ პრეზენტაცია</a><a href="defense-profileC-demo.html">⚙ დემო</a><a href="defense-replay.html">🖥 Replay</a><a href="defense-config.html">🛠 კონფიგურაცია</a><span style="flex:1"></span></div>
 <div class="wrap">
 <h1 lang="ka">დაცვის მოსამზადებელი</h1><h1 lang="en">Defense preparation</h1>
 <p class="sub" lang="ka">სწრაფი მინიშნება · გლოსარიუმი · თეორიები · არქიტექტურა · ფორმულები · კოდი · 42 კონცეფცია · 27 სავარაუდო კითხვა</p><p class="sub" lang="en">Quick reference · glossary · theories · architecture · formulas · code · 42 concepts · 27 likely questions</p><style>.syncbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 4px}.syncbar button{font:inherit;cursor:pointer;border:1px solid var(--line,#2a2c35);background:var(--card,#16171c);color:inherit;border-radius:9px;padding:7px 14px;font-size:.85rem}.syncbar button:hover{border-color:#9aa6ff;color:#9aa6ff}#syncst{font-size:.78rem;opacity:.75}</style><div class="syncbar"><button id="syncall">⬇ ყველას ექსპორტი</button><button id="commitall">⇪ ყველას commit</button><span id="syncst"></span></div>
@@ -163,9 +163,9 @@ window.__mergeClean=null;
 (function(){
   var bar=document.getElementById('syncbar');if(!bar)return;
   var PAGES=[
-    {path:'project/defense-presentation.html',src:'defense-presentation.html',name:'\u10de\u10e0\u10d4\u10d6\u10d4\u10dc\u10e2\u10d0\u10ea\u10d8\u10d0'},
-    {path:'project/defense-config.html',src:'defense-config.html',name:'\u10d9\u10dd\u10dc\u10e4\u10d8\u10d2\u10e3\u10e0\u10d0\u10ea\u10d8\u10d0'},
-    {path:'THESIS_BILINGUAL.html',src:'../THESIS_BILINGUAL.html',name:'\u10d3\u10dd\u10d9\u10e3\u10db\u10d4\u10dc\u10e2\u10d8'}
+    {path:'presentation/defense-presentation.html',src:'defense-presentation.html',name:'\u10de\u10e0\u10d4\u10d6\u10d4\u10dc\u10e2\u10d0\u10ea\u10d8\u10d0'},
+    {path:'presentation/defense-config.html',src:'defense-config.html',name:'\u10d9\u10dd\u10dc\u10e4\u10d8\u10d2\u10e3\u10e0\u10d0\u10ea\u10d8\u10d0'},
+    {path:'presentation/THESIS_BILINGUAL.html',src:'THESIS_BILINGUAL.html',name:'\u10d3\u10dd\u10d9\u10e3\u10db\u10d4\u10dc\u10e2\u10d8'}
   ];
   var st=document.getElementById('syncst');
   function loadMerged(p){return new Promise(function(res,rej){
