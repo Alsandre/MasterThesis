@@ -1,0 +1,139 @@
+<!doctype html><html lang="ka"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>დაცვის პრეზენტაცია — 15 სლაიდი</title>
+<style>
+:root{--bg:#0f1013;--fg:#e9eaf0;--mut:#9a9daa;--line:#2a2c35;--acc:#9aa6ff;--card:#16171c;--warn:#e0a13a}
+@media(prefers-color-scheme:light){:root{--bg:#f6f7f9;--fg:#1c1e24;--mut:#6b6f7a;--line:#e2e3ea;--acc:#3b4cca;--card:#fff;--warn:#b5730f}}
+:root[data-theme=light]{--bg:#f6f7f9;--fg:#1c1e24;--mut:#6b6f7a;--line:#e2e3ea;--acc:#3b4cca;--card:#fff;--warn:#b5730f}
+:root[data-theme=dark]{--bg:#0f1013;--fg:#e9eaf0;--mut:#9a9daa;--line:#2a2c35;--acc:#9aa6ff;--card:#16171c;--warn:#e0a13a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
+font:18px/1.5 -apple-system,"Segoe UI",Roboto,"Noto Sans Georgian",sans-serif;overflow:hidden}
+/* cross-page nav */
+.xnav{position:fixed;top:0;left:0;right:0;height:36px;z-index:60;display:flex;align-items:center;gap:3px;
+background:#0b0c0f;border-bottom:1px solid #23252d;padding:0 10px;font:600 12.5px/1 -apple-system,"Noto Sans Georgian",sans-serif}
+.xnav a{color:#9aa0ad;text-decoration:none;padding:6px 10px;border-radius:6px;white-space:nowrap}
+.xnav a:hover{color:#fff;background:#181a20} .xnav a.cur{color:#fff;background:#3b4cca}
+.xnav .xsp{flex:1} .xnav .xk{color:#5c6070;font-weight:500;font-size:11px}
+.stage{position:fixed;inset:36px 0 0;display:flex;align-items:center;justify-content:center;padding:4vh 7vw 12vh}
+.slide{display:none;width:100%;max-width:1000px;animation:fade .25s ease}
+.slide[data-active]{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+.sec{color:var(--acc);font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:14px}
+h2{font-size:2.4rem;line-height:1.15;margin:0 0 26px;font-weight:750}
+.body{font-size:1.35rem}
+.body ul,.body ol{margin:0;padding-left:1.1em} .body li{margin:12px 0} .body p{margin:14px 0}
+.lead{font-size:1.5rem;color:var(--fg)} .by{color:var(--mut);font-size:1.05rem;margin-top:30px}
+.q{margin-top:26px;padding:16px 20px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:0 12px 12px 0;font-size:1.25rem}
+.big{font-size:1.9rem;line-height:1.35}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.two .k,.k{color:var(--acc);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.two p{margin:0;font-size:1.15rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px 26px;list-style:none;padding:0}
+.grid2 li{margin:7px 0;font-size:1.2rem}
+.steps{list-style:none;counter-reset:s;padding:0}
+.steps li{counter-increment:s;position:relative;padding-left:52px;margin:16px 0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:34px;height:34px;background:var(--acc);
+color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem}
+.formula{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:2.6rem;text-align:center;letter-spacing:2px;margin:6px 0 24px;color:var(--acc)}
+.cond{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 18px;margin:10px 0;font-size:1.2rem}
+.cond span{flex:none;width:52px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;background:var(--line);border-radius:8px;color:var(--fg)}
+.cond.hot{border-color:var(--acc)} .cond.hot span{background:var(--acc);color:#fff}
+.bar{position:fixed;top:36px;left:0;height:3px;background:var(--acc);transition:width .25s;z-index:5}
+.hud{position:fixed;bottom:14px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:14px;z-index:5;color:var(--mut);font-size:.85rem;flex-wrap:wrap}
+.hud button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:.8rem}
+.hud button:hover{border-color:var(--acc);color:var(--acc)}
+.count{font-variant-numeric:tabular-nums} #timer{font-variant-numeric:tabular-nums;font-weight:700} #timer.run{color:var(--acc)}
+.arrow{position:fixed;top:36px;bottom:0;width:12vw;z-index:4;cursor:pointer;border:0;background:transparent} .arrow.l{left:0} .arrow.r{right:0}
+.notes{position:fixed;left:0;right:0;bottom:0;max-height:44vh;overflow:auto;background:var(--card);
+border-top:2px solid var(--acc);padding:16px 22px 20px;z-index:8;transform:translateY(100%);transition:transform .2s;box-shadow:0 -8px 30px rgba(0,0,0,.25)}
+.notes.show{transform:none}
+.notes .nh{display:flex;justify-content:space-between;align-items:center;color:var(--acc);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.notes .nt{color:var(--warn)} .notes .nb{font-size:1.05rem;line-height:1.55}
+/* edit mode */
+body.editing .slide h2,body.editing .slide .body,body.editing .nb{outline:1px dashed var(--acc);outline-offset:4px;border-radius:5px}
+body.editing .arrow{display:none}
+#editbadge{display:none;color:var(--warn);font-weight:700} body.editing #editbadge{display:inline}
+@media(max-width:640px){h2{font-size:1.7rem}.body{font-size:1.1rem}.two,.grid2{grid-template-columns:1fr}.formula{font-size:1.7rem}}
+</style></head><body>
+<div class="xnav"><a href="../THESIS_BILINGUAL.html">📄 დოკუმენტი</a><a href="defense-prep.html">📋 Defense prep</a><a href="defense-presentation.html" class=cur>▶ პრეზენტაცია</a><a href="defense-profileC-demo.html">⚙ დემო</a><span class="xsp"></span><span class="xk">← → სლაიდი · N ჩანაწერები · E რედაქტ. · T ტაიმერი · F სრული</span></div>
+<div class="bar" id="bar"></div>
+<button class="arrow l" id="prev" aria-label="prev"></button>
+<button class="arrow r" id="next" aria-label="next"></button>
+<div class="stage"><section class="slide" data-active data-notes="ეს არის ამბავი ერთი მარტივი კითხვის შესახებ: შეიძლება თუ არა AI იყოს არა უბრალო ხელსაწყო, არამედ ნამდვილი თანამოსაუბრე — ისეთი, ვისაც ახსოვხარ? წარმოვადგინოთ თავი და ნაშრომის სათაური, მშვიდად. ~30 წამი." data-time="0:30"><div class="sec">სამაგისტრო ნაშრომის დაცვა</div><h2>სასაუბრო ხელოვნური ინტელექტი: ასისტენტიდან თანამოსაუბრემდე</h2><div class="body"><p class='lead'>კოგნიტურ თეორიაზე დაფუძნებული მეხსიერების არქიტექტურა ხმოვანი AI თანამოსაუბრისთვის</p><p class='by'>ალექსანდრე იმნაიშვილი &nbsp;·&nbsp; ხელმძღვანელი: ოთარ თავდიშვილი<br>საქართველოს ტექნიკური უნივერსიტეტი &nbsp;·&nbsp; 2026</p></div></section><section class="slide" data-notes="ეს არის ამბავი ადამიანზე, რომელიც ორ კვირას ესაუბრება AI ასისტენტს — უზიარებს გეგმებს, ნერვიულობას, სახელებს. მერე ახალ დღეს იწყებს და აღმოაჩენს, რომ ასისტენტს ყველაფერი დაავიწყდა. ეს არა მხოლოდ მოუხერხებელია — ეს ურთიერთობას ანგრევს. და ეს განცდა კი არა, გაზომილი პრობლემაა: ბენჩმარკები აჩვენებენ, საუკეთესო მოდელებიც კი ბევრად ჩამორჩებიან ადამიანს." data-time="1:15"><div class="sec">1 · პრობლემა</div><h2>AI-ს ავიწყდება</h2><div class="body"><ul><li>დღევანდელი ასისტენტები ყოველ სესიას <b>„ცივად“</b> იწყებენ — ავიწყდებათ სახელები, უპირატესობები, საერთო ისტორია.</li><li>ბენჩმარკები <b>LoCoMo</b> და <b>LongMemEval</b> აჩვენებენ: საუკეთესო მოდელებიც კი მნიშვნელოვნად ჩამორჩებიან ადამიანს.</li><li>ყველაზე სუსტი კატეგორია — <b>დროითი მსჯელობა</b> („როდის ითქვა / რა მოჰყვა რას“).</li></ul></div></section><section class="slide" data-notes="ეს არის ამბავი ორ სიტყვას შორის სხვაობაზე. ასისტენტი — ხელსაწყოა, რომელსაც იყენებ და ივიწყებ. თანამოსაუბრე — ვიღაც, ვისაც ახსოვხარ. სამი ნიშანი განასხვავებს მათ: კონტექსტი, იდენტობა, ინიციატივა. „თანამოსაუბრე“ ჩვენი საკუთარი, გაზომვადი განსაზღვრებაა — და ამას გულახდილად ვამბობთ. მთელი ნაშრომის კითხვა ერთია — შეუძლია თუ არა ადამიანისებრ მეხსიერებას ეს გადასვლა მოახდინოს." data-time="1:00"><div class="sec">2 · კვლევის კითხვა</div><h2>ასისტენტიდან თანამოსაუბრემდე</h2><div class="body"><div class='two'><div><div class='k'>ასისტენტი</div><p>ერთჯერადი ხელსაწყო — რეაქტიული, უმეხსიერო.</p></div><div><div class='k'>თანამოსაუბრე</div><p>უწყვეტი პარტნიორი — კონტექსტი, იდენტობა, ინიციატივა.</p></div></div><p class='q'>შეუძლია თუ არა ადამიანის მეხსიერების პრინციპებზე დაფუძნებულ არქიტექტურას AI აქციოს უფრო <b>თანამოსაუბრედ</b> აღქმულ სისტემად?</p></div></section><section class="slide" data-notes="ეს არის ამბავი ორ სამყაროზე, რომლებიც ერთმანეთს არ ხვდებიან. ერთ მხარეს — ინჟინრები, რომლებიც AI-ს მეხსიერებას აშენებენ, მაგრამ ზომავენ მხოლოდ სიზუსტეს. მეორე მხარეს — მკვლევრები, რომლებიც ხედავენ, რომ მეხსიერება ურთიერთობას ქმნის. არავის შეუერთებია ეს ორი — არავის უკითხავს, სხვადასხვა მეხსიერების არქიტექტურა როგორ განსხვავებულად აღიქმება ადამიანის მიერ. სწორედ ამ ცარიელ ადგილას დგას ეს ნაშრომი." data-time="1:15"><div class="sec">3 · ლიტერატურა</div><h2>ხარვეზი, რომელსაც ნაშრომი ავსებს</h2><div class="body"><div class='two'><div><div class='k'>LLM-მეხსიერების სისტემები</div><p>თითოეული <b>ერთ</b> თეორიას ახორციელებს, ფასდება <b>სიზუსტეზე</b> (HippoRAG, MemoryBank, ReadAgent…).</p></div><div><div class='k'>აღქმის კვლევები</div><p>მეხსიერება აყალიბებს — და შეუძლია <b>შეარყიოს</b> — ურთიერთობა (Cox, Replika).</p></div></div><p class='q'>ვერ მოიძებნა კონტროლირებადი კვლევა, რომელიც <b>სხვადასხვა თეორიაზე</b> დაფუძნებულ არქიტექტურებს ადარებდეს <b>აღქმულ სოციალურ კონსტრუქტებზე</b> — მით უფრო ხმაში.</p></div></section><section class="slide" data-notes="ეს არის ამბავი იმაზე, რომ ჩვენ არაფერი გამოგვიგონია. ავიღეთ ის, რაც ფსიქოლოგიამ ას წელზე მეტი უკვე იცის — ექვსი თეორია იმაზე, თუ როგორ იქცევა ცოცხალი მეხსიერება. თითოეულიდან ავიღეთ ერთი დაკვირვებადი ქცევა — ის, რასაც მომხმარებელი შეამჩნევდა. მაგალითად ებინგჰაუზი მარტივია: რაც არ მეორდება, ავიწყდება. ამ სლაიდზე ჩამოთვლა საკმარისია — არ ჩაუღრმავდე." data-time="1:00"><div class="sec">4 · თეორიული საფუძველი</div><h2>ექვსი მეხსიერების თეორია → ქცევითი ნიშანი</h2><div class="body"><ul class='grid2'><li><b>ატკინსონ-შიფრინი</b> — მრავალსაცავიანი, გამეორება</li><li><b>ებინგჰაუზი</b> — დავიწყების მრუდი</li><li><b>ტულვინგი</b> — ეპიზოდური / სემანტიკური</li><li><b>ბუნდოვანი კვალი</b> — gist vs verbatim</li><li><b>CLS</b> — სწრაფი ჰიპოკამპი, ნელი კორტექსი</li><li><b>ჰიპოკამპური ინდექსირება</b> — მაჩვენებლები</li></ul><p class='q'>თითოეულს ვიხილავთ არა როგორც ისტორიას, არამედ იმ <b>დაკვირვებადი ქცევის</b> კუთხით, რომელსაც პროგნოზირებს.</p></div></section><section class="slide" data-notes="ეს არის ამბავი იმაზე, თუ როგორ ავაწყვეთ ეს ყველაფერი ერთ სისტემად — წარმოიდგინე მეხსიერება ხუთი ნაბიჯის ციკლად. პირველი: ისმენ და წყვეტ, რა ღირს დამახსოვრებად. მეორე: იმახსოვრებ აზრს, არა ზუსტ სიტყვებს. მესამე: დროთა განმავლობაში ივიწყებ. მეოთხე: „ძილში“, ოფლაინ, განმეორებადი აზრები ცოდნად იქცევა. მეხუთე: საჭიროებისას იხსენებ — და გახსენება ამ მოგონებას აძლიერებს. ეს ნაშრომის გულია — არ იჩქარო. (კარგი მომენტია დემოს (⚙) საჩვენებლად.)" data-time="2:00"><div class="sec">5 · არქიტექტურა</div><h2>Profile C — მეხსიერების ხუთსაფეხურიანი ციკლი</h2><div class="body"><ol class='steps'><li><b>კოდირება</b> — LLM აფასებს მნიშვნელობას (salience); მნიშვნელოვანი დიდხანს ძლებს.</li><li><b>წარმოდგენა</b> — არსი (gist) + ზუსტი ღუზა (anchor).</li><li><b>დაქვეითება</b> — ებინგჰაუზისეული, დროსთან ერთად ქრება.</li><li><b>კონსოლიდაცია</b> — ოფლაინ „ძილი“: ეპიზოდური → სემანტიკური.</li><li><b>მოძიება</b> — არსზე პრიორიტეტით, სიახლით შეწონილი; გამოყენება აძლიერებს.</li></ol></div></section><section class="slide" data-notes="ეს არის ამბავი იმაზე, რომ მთელი ეს „ადამიანური“ ქცევა ერთ მარტივ ფორმულაში ჯდება — არაფერი შავი ყუთი. R = exp(−Δt/S): რაც მეტი დრო გადის, მით სუსტდება მოგონება, თუ არ განახლდა; მნიშვნელოვანი — უფრო ნელა. და მთავარი: ეს არაფერს ანელებს პასუხს, რადგან ყველა ძვირი ოპერაცია ფონურად ხდება. ეს კრიტიკულია ხმოვანი, რეალურ-დროიანი სისტემისთვის." data-time="1:00"><div class="sec">6 · მექანიზმი</div><h2>მთელი დინამიკა ერთ ფორმულაში</h2><div class="body"><div class='formula'>R = exp(−Δt / S)</div><ul><li><b>R</b> — მოძიებადობა (0–1) · <b>Δt</b> — გასული დრო · <b>S</b> — სტაბილურობა</li><li>საწყისი S = 2.0 · მნიშვნელობა · გამყარება S += 0.5 · სემანტიკური S = 5.0</li><li>დავიწყების ზღვარი 0.10 — <b>რბილი</b> დავიწყება, არა წაშლა</li><li>ყველა ძვირი ოპერაცია <b>ოფლაინ</b>; მოძიება — ერთი embedding, ნულ LLM-გამოძახება ტურზე</li></ul></div></section><section class="slide" data-notes="ეს არის ამბავი ერთ ჭკვიან ხრიკზე. თუ ჩემი სისტემა C მოიგებს, სკეპტიკოსი მკითხავს — იქნებ უბრალოდ იმიტომ, რომ მისი ტექსტი უფრო სუფთაა? ამიტომ შევქმენი B+ — იგივე სუფთა, დამუშავებული მეხსიერება, ოღონდ ცოცხალი დინამიკის გარეშე. თუ C მოიგებს B+-ს, მაშინ ეს ნამდვილად დინამიკაა და არა კოსმეტიკა. ეს ალბათ ყველაზე ხშირად დასმული კითხვაა — მზად იყავი მასზე." data-time="1:30"><div class="sec">7 · ექსპერიმენტული დიზაინი</div><h2>ოთხი პირობა და აქტიური კონტროლი B+</h2><div class="body"><div class='cond'><span>A</span> მეხსიერების გარეშე — ცივი დაწყება</div><div class='cond'><span>B</span> სიტყვასიტყვითი RAG — top-k</div><div class='cond hot'><span>B+</span> კურირებული, <b>სტატიკური</b> — gist, მაგრამ დაქვეითების/salience/კონსოლიდაციის გარეშე</div><div class='cond hot'><span>C</span> სრული Profile C — ადამიანისებრი დინამიკა</div><p class='q'><b>C vs B+</b> — ეს კონტრასტი განასხვავებს <b>დინამიკას</b> უბრალო <b>კურაციისგან</b>.</p></div></section><section class="slide" data-notes="ეს არის ამბავი იმაზე, თუ როგორ ვზომავ ამ ყველაფერს — სამი გზით, თანდათან უფრო რეალურით: ტექნიკური ტესტი, სიმულირებული მომხმარებელი, და ბოლოს ცოცხალი ადამიანების კვლევა. ერთ რამეს გულახდილად ვამბობ: ეს ბოლო ჯერ არ ჩამიტარებია. პლატფორმის აგებას ერთი ადამიანი 12-16 კვირას ანდომებდა — ვადებში არ ჯდებოდა. ამიტომ ამ ნაშრომში არცერთი დასკვნა არ ეყრდნობა ადამიანების მონაცემებს — და ეს განზრახ და პატიოსნადაა." data-time="1:15"><div class="sec">8 · შეფასება</div><h2>სამი მიმართულება — და გულახდილობა</h2><div class="body"><ul><li><b>ტექნიკური შეფასება</b> (თავი 4) — მოძიების ხარისხი, ლატენტურობა.</li><li><b>სიმულირებული მომხმარებელი</b> (თავი 5) — LLM-მსაჯი, მექანიზმის სიგნალი.</li><li><b>ადამიან-პროტოკოლი</b> (თავი 2) — სრულად დაპროექტებული, <b>მომავალი სამუშაო</b>.</li></ul><p class='q'>ამ ნაშრომში <b>არცერთი მტკიცება არ ეყრდნობა ადამიანების მონაცემებს</b> — ეს პატიოსნად არის დეკლარირებული.</p></div></section><section class="slide" data-notes="ეს არის ამბავის ყველაზე გულახდილი ნაწილი. ჩემი მთავარი შედარება — C vs B+ — იმდენად ნატიფია, რომ ოც ადამიანზე მისი დამტკიცება უბრალოდ შეუძლებელია; საჭირო იქნებოდა ასზე მეტი მონაწილე. ამიტომ მე მას არ ვასაღებ როგორც „დამტკიცებულს“ — ვზომავ და ვაჩვენებ სანდოობის ინტერვალით. ცარიელი შედეგიც კი ღირებულია. ეს სისუსტე კი არა, სიმკაცრეა — და აჩვენებს, რომ სტატისტიკა მესმის." data-time="1:15"><div class="sec">9 · სტატისტიკური პოზიცია</div><h2>C > B+ — შეფასების სამიზნე, არა ტესტი</h2><div class="body"><ul><li>C vs B+ ეფექტი კონსტრუქციით <b>მცირეა</b> (dz ≈ 0.28).</li><li>n ≈ 20-ზე მისი დადასტურება <b>შეუძლებელია</b> (საჭიროა n ≈ 116–159).</li><li>ამიტომ ის <b>წინასწარ რეგისტრირებული შეფასების სამიზნეა</b> (ეფექტის სიდიდე + 95% CI).</li><li>ზუსტი <b>ნული — შინაარსობრივი, გამოსაქვეყნებელი შედეგია</b>. სწორედ ამისთვის არსებობს B+.</li></ul></div></section><section class="slide" data-notes="მოკლედ: სამი რამ, რასაც ეს ნაშრომი ტოვებს — არქიტექტურა, გამზომი მეთოდოლოგია, და მუშა პროტოტიპი. თითო წინადადება თითოზე, დარწმუნებით. თითოეული უკავშირდება კონკრეტულ თავს." data-time="0:45"><div class="sec">10 · წვლილი</div><h2>სამი წვლილი</h2><div class="body"><ol class='steps'><li><b>Profile C</b> — კოგნიტურ თეორიაზე დაფუძნებული მეხსიერების არქიტექტურა.</li><li><b>კურაციაზე-კონტროლირებადი მეთოდოლოგია</b> — აქტიური კონტროლი B+.</li><li><b>კონცეფციის დადასტურება</b> — იმპლემენტაცია + ტექნიკური და სიმულირებული შეფასება.</li></ol></div></section><section class="slide" data-notes="ეს არის ამბავი იმაზე, თუ რა არის უკვე რეალური — განსხვავებით მომავალი ადამიან-კვლევისგან. ტექნიკურად: დავიწყება რბილია და არა გატეხილი, სიჩქარე თანაბარია პირობებს შორის. სიმულაციაში: პირობები ნამდვილად სხვადასხვანაირად იქცევიან. მაგრამ ფრთხილად ვამბობ — ეს მექანიზმის სიგნალია, არა ადამიანის აღქმის მტკიცება." data-time="1:00"><div class="sec">11 · შედეგები</div><h2>კონცეფციის დადასტურება — რა არის რეალური</h2><div class="body"><div class='two'><div><div class='k'>ტექნიკური</div><p>რბილი დავიწყება დადასტურდა · ლატენტური პარიტეტი B/B+/C-სთვის · მოძიების სიზუსტე დახასიათებული.</p></div><div><div class='k'>სიმულირებული</div><p>პირობები <b>განსხვავებულ</b> ქცევას წარმოქმნიან — მექანიზმის სიგნალი, არა აღქმის მტკიცება.</p></div></div></div></section><section class="slide" data-notes="ეს არის ამბავი საზღვრებზე — და ვამბობ გულახდილად. კვლევა ინგლისურ ენაზეა, მხოლოდ ხმაზე. ინტერფერენცია — ადამიანის დავიწყების მთავარი ნაწილი — არ მიმიბაძავს. და ცოცხალი ადამიანების კვლევა ჯერ წინ არის. მაგრამ თითოეული ეს საზღვარი მომავალი ნაბიჯია, არა ხვრელი — და ეს აჩვენებს, რომ ვიცი ჩემი ნაშრომის ფარგლები." data-time="0:45"><div class="sec">12 · შეზღუდვები</div><h2>შეზღუდვები და მომავალი სამუშაო</h2><div class="body"><ul><li>ერთენოვანი (ინგლისური), მხოლოდ <b>ხმოვანი</b> მოდალობა.</li><li><b>ინტერფერენცია</b> — ადამიანის დავიწყების მთავარი დინამიკა — არ არის მოდელირებული.</li><li>ადამიან-კვლევა <b>ჩასატარებელია</b>.</li><li>მომავალი: სრული ადამიან-პროტოკოლი · ქართული · თეორია-თეორიის შედარება.</li></ul></div></section><section class="slide" data-notes="ერთი წინადადებით, დაიმახსოვრე ზეპირად: ეს ნაშრომი აშენებს ხელსაწყოსა და მეთოდს, რომ გავზომოთ — ხდის თუ არა ადამიანისებრი მეხსიერების დინამიკა AI-ს უფრო თანამოსაუბრედ, სუფთა კურაციისგან განცალკევებით. ეს არის ის გზავნილი, რომელიც კომისიას უნდა დარჩეს. თქვი ნელა, დარწმუნებით, მერე პაუზა." data-time="0:45"><div class="sec">13 · დასკვნა</div><h2>დასკვნა</h2><div class="body"><p class='big'>ნაშრომი აწვდის <b>აპარატურასა</b> და <b>მეთოდოლოგიას</b>, რომ გავზომოთ — ხდის თუ არა ადამიანისებრი მეხსიერების <b>დინამიკა</b> AI-ს უფრო თანამოსაუბრედ აღქმულ სისტემად, <b>კურაციისგან გამიჯნულად</b>.</p></div></section><section class="slide" data-notes="ამბავი დასრულდა — ახლა კითხვები. გადადი მშვიდად, თავდაჯერებით. გახსოვდეს, პასუხები უკვე მოამზადე: კურაცია vs დინამიკა (Q16), სიმძლავრე C&gt;B+ (Q23), ბენჩმარკის რიცხვები (Q4/Q12). ყოველ კითხვაზე: სუნთქვა, პაუზა, მერე პასუხი." data-time="—"><div class="sec">მადლობა</div><h2>მადლობა ყურადღებისთვის</h2><div class="body"><p class='lead'>მზად ვარ თქვენი კითხვებისთვის.</p><p class='by'>ალექსანდრე იმნაიშვილი · სტუ · 2026</p></div></section></div>
+<div class="hud">
+  <button id="bprev">‹</button>
+  <span class="count"><span id="cur">1</span> / 15</span>
+  <button id="bnext">›</button>
+  <span>·</span>
+  <button id="bnotes">ჩანაწერები (N)</button>
+  <button id="bedit">✎ რედაქტ.</button><span id="editbadge">● რედაქტირება</span>
+  <button id="bexport">⬇ export</button>
+  <span id="timer">00:00</span><button id="btimer">▶ ტაიმერი</button>
+  <span class="tot">სამიზნე ≈ 14:30</span>
+  <button id="btheme">☾</button>
+</div>
+<div class="notes" id="np">
+  <div class="nh"><span>სპიკერის ჩანაწერები</span><span class="nt" id="ntime"></span></div>
+  <div class="nb" id="nbody"></div>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0,editing=false;
+const cur=document.getElementById('cur'),bar=document.getElementById('bar');
+const np=document.getElementById('np'),nb=document.getElementById('nbody'),ntime=document.getElementById('ntime');
+// ---- persisted edits (this HTML is the source of truth) ----
+let edits={};try{edits=JSON.parse(localStorage.getItem('pres_edits')||'{}')}catch(e){}
+function applyEdits(){slides.forEach((s,k)=>{const e=edits[k];if(!e)return;
+  if(e.title!=null)s.querySelector('h2').innerHTML=e.title;
+  if(e.body!=null)s.querySelector('.body').innerHTML=e.body;
+  if(e.notes!=null)s.dataset.notes=e.notes;});}
+function saveEdit(k,f,v){edits[k]=edits[k]||{};edits[k][f]=v;try{localStorage.setItem('pres_edits',JSON.stringify(edits))}catch(e){}}
+applyEdits();
+function show(n){
+  i=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,k)=>k===i?s.setAttribute('data-active',''):s.removeAttribute('data-active'));
+  cur.textContent=i+1;bar.style.width=((i+1)/slides.length*100)+'%';
+  nb.innerHTML=slides[i].dataset.notes;ntime.textContent='⏱ '+slides[i].dataset.time;
+}
+function nx(){if(!editing)show(i+1)}function pv(){if(!editing)show(i-1)}
+document.getElementById('next').onclick=nx;document.getElementById('prev').onclick=pv;
+document.getElementById('bnext').onclick=()=>show(i+1);document.getElementById('bprev').onclick=()=>show(i-1);
+document.getElementById('bnotes').onclick=()=>np.classList.toggle('show');
+// live-save edits
+document.querySelector('.stage').addEventListener('input',()=>{if(!editing)return;const s=slides[i];
+  saveEdit(i,'title',s.querySelector('h2').innerHTML);saveEdit(i,'body',s.querySelector('.body').innerHTML);});
+nb.addEventListener('input',()=>{if(!editing)return;slides[i].dataset.notes=nb.innerHTML;saveEdit(i,'notes',nb.innerHTML);});
+function setEdit(on){editing=on;document.body.classList.toggle('editing',on);
+  slides.forEach(s=>{s.querySelector('h2').contentEditable=on;s.querySelector('.body').contentEditable=on;});
+  nb.contentEditable=on;if(on)np.classList.add('show');
+  document.getElementById('bedit').textContent=on?'✓ დასრულება':'✎ რედაქტ.';}
+document.getElementById('bedit').onclick=()=>setEdit(!editing);
+document.getElementById('bexport').onclick=()=>{
+  const wasEdit=editing;setEdit(false);
+  const c=document.documentElement.cloneNode(true);
+  c.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));
+  c.querySelectorAll('.slide').forEach(s=>{s.removeAttribute('data-active')});
+  const first=c.querySelector('.slide');if(first)first.setAttribute('data-active','');
+  const blob=new Blob(['<!doctype html>\n'+c.outerHTML],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='defense-presentation.html';a.click();
+  if(wasEdit)setEdit(true);
+};
+document.addEventListener('keydown',e=>{
+  if(editing){if(e.key==='Escape')setEdit(false);return;}
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();nx();}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){pv();}
+  else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(slides.length-1);}
+  else if(e.key==='n'||e.key==='N'){np.classList.toggle('show');}
+  else if(e.key==='e'||e.key==='E'){setEdit(!editing);}
+  else if(e.key==='t'||e.key==='T'){toggleTimer();}
+  else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+});
+let t=0,tv=null;const tel=document.getElementById('timer');
+function fmt(x){return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0');}
+function toggleTimer(){if(tv){clearInterval(tv);tv=null;tel.classList.remove('run');document.getElementById('btimer').textContent='▶ ტაიმერი';}
+  else{tv=setInterval(()=>{t++;tel.textContent=fmt(t);},1000);tel.classList.add('run');document.getElementById('btimer').textContent='⏸ პაუზა';}}
+document.getElementById('btimer').onclick=toggleTimer;document.getElementById('btimer').ondblclick=()=>{t=0;tel.textContent='00:00';};
+document.getElementById('btheme').onclick=()=>{const r=document.documentElement;
+  const dark=r.dataset.theme?r.dataset.theme==='dark':window.matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark';};
+show(0);
+</script></body></html>
