@@ -86,7 +86,7 @@ if len(cluster) >= CONSOLIDATE_N:</pre></div><div class='tc'><div class='th'><b>
   <span>·</span>
   <button id="bnotes">ჩანაწერები (N)</button>
   <button id="bedit">✎ რედაქტ.</button><span id="editbadge">● რედაქტირება</span>
-  <button id="bexport">⬇ export</button><button id="ghpush" title="ცვლილებების პირდაპირ GitHub-ზე დაკომიტება">⇪ GitHub</button>
+  <button id="bexport">⬇ export</button><button id="bppt" title="PowerPoint — რედაქტირებადი ტექსტით">PPT</button><button id="bppts" title="PowerPoint — ზუსტი ვიზუალი (სურათებად)">PPT 📷</button><button id="ghpush" title="ცვლილებების პირდაპირ GitHub-ზე დაკომიტება">⇪ GitHub</button>
   <span id="timer">00:00</span><button id="btimer">▶ ტაიმერი</button>
   <span class="tot">სამიზნე ≈ 17:30</span>
   <button id="btheme">☾</button>
@@ -208,5 +208,86 @@ window.__mergeClean=function(c){
   var be=c.querySelector('#bedit');if(be)be.textContent='\u270e \u10e0\u10d4\u10d3\u10d0\u10e5\u10e2.';
 };
 
+</script>
+
+<script>
+const PPT_DARK={bg:'0F1013',fg:'E9EAF0',mut:'9A9DAA',acc:'9AA6FF'};
+function pptLoad(src){return new Promise(function(res,rej){var t=document.createElement('script');t.src=src;t.onload=res;t.onerror=function(){rej(new Error('ბიბლიოთეკა ვერ ჩაიტვირთა: '+src))};document.head.appendChild(t)})}
+async function pptEnsure(snap){
+  if(!window.PptxGenJS)await pptLoad('vendor/pptxgen.bundle.js');
+  if(snap&&!window.html2canvas)await pptLoad('vendor/html2canvas.min.js');
+}
+function pptTxt(el){return el.textContent.replace(/\s+/g,' ').trim()}
+function pptRuns(body){
+  var runs=[];
+  function push(t,o){if(t)runs.push({text:t,options:Object.assign({breakLine:true},o||{})})}
+  Array.prototype.forEach.call(body.children,function(el){
+    if(el.matches('ol')){var n=1;el.querySelectorAll(':scope > li').forEach(function(li){push(n+'.  '+pptTxt(li),{fontSize:15,color:PPT_DARK.fg,paraSpaceAfter:6});n++})}
+    else if(el.matches('ul')){el.querySelectorAll(':scope > li').forEach(function(li){push(pptTxt(li),{bullet:true,fontSize:15,color:PPT_DARK.fg,paraSpaceAfter:5})})}
+    else if(el.matches('pre')){el.textContent.split('\n').forEach(function(l){push(l||' ',{fontFace:'Courier New',fontSize:13,color:PPT_DARK.acc})})}
+    else if(el.matches('.formula')){push(pptTxt(el),{fontFace:'Courier New',fontSize:26,color:PPT_DARK.acc,align:'center',paraSpaceBefore:4,paraSpaceAfter:8})}
+    else if(el.matches('.tc')){
+      var th=el.querySelector('.th'),pre=el.querySelector('pre');
+      if(th){var b=th.querySelector('b'),sp=th.querySelector('span');
+        push(pptTxt(b||th),{bold:true,fontSize:14.5,color:PPT_DARK.fg,paraSpaceBefore:6});
+        if(sp)push(pptTxt(sp),{fontSize:10.5,color:PPT_DARK.mut});}
+      if(pre)pre.textContent.split('\n').forEach(function(l){push(l||' ',{fontFace:'Courier New',fontSize:12,color:PPT_DARK.acc})})}
+    else if(el.matches('.cond')){
+      var c2=el.cloneNode(true),cd=c2.querySelector('code');if(cd)cd.remove();
+      push(pptTxt(c2),{fontSize:14.5,color:PPT_DARK.fg,paraSpaceBefore:5});
+      var code=el.querySelector('code');if(code)push(pptTxt(code),{fontFace:'Courier New',fontSize:11,color:PPT_DARK.mut})}
+    else if(el.matches('.two,.grid2')){el.querySelectorAll(':scope > *').forEach(function(x){var t=pptTxt(x);if(t)push(t,{fontSize:13.5,color:PPT_DARK.fg,paraSpaceAfter:4})})}
+    else if(el.matches('.q')){push(pptTxt(el),{italic:true,fontSize:14,color:PPT_DARK.acc,paraSpaceBefore:7})}
+    else if(el.matches('.srcref')){push(pptTxt(el),{fontFace:'Courier New',fontSize:10,color:PPT_DARK.mut,paraSpaceBefore:7})}
+    else{var t=pptTxt(el);if(t)push(t,{fontSize:15,color:PPT_DARK.fg,paraSpaceAfter:5})}
+  });
+  return runs;
+}
+function pptNew(){var p=new PptxGenJS();p.defineLayout({name:'W169',width:13.33,height:7.5});p.layout='W169';return p}
+async function pptText(btn){
+  var old=btn.textContent;
+  try{
+    if(editing)setEdit(false);
+    btn.textContent='⏳…';
+    await pptEnsure(false);
+    var p=pptNew();
+    slides.forEach(function(sec,idx){
+      var sl=p.addSlide();sl.background={color:PPT_DARK.bg};
+      var kick=sec.querySelector('.sec'),h=sec.querySelector('h2'),body=sec.querySelector('.body');
+      if(kick)sl.addText(pptTxt(kick).toUpperCase(),{x:.6,y:.3,w:12.1,h:.4,fontSize:11,color:PPT_DARK.acc,bold:true,charSpacing:2});
+      if(h)sl.addText(pptTxt(h),{x:.6,y:.72,w:12.1,h:1.05,fontSize:28,bold:true,color:PPT_DARK.fg,fit:'shrink',valign:'top'});
+      if(body){var runs=pptRuns(body);if(runs.length)sl.addText(runs,{x:.6,y:1.95,w:12.1,h:5.15,valign:'top',fit:'shrink'})}
+      sl.addText(String(idx+1)+' / '+slides.length,{x:12.1,y:7.08,w:1.1,h:.32,fontSize:9,color:PPT_DARK.mut,align:'right'});
+      var n=(sec.dataset.notes||'').replace(/\s+/g,' ').trim();if(n)sl.addNotes(n);
+    });
+    await p.writeFile({fileName:'defense-presentation.pptx'});
+    btn.textContent='✓';setTimeout(function(){btn.textContent=old},2200);
+  }catch(e){alert('PPT ვერ შეიქმნა: '+e.message);btn.textContent=old}
+}
+async function pptSnap(btn){
+  var old=btn.textContent,back=i;
+  try{
+    if(editing)setEdit(false);
+    btn.textContent='⏳…';
+    await pptEnsure(true);
+    var p=pptNew();
+    for(var k=0;k<slides.length;k++){
+      btn.textContent='📷 '+(k+1)+'/'+slides.length;
+      show(k);
+      await new Promise(function(r){setTimeout(r,80)});
+      var canvas=await html2canvas(slides[k],{backgroundColor:'#0f1013',scale:2,logging:false});
+      var sl=p.addSlide();sl.background={color:PPT_DARK.bg};
+      var W=13.33,H=7.5,ar=canvas.width/canvas.height,w,h;
+      if(ar>W/H){w=W-.6;h=w/ar}else{h=H-.4;w=h*ar}
+      sl.addImage({data:canvas.toDataURL('image/png'),x:(W-w)/2,y:(H-h)/2,w:w,h:h});
+      var n=(slides[k].dataset.notes||'').replace(/\s+/g,' ').trim();if(n)sl.addNotes(n);
+    }
+    show(back);
+    await p.writeFile({fileName:'defense-presentation-visual.pptx'});
+    btn.textContent='✓';setTimeout(function(){btn.textContent=old},2200);
+  }catch(e){alert('PPT ვერ შეიქმნა: '+e.message);btn.textContent=old;show(back)}
+}
+document.getElementById('bppt').onclick=function(){pptText(this)};
+document.getElementById('bppts').onclick=function(){pptSnap(this)};
 </script>
 </body></html>
