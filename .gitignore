@@ -2,3 +2,11 @@
 ~$*
 project/thesis-ka.pdf
 project/thesis-ka.BEFORE-format.docx
+
+# Full thesis text / binaries — kept LOCAL ONLY (public repo: avoid pre-defense plagiarism-checker exposure)
+final/
+corrected/
+endgame/
+THESIS_EN.html
+STRUCTURE.html
+project/*.pdf
